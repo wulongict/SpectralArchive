@@ -1,0 +1,185 @@
+###################################################################################
+# Program       : Makefile                                                        #
+# Author        : Henry Lam <hlam@systemsbiology.org>                      #
+# Date          : 01/18/2003                                                      #
+#                                                                                 #
+# THE SOFTWARE IS PROVIDED BY THE INSTITUTE FOR SYSTEMS BIOLOGY (ISB)             #
+# "AS IS" AND "WITH ALL FAULTS." ISB MAKES NO REPRESENTATIONS OR WARRANTI         #
+# ES OF ANY KIND CONCERNING THE QUALITY, SAFETY OR SUITABILITY OF THE             #
+# SOFTWARE, EITHER EXPRESSED OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IM-     #
+# PLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,          #
+# OR NON-INFRINGEMENT.                                                            #
+#                                                                                 #
+# ISB MAKES NO REPRESENTATIONS OR WARRANTIES AS TO THE TRUTH, ACCURACY            #
+# OR COMPLETENESS OF ANY STATEMENTS, INFORMATION OR MATERIALS CONCERNING          #
+#                                                                                 #
+# THE SOFTWARE THAT IS CONTAINED IN ANY DOCUMENTATION INCLUDED WITH THE           #
+# SOFTWARE OR ON AND WITHIN ANY OF THE WEBSITES OWNED AND OPERATED BY ISB         #
+#                                                                                 #
+# IN NO EVENT WILL ISB BE LIABLE FOR ANY INDIRECT, PUNITIVE, SPECIAL,             #
+# INCIDENTAL OR CONSEQUENTIAL DAMAGES HOWEVER THEY MAY ARISE AND EVEN IF          #
+# ISB HAVE BEEN PREVIOUSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.            #
+#                                                                                 #
+###################################################################################
+
+
+LDFLAGS= $(SYSLIBS)
+
+ARCH=linux_standalone
+
+EXE=${ARCH}/spectrast ${ARCH}/plotspectrast ${ARCH}/plotspectrast.cgi ${ARCH}/Lib2HTML
+
+# lfs support
+LFSFLAGS= -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+WARNINGFLAGS = -Werror -Wformat -Wstrict-aliasing -Wno-deprecated -Wno-char-subscripts
+IFLAGS= -I/usr/include
+
+ifeq (${LGPL},1)
+SYSLIBS= -lm -lz
+CXX=g++ ${DEBUG} ${IFLAGS} ${WARNINGFLAGS} ${LFSFLAGS} ${OSFLAGS} -DSTANDALONE_LINUX -D__LGPL__
+else
+SYSLIBS= -lm -lz -lgsl -lgslcblas
+CXX=g++ ${DEBUG} ${IFLAGS} ${WARNINGFLAGS} ${LFSFLAGS} ${OSFLAGS} -DSTANDALONE_LINUX
+endif
+
+######################################################################
+#
+# do not edit past this point
+#
+######################################################################
+
+MYCRAMP = ${ARCH}/SpectraST_cramp.o ${ARCH}/SpectraST_ramp.o ${ARCH}/SpectraST_base64.o ${ARCH}/SpectraST_util.o
+#MYCRAMP = $(TPPLIB) 
+ifeq (${LGPL},1)
+# no kwset, no REFRESH function
+else
+MYKWSET = ${ARCH}/SpectraST_kwset.o ${ARCH}/SpectraST_obstack.o
+endif
+
+OBJS= ${ARCH}/SpectraSTLib.o ${ARCH}/SpectraSTLibIndex.o \
+	${ARCH}/SpectraSTLibEntry.o ${ARCH}/SpectraSTPeakList.o \
+	${ARCH}/SpectraSTMzLibIndex.o ${ARCH}/SpectraSTCreateParams.o \
+	${ARCH}/SpectraSTLibImporter.o ${ARCH}/SpectraSTMspLibImporter.o \
+	${ARCH}/SpectraSTPepXMLLibImporter.o ${ARCH}/SpectraSTSpLibImporter.o \
+	${ARCH}/SpectraSTXHunterLibImporter.o ${ARCH}/SpectraSTTsvLibImporter.o \
+	${ARCH}/SpectraSTSearchTask.o \
+	${ARCH}/SpectraSTDtaSearchTask.o ${ARCH}/SpectraSTMspSearchTask.o ${ARCH}/SpectraSTMgfSearchTask.o \
+	${ARCH}/SpectraSTMzXMLSearchTask.o ${ARCH}/SpectraSTCandidate.o\
+	${ARCH}/SpectraSTSearch.o ${ARCH}/SpectraSTReplicates.o \
+	${ARCH}/SpectraSTSearchOutput.o ${ARCH}/SpectraSTTxtSearchOutput.o\
+	${ARCH}/SpectraSTXlsSearchOutput.o ${ARCH}/SpectraSTPepXMLSearchOutput.o \
+	${ARCH}/SpectraSTHtmlSearchOutput.o ${ARCH}/SpectraSTPeptideLibIndex.o ${ARCH}/SpectraSTSimScores.o \
+	${ARCH}/SpectraSTSearchParams.o ${ARCH}/SpectraSTMain.o \
+	${ARCH}/SpectraSTQuery.o ${ARCH}/SpectraSTFileList.o \
+	${ARCH}/SpectraSTLog.o ${ARCH}/SpectraSTMs2LibImporter.o \
+	${ARCH}/SpectraSTMzXMLLibImporter.o \
+	${ARCH}/SpectraSTSearchTaskStats.o \
+	${ARCH}/SpectraSTFastaFileHandler.o \
+	${ARCH}/SpectraSTDenoiser.o \
+	${ARCH}/FileUtils.o ${ARCH}/Peptide.o ${ARCH}/XMLWalker.o \
+	${ARCH}/ProgressCount.o ${ARCH}/Predicate.o \
+	${MYCRAMP} ${MYKWSET}
+
+
+#
+# rules
+#
+.SUFFIXES:	.o .cpp 
+
+#
+# note we have our own arch subdirs, needed
+# to avoid filename conflicts in the OBJ_ARCH
+# directory of the parent project
+#
+
+${ARCH}/%.o : %.cpp
+	@ mkdir -p $(ARCH)
+	$(CXX) $(OLD) $(DEBUG) $(IFLAGS) $(LFSFLAGS) ${WARNINGFLAGS} -O2 -c $< -o $@
+
+#
+# targets
+#
+
+all : ${EXE}
+
+${ARCH}/spectrast : ${OBJS}
+	$(CXX) $(DEBUG) -O2 $^ $(LDFLAGS) -o $@ 
+
+${ARCH}/plotspectrast.cgi : ${ARCH}/plotspectrast_cgi.o ${ARCH}/SpectraSTLibEntry.o ${ARCH}/SpectraSTQuery.o ${ARCH}/SpectraSTPeakList.o ${ARCH}/SpectraSTDenoiser.o ${ARCH}/SpectraSTLog.o ${ARCH}/FileUtils.o ${ARCH}/Peptide.o ${MYCRAMP}
+	$(CXX) -O2 $^ $(LDFLAGS) -o $@ 
+
+${ARCH}/plotspectrast : ${ARCH}/plotspectrast.o ${ARCH}/SpectraSTLibEntry.o ${ARCH}/SpectraSTQuery.o ${ARCH}/SpectraSTPeakList.o ${ARCH}/SpectraSTDenoiser.o ${ARCH}/SpectraSTLog.o ${ARCH}/FileUtils.o ${ARCH}/Peptide.o ${MYCRAMP}
+	$(CXX) -O2 $^ $(LDFLAGS) -o $@ 
+
+${ARCH}/Lib2HTML : ${ARCH}/Lib2HTML.o ${ARCH}/SpectraSTPeptideLibIndex.o ${ARCH}/SpectraSTMzLibIndex.o ${ARCH}/SpectraSTLibIndex.o ${ARCH}/SpectraSTLibEntry.o ${ARCH}/SpectraSTPeakList.o ${ARCH}/SpectraSTDenoiser.o ${ARCH}/SpectraSTLog.o ${ARCH}/FileUtils.o ${ARCH}/Peptide.o ${MYCRAMP}
+	$(CXX) -O2 $^ $(LDFLAGS) -o $@
+
+${ARCH}/plotspectrast_cgi.o : plotspectrast.cpp 
+	$(CXX) $(LFSFLAGS) $(IFLAGS) ${WARNINGFLAGS} -D RUN_AS_CGI -O2 -o ${ARCH}/plotspectrast_cgi.o -c plotspectrast.cpp 
+
+clean:
+	rm -rf ${ARCH}; rm -f $(EXE) core* *~
+
+debug:
+	DEBUG='-g'  make all
+
+LGPL:
+	LGPL='1' make -f Makefile_STANDALONE_LINUX clean all
+
+
+
+#
+# dependencies
+#
+
+SPECTRAST_HPP = *.hpp *.h
+
+${OBJDIR}/SpectraSTLib.o : SpectraSTLib.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTLibIndex.o : SpectraSTLibIndex.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMzLibIndex.o : SpectraSTMzLibIndex.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTLibEntry.o : SpectraSTLibEntry.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTPeakList.o : SpectraSTPeakList.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTLibImporter.o : SpectraSTLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMspLibImporter.o : SpectraSTMspLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTPepXMLLibImporter.o : SpectraSTPepXMLLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSpLibImporter.o : SpectraSTSpLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMs2LibImporter.o : SpectraSTMs2LibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTXHunterLibImporter.o : SpectraSTXHunterLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTTsvLibImporter.o : SpectraSTTsvLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMzXMLLibImporter.o : SpectraSTMzXMLLibImporter.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTFastaFileHandler.o : SpectraSTFastaFileHandler.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSearchTask.o : SpectraSTSearchTask.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSearchTaskStats.o : SpectraSTSearchTaskStats.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMspSearchTask.o : SpectraSTMspSearchTask.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMzXMLSearchTask.o : SpectraSTMzXMLSearchTask.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTDtaSearchTask.o : SpectraSTDtaSearchTask.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTCandidate.o : SpectraSTCandidate.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTQuery.o : SpectraSTQuery.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTFileList.o : SpectraSTFileList.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSearch.o : SpectraSTSearch.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTReplicates.o : SpectraSTReplicates.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSearchOutput.o : SpectraSTSearchOutput.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTTxtSearchOutput.o : SpectraSTTxtSearchOutput.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTXlsSearchOutput.o : SpectraSTXlsSearchOutput.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTPepXMLSearchOutput.o : SpectraSTPepXMLSearchOutput.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTHtmlSearchOutput.o : SpectraSTHtmlSearchOutput.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTPeptideLibIndex.o : SpectraSTPeptideLibIndex.cpp ${SPECTRAST_HPP}
+${OBJDIR}/SpectraSTSimScores.o : SpectraSTSimScores.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTSearchParams.o : SpectraSTSearchParams.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTCreateParams.o : SpectraSTCreateParams.cpp  ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTLog.o : SpectraSTLog.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTDenoiser.o : SpectraSTDenoiser.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraSTMain.o : SpectraSTMain.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/FileUtils.o : FileUtils.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/Peptide.o : Peptide.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/XMLWalker.o : XMLWalker.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/Predicate.o : Predicate.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/ProgressCount.o : ProgressCount.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/plotspectrast.o : plotspectrast.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/plotspectrast_cgi.o : plotspectrast.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/Lib2HTML.o : Lib2HTML.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraST_base64.o : SpectraST_base64.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraST_ramp.o :  SpectraST_ramp.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraST_cramp.o : SpectraST_cramp.cpp ${SPECTRAST_HPP} 
+${OBJDIR}/SpectraST_util.o : SpectraST_util.cpp ${SPECTRAST_HPP} 
+

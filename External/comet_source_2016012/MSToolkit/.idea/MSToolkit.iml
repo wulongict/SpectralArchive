@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/infback.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/deflate.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/gzlib.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/gzread.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/crc32.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/inffast.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/adler32.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/uncompr.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/trees.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/zutil.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/gzwrite.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/inflate.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/gzclose.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/compress.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/zlib-1.2.8/inftrees.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/expat-2.2.0/xmltok.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/expat-2.2.0/xmlparse.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/expat-2.2.0/xmltok_ns.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/expat-2.2.0/xmlrole.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/expat-2.2.0/xmltok_impl.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/mzMLWriter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/MSReader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/RAWReader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/pepXMLWriter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/MSObject.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/MSToolkit/Spectrum.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mz5handler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/saxhandler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/PWIZface.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/saxmzmlhandler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mzpMz5Structs.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mzParser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mzMLReader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/Czran.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mzp_base64.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/BasicChromatogram.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/MSNumpress.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/saxmzxmlhandler.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/mzpMz5Config.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/BasicSpectrum.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/mzParser/RAMPface.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/sqlite-3.7.7.1/sqlite3.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/sqlite-3.7.7.1/sqlite3.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/mzMLWriter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/mzParser.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/amigaconfig.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/expat_external.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/winconfig.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/MSNumpress.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/iasciitab.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/zconf.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/Spectrum.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/MSToolkitTypes.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/inftrees.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/RAWReader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/gzguts.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/sqlite3.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/inffixed.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/macconfig.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/pepXMLWriter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/inffast.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/crc32.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/utf8tab.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/latin1tab.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/zlib.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/MSObject.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/MSReader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/nametab.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/zutil.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/deflate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/expat_config.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/xmltok.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/trees.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/xmlrole.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/internal.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/inflate.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/expat.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/asciitab.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/xmltok_impl.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/ascii.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

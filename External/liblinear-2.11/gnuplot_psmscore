@@ -1,0 +1,1 @@
+plot '/data/wulong/data/NIST/test.mgffrag_1.300000_sparse_len10.txt.psmscore' using 4:3

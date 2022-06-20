@@ -1,0 +1,9 @@
+# tell git what is the end of line symbol
+# from the following webpage.
+# https://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/
+# Start to use the .gitattribute file to specify file content later
+# the list of text file to be change
+*.h text
+*.cpp   text
+*.hpp   text
+

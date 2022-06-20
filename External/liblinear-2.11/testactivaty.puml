@@ -1,0 +1,22 @@
+@startuml
+
+(*)  --> "main"
+
+--> FILE * input , *output
+--> "do_predict"
+--> model , x,
+--> predict_probability
+--> probability esitmation
+If "input is verbose" then
+--> [Yes] "turn on verbosity"
+--> "run command"
+else
+--> "run command"
+Endif
+-->(*)
+
+main --> load_model
+load_model --> do_predict
+
+
+@enduml

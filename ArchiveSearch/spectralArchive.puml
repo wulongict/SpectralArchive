@@ -1,0 +1,36 @@
+@startuml
+
+
+
+class CSpectralArchive{
+- int m_dim
+- string m_mzXMLListFileName
+- string m_pepxmlFileName
+- string m_indexFileName
+- string m_specTableFileName
+
+- bool m_removeprecursor
+- bool m_useflankingbins
+- CFaissIndexWrapper m_wIndex
+- CDataBaseManager m_dbmanager
+- const int PeakNumPerSpec
+- CMzFileReader *m_csa
+- CUDAScore *m_GpuScorer
+
++ CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor, bool useflankingbins)
++ ~CSpectralArchive()
++ void update(string new_experimental_data, string new_search_result, string new_search_result_list)
++ void create(bool rebuild, string indexstr, bool usegpu)
++ void searchQuery(int query_index, string &jsonstring, int topN)
++ void searchPeptide(string peptide, vector<vector<string>> &results)
++ void setnProbe(int nprobe)
++ long total()
++ void getQuerySpec(long queryindex,vector<uint16_t> &queryspec)
++ CMzSpec getMzSpec(long queryindex)
+
+}
+
+
+
+
+@enduml

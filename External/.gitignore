@@ -1,0 +1,4 @@
+**/*.cbp
+*/*.cbp
+CMakeCache.txt
+*.cbp

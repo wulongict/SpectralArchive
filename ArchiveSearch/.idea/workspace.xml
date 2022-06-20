@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BuildServerSettings">
+    <option name="LOGIN" value="" />
+    <option name="SERVER_URL" value="http://buildserver" />
+    <option name="REMEMBER_ME" value="true" />
+    <option name="USE_IDEA_PROXY_SETTINGS" value="true" />
+    <option name="INSPECTIONS_BUILD_TYPE_IDS" />
+    <option name="DUPLICATES_BUILD_TYPE_IDS" />
+    <option name="COVERAGE_SETTINGS" />
+    <option name="TEST_STATUS_ENABLED" value="true" />
+    <option name="TEST_STATUS_SHOW_SUCCESSFUL" value="false" />
+    <option name="POSTPONE_SUITABLE_CONFIGURATIONS_SEARCH" value="false" />
+    <option name="ARTIFACTS_BUILD_TYPE_IDS" />
+    <option name="PERFORM_COMMIT_IF_SUCCESSFUL" value="true" />
+    <option name="PERFORM_COMMIT_IF_NO_NEW_FAILED_TESTS" value="false" />
+    <option name="REQUEST_CONFIRMATON" value="false" />
+    <option name="PRE_TESTED_COMMIT" value="true" />
+    <option name="FILTER_BY_STATUS" value="false" />
+    <option name="FILTER_MARKED_AS_FIXED" value="false" />
+    <option name="SHOW_CLOSE_PROMPT" value="true" />
+    <option name="TOOL_WINDOW_SELECTED_CONTENT_INDEX" value="0" />
+    <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="mzXMLReader" targetName="mzXMLReader" />
+      <config projectName="mzXMLReader" targetName="similarity_gpu" />
+      <config projectName="mzXMLReader" targetName="mzxmltomatrix" />
+      <config projectName="mzXMLReader" targetName="LibraryRetrieval" />
+      <config projectName="mzXMLReader" targetName="fastcgi_similarity_gpu.fcgi" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7e15bb1f-31f0-4fd5-b134-eec2ba33a6c8" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/markdown-navigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/markdown-navigator/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/010cf8fe-5c63-4cb5-aa94-0a93cfb6ab80.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/010cf8fe-5c63-4cb5-aa94-0a93cfb6ab80.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/70f35a61-b8af-41a5-965f-65da94a621dc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/70f35a61-b8af-41a5-965f-65da94a621dc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/9ec80efa-bfd9-471b-bd2e-7c688328938e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/9ec80efa-bfd9-471b-bd2e-7c688328938e.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/a34758bc-3299-4110-b4d2-2c65bd01974b.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/a34758bc-3299-4110-b4d2-2c65bd01974b.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/d0e35524-6dd6-4332-a9d3-fed714203c87.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/d0e35524-6dd6-4332-a9d3-fed714203c87.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/dataSources/e38c21fb-caf8-4391-bda7-d5b7198145d6.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/dataSources/e38c21fb-caf8-4391-bda7-d5b7198145d6.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../123456" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/LibraryRetrieval" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/LibraryRetrieval" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/fastcgi_similarity_gpu.fcgi" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/fastcgi_similarity_gpu.fcgi" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/library_retrieval.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/library_retrieval.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/my_model.gmm" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/my_model.gmm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/rungtest" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/rungtest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/similarity_gpu" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/similarity_gpu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/spectral_clustering.1.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/spectral_clustering.1.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/spectral_clustering.2.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/spectral_clustering.2.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/spectral_clustering.3.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/spectral_clustering.3.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/spectral_clustering.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/spectral_clustering.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/CMultiIndices.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/CMultiIndices.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/LibSearchEngine.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/LibSearchEngine.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/CMultiIndices.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/CMultiIndices.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/similarity_gpu.dir/CMultiIndices.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/similarity_gpu.dir/CMultiIndices.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/similarity_gpu.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/similarity_gpu.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/unit_tests/CMakeFiles/rungtest.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/unit_tests/CMakeFiles/rungtest.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/unit_tests/CMakeFiles/rungtest.dir/leetcodetest.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/unit_tests/CMakeFiles/rungtest.dir/leetcodetest.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../firstcmake/spectracompact.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../firstcmake/spectracompact.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/LibraryRetrieval.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/fastcgi_similarity_gpu.fcgi.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/ReadmzXML.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/ReadmzXML.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/mzXMLReader.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/mzxmltomatrix.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/mzxmltomatrix.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/mzxmltomatrix.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/mzxmltomatrix.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/similarity_gpu.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMultiIndices.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CMultiIndices.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMultiIndices.h" beforeDir="false" afterPath="$PROJECT_DIR$/CMultiIndices.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LibSearchEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/LibSearchEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mzXMLReader.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/mzXMLReader.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../unit_tests/leetcodetest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../unit_tests/leetcodetest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/.idea/lwbmatch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/.idea/lwbmatch.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/Dewarper.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/Dewarper.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/Release/libmsms.so" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/Release/libmsms.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/Release/mzXMLReader" beforeDir="false" afterPath="$PROJECT_DIR$/../../../rt-alignment/Release/mzXMLReader" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../rt-alignment/Release1/.resu" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/scripts.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/scripts.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/HUPO2016Package/PipelineConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/HUPO2016Package/PipelineConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/Workflow1.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/Workflow1.py" afterDir="false" />
+    </list>
+    <ignored path="mzXMLReader.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <ignored path="$PROJECT_DIR$/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/cmake-build-release/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="FavoritesManager">
+    <favorites_list name="mzXMLReader" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/LibSearchEngine.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="179" column="65" lean-forward="true" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
+              <folding>
+                <element signature="e#39#66#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>index</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/ReadmzXML.cpp" />
+        <option value="$PROJECT_DIR$/spectral_similarity_gpu.cpp" />
+        <option value="$PROJECT_DIR$/CIndexManager.cpp" />
+        <option value="$PROJECT_DIR$/LibSearchEngine.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="8" />
+    <option name="y" value="32" />
+    <option name="width" value="1920" />
+    <option name="height" value="1017" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="mzXMLReader" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mzXMLReader" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="recentsLimit" value="5" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Build All">
+    <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="mzXMLReader" CONFIG_NAME="Release" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="mzXMLReader" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="mzXMLReader">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LibraryRetrieval" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="LibraryRetrieval" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="LibraryRetrieval">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="mzXMLReader" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="fastcgi_similarity_gpu.fcgi" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="fastcgi_similarity_gpu.fcgi" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="fastcgi_similarity_gpu.fcgi">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="mzXMLReader" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="mzXMLReader" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="mzXMLReader">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="mzxmltomatrix" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="mzxmltomatrix" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="mzxmltomatrix">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="similarity_gpu" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mzXMLReader" TARGET_NAME="similarity_gpu" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="mzXMLReader" RUN_TARGET_NAME="similarity_gpu">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.fastcgi_similarity_gpu.fcgi" />
+      <item itemvalue="Application.LibraryRetrieval" />
+      <item itemvalue="Application.mzXMLReader" />
+      <item itemvalue="Application.mzxmltomatrix" />
+      <item itemvalue="Application.similarity_gpu" />
+      <item itemvalue="Application.Build All" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7e15bb1f-31f0-4fd5-b134-eec2ba33a6c8" name="Default" comment="" />
+      <created>1436512703134</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1436512703134</updated>
+      <workItem from="1547178977997" duration="1671000" />
+      <workItem from="1551161869731" duration="924000" />
+      <workItem from="1551162832072" duration="6000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2601000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="8" y="32" width="1920" height="1017" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16932908" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32925472" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="CMake" order="8" weight="0.3288889" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Messages" order="10" visible="true" weight="0.32814237" />
+      <window_info anchor="bottom" id="Database Changes" order="11" />
+      <window_info anchor="bottom" id="TeamCity" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="PlantUML" order="3" />
+      <window_info anchor="right" id="LuaJ" order="4" />
+      <window_info anchor="right" id="Database" order="5" />
+      <window_info anchor="right" id="Terminal" order="6" visible="true" weight="0.2971246" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/CIndexManager.h" />
+    <entry file="file://$PROJECT_DIR$/CIndexManager.cpp" />
+    <entry file="file://$PROJECT_DIR$/../librarymsms/CompactSpecMZ.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LibSearchEngine.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ReadmzXML.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="589" column="8" selection-start-line="589" selection-start-column="3" selection-end-line="589" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spectral_similarity_gpu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="79" column="19" selection-start-line="79" selection-start-column="19" selection-end-line="79" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../librarymsms/SWATHmzXMLReader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CQuery.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="75" column="30" selection-start-line="75" selection-start-column="30" selection-end-line="75" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LibSearchEngine.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="179" column="65" lean-forward="true" selection-start-line="179" selection-start-column="65" selection-end-line="179" selection-end-column="65" />
+          <folding>
+            <element signature="e#39#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

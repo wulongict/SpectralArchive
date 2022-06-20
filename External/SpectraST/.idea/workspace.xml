@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BuildServerSettings">
+    <option name="LOGIN" value="" />
+    <option name="SERVER_URL" value="http://buildserver" />
+    <option name="COMMIT_PATTERN" value="{message}" />
+    <option name="REMEMBER_ME" value="true" />
+    <option name="USE_IDEA_PROXY_SETTINGS" value="true" />
+    <option name="INSPECTIONS_BUILD_TYPE_IDS" />
+    <option name="DUPLICATES_BUILD_TYPE_IDS" />
+    <option name="ENABLE_SUITABLE_CONFIGURATION_CACHING" value="true" />
+    <option name="COVERAGE_SETTINGS" />
+    <option name="TEST_STATUS_ENABLED" value="true" />
+    <option name="TEST_STATUS_SHOW_SUCCESSFUL" value="false" />
+    <option name="POSTPONE_SUITABLE_CONFIGURATIONS_SEARCH" value="false" />
+    <option name="ARTIFACTS_BUILD_TYPE_IDS" />
+    <option name="PERFORM_COMMIT_IF_SUCCESSFUL" value="true" />
+    <option name="PERFORM_COMMIT_IF_NO_NEW_FAILED_TESTS" value="false" />
+    <option name="REQUEST_CONFIRMATON" value="false" />
+    <option name="PRE_TESTED_COMMIT" value="true" />
+    <option name="FILTER_BY_STATUS" value="false" />
+    <option name="FILTER_MARKED_AS_FIXED" value="false" />
+    <option name="TOOL_WINDOW_SELECTED_CONTENT_INDEX" value="0" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="Myspectrast" targetName="libspectrast" />
+      <config projectName="Myspectrast" targetName="spectrastlib_static" />
+      <config projectName="Myspectrast" targetName="plotspectrast" />
+      <config projectName="Myspectrast" targetName="spectrast" />
+      <config projectName="Myspectrast" targetName="spectrastlib" />
+      <config projectName="Myspectrast" targetName="Lib2HTML" />
+      <config projectName="Myspectrast" targetName="plotspectrast.cgi" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5d05a766-1993-4b34-b57c-03aab7db1fe2" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../ArchiveSearch/CSpectralArchive.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../ArchiveSearch/CSpectralArchive.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/Clustering.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/Clustering.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/Clustering.h" beforeDir="false" afterPath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/Clustering.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/pvalueEstimation/pvalueCalc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../ArchiveSearch/dependentlibs/pvalueEstimation/pvalueCalc.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ArchiveSearch/independent_code/unitTests.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../ArchiveSearch/independent_code/unitTests.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/CUDA_dp.nvvp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/IPV.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/IPVC13.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/RF.confusion" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/RF.importance" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/RF.importance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/RF.importance_sorted.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/UpdateLWBMatch.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/_swigfaiss.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/_swigfaiss_gpu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/configfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/exp_results" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/faiss_ivf256_pq16_gpu.index.json.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/gnuplot.gp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/gnuplotRank1.gp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/inputquery" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/libsearch.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/pParse.para" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/pParsePlusLog.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.confusion" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.importance" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.importance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.importance_sorted.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.prediction" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.prediction.roc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.prediction_scoreDist.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/psmvalidatorRFmodel.predictionroc_rf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/rank1_scores.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/removeNoise" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/run.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/run_experiment_similarity_gpu_index.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/run_psmvalidator.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/run_psmvalidator_full.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/similarityNetTool.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/start_honeybee_web.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/test.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/testSpectraST" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/test_feature_extract" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/test_score_cuda.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/testinput.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/update_clion_binaries.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/update_vs_binaries.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Myspectrast.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/Myspectrast.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../librarymsms/CAnnotationDB.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../librarymsms/CAnnotationDB.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../librarymsms/CAnnotationDB.h" beforeDir="false" afterPath="$PROJECT_DIR$/../librarymsms/CAnnotationDB.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../librarymsms/Util.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../librarymsms/Util.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spectrast5/SpectraSTPepXMLLibImporter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../spectrast5/SpectraSTPepXMLLibImporter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../spectrast5/SpectraSTPepXMLLibImporter.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../spectrast5/SpectraSTPepXMLLibImporter.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../lorikeet/run.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../../lorikeet/run.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../nowclean" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/scripts.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/scripts.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/19110942_1_test.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/19110942_1_test.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/19110942_2_test.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/19110942_2_test.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/HUPO2016Package/FastaReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/HUPO2016Package/FastaReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/HereDocument.bash" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/HereDocument.bash" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/PEP_FDR_diff.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/PEP_FDR_diff.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/buildtools.bash" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/buildtools.bash" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/dist_rational.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/dist_rational.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/heatmapcluster_master/heatmapcluster.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/heatmapcluster_master/heatmapcluster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/oldsrc/MGFReader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/oldsrc/MGFReader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/pcatest4.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/pcatest4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/pepxmlreader.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/pepxmlreader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/plot_heatmapcluster_for_jordy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/plot_heatmapcluster_for_jordy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/psm_validator/NIST" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/roc_auc.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/roc_auc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/split_decoy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/split_decoy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/table_with_header.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/table_with_header.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../scripts/test_alignment_idea.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../scripts/test_alignment_idea.ipynb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1ha7Jy5Tz6h02dwZL6xs2kAdZV3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="OCFindUsagesOptions.isSearchForTextOccurrences" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+  </component>
+  <component name="RunManager" selected="CMake Application.Build All">
+    <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="Lib2HTML" CONFIG_NAME="Release" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="Lib2HTML" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="Myspectrast" RUN_TARGET_NAME="Lib2HTML">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="Lib2HTML" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="plotspectrast" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="plotspectrast" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="Myspectrast" RUN_TARGET_NAME="plotspectrast">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="plotspectrast.cgi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="plotspectrast.cgi" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="Myspectrast" RUN_TARGET_NAME="plotspectrast.cgi">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spectrast" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="spectrast" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="Myspectrast" RUN_TARGET_NAME="spectrast">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spectrastlib" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="spectrastlib" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="spectrastlib_static" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Myspectrast" TARGET_NAME="spectrastlib_static" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.Build All" />
+      <item itemvalue="CMake Application.plotspectrast" />
+      <item itemvalue="CMake Application.plotspectrast.cgi" />
+      <item itemvalue="CMake Application.spectrast" />
+      <item itemvalue="CMake Application.spectrastlib" />
+      <item itemvalue="CMake Application.spectrastlib_static" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5d05a766-1993-4b34-b57c-03aab7db1fe2" name="Default" comment="" />
+      <created>1446982546278</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1446982546278</updated>
+      <workItem from="1481905186499" duration="179000" />
+      <workItem from="1600237282818" duration="501000" />
+      <workItem from="1600241371008" duration="38000" />
+      <workItem from="1600251282585" duration="3000" />
+      <workItem from="1600323072993" duration="8552000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="424" y="264" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600323250632">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="424" y="264" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1200@0.0.1920.1200" timestamp="1600323250632" />
+    <state x="748" y="364" key="FileChooserDialogImpl" timestamp="1600323260763">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="748" y="364" key="FileChooserDialogImpl/0.0.1920.1200@0.0.1920.1200" timestamp="1600323260763" />
+    <state x="476" y="241" key="SettingsEditor" timestamp="1600323268512">
+      <screen x="0" y="0" width="1920" height="1200" />
+    </state>
+    <state x="476" y="241" key="SettingsEditor/0.0.1920.1200@0.0.1920.1200" timestamp="1600323268512" />
+  </component>
+</project>

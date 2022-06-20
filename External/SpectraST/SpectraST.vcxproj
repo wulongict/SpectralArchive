@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Profile|Win32">
+      <Configuration>Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BB1C0DAF-678E-463C-B617-1948542F3419}</ProjectGuid>
+    <RootNamespace>spectrast</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="$(SolutionDir)tpp_common_release.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="$(SolutionDir)tpp_common_profile.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC60.props" />
+    <Import Project="$(SolutionDir)tpp_common_debug.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <TypeLibraryName>.\Debug/spectrast.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CONSOLE;WIN32;_DEBUG;_WIN32;TPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeaderOutputFile>.\Debug/spectrast.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>dbughelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)$(Configuration)/spectrast.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/spectrast.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\Debug/spectrast.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <TypeLibraryName>.\$(Configuration)/spectrast.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32;TPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\$(Configuration)/spectrast.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\$(Configuration)/</AssemblerListingLocation>
+      <ObjectFileName>.\$(Configuration)/</ObjectFileName>
+      <ProgramDataBaseFileName>.\$(Configuration)/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>Iphlpapi.lib;setargv.obj;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)$(Configuration)/spectrast.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\$(Configuration)/spectrast.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\$(Configuration)/spectrast.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
+    <Midl>
+      <TypeLibraryName>.\$(Configuration)/spectrast.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(SolutionDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32;TPPLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeaderOutputFile>.\$(Configuration)/spectrast.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\$(Configuration)/</AssemblerListingLocation>
+      <ObjectFileName>.\$(Configuration)/</ObjectFileName>
+      <ProgramDataBaseFileName>.\$(Configuration)/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>Iphlpapi.lib;setargv.obj;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)$(Configuration)/spectrast.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\$(Configuration)/spectrast.pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>.\$(Configuration)/spectrast.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="FileUtils.cpp" />
+    <ClCompile Include="Peptide.cpp" />
+    <ClCompile Include="Predicate.cpp" />
+    <ClCompile Include="ProgressCount.cpp" />
+    <ClCompile Include="SpectraSTCandidate.cpp" />
+    <ClCompile Include="SpectraSTCreateParams.cpp" />
+    <ClCompile Include="SpectraSTDtaSearchTask.cpp" />
+    <ClCompile Include="SpectraSTFastaFileHandler.cpp" />
+    <ClCompile Include="SpectraSTFileList.cpp" />
+    <ClCompile Include="SpectraSTHtmlSearchOutput.cpp" />
+    <ClCompile Include="SpectraSTLib.cpp" />
+    <ClCompile Include="SpectraSTLibEntry.cpp" />
+    <ClCompile Include="SpectraSTLibImporter.cpp" />
+    <ClCompile Include="SpectraSTLibIndex.cpp" />
+    <ClCompile Include="SpectraSTMain.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">CompileAsCpp</CompileAs>
+    </ClCompile>
+    <ClCompile Include="SpectraSTMgfSearchTask.cpp" />
+    <ClCompile Include="SpectraSTMs2LibImporter.cpp" />
+    <ClCompile Include="SpectraSTMspLibImporter.cpp" />
+    <ClCompile Include="SpectraSTMspSearchTask.cpp" />
+    <ClCompile Include="SpectraSTMzLibIndex.cpp" />
+    <ClCompile Include="SpectraSTMzXMLLibImporter.cpp" />
+    <ClCompile Include="SpectraSTMzXMLSearchTask.cpp" />
+    <ClCompile Include="SpectraSTPeakList.cpp" />
+    <ClCompile Include="SpectraSTPeptideLibIndex.cpp" />
+    <ClCompile Include="SpectraSTPepXMLLibImporter.cpp" />
+    <ClCompile Include="SpectraSTPepXMLSearchOutput.cpp" />
+    <ClCompile Include="SpectraSTQuery.cpp" />
+    <ClCompile Include="SpectraSTReplicates.cpp" />
+    <ClCompile Include="SpectraSTSearch.cpp" />
+    <ClCompile Include="SpectraSTSearchOutput.cpp" />
+    <ClCompile Include="SpectraSTSearchParams.cpp" />
+    <ClCompile Include="SpectraSTSearchTask.cpp" />
+    <ClCompile Include="SpectraSTSearchTaskStats.cpp" />
+    <ClCompile Include="SpectraSTSimScores.cpp" />
+    <ClCompile Include="SpectraSTSpLibImporter.cpp" />
+    <ClCompile Include="SpectraSTTsvLibImporter.cpp" />
+    <ClCompile Include="SpectraSTTxtSearchOutput.cpp" />
+    <ClCompile Include="SpectraSTXHunterLibImporter.cpp" />
+    <ClCompile Include="SpectraSTXlsSearchOutput.cpp" />
+    <ClCompile Include="SpectraST_kwset.cpp" />
+    <ClCompile Include="SpectraST_obstack.cpp" />
+    <ClCompile Include="XMLWalker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FileUtils.hpp" />
+    <ClInclude Include="Peptide.hpp" />
+    <ClInclude Include="Predicate.hpp" />
+    <ClInclude Include="ProgressCount.hpp" />
+    <ClInclude Include="SpectraST_base64.h" />
+    <ClInclude Include="SpectraST_constants.h" />
+    <ClInclude Include="SpectraST_cramp.hpp" />
+    <ClInclude Include="SpectraST_kwset.h" />
+    <ClInclude Include="SpectraST_obstack.h" />
+    <ClInclude Include="SpectraST_ramp.h" />
+    <ClInclude Include="SpectraSTCandidate.hpp" />
+    <ClInclude Include="SpectraSTConstants.hpp" />
+    <ClInclude Include="SpectraSTCreateParams.hpp" />
+    <ClInclude Include="SpectraSTDtaSearchTask.hpp" />
+    <ClInclude Include="SpectraSTFastaFileHandler.hpp" />
+    <ClInclude Include="SpectraSTFileList.hpp" />
+    <ClInclude Include="SpectraSTHtmlSearchOutput.hpp" />
+    <ClInclude Include="SpectraSTLib.hpp" />
+    <ClInclude Include="SpectraSTLibEntry.hpp" />
+    <ClInclude Include="SpectraSTLibImporter.hpp" />
+    <ClInclude Include="SpectraSTLibIndex.hpp" />
+    <ClInclude Include="SpectraSTMgfSearchTask.hpp" />
+    <ClInclude Include="SpectraSTMs2LibImporter.hpp" />
+    <ClInclude Include="SpectraSTMspLibImporter.hpp" />
+    <ClInclude Include="SpectraSTMspSearchTask.hpp" />
+    <ClInclude Include="SpectraSTMzLibIndex.hpp" />
+    <ClInclude Include="SpectraSTMzXMLLibImporter.hpp" />
+    <ClInclude Include="SpectraSTMzXMLSearchTask.hpp" />
+    <ClInclude Include="SpectraSTPeakList.hpp" />
+    <ClInclude Include="SpectraSTPeptideLibIndex.hpp" />
+    <ClInclude Include="SpectraSTPepXMLLibImporter.hpp" />
+    <ClInclude Include="SpectraSTPepXMLSearchOutput.hpp" />
+    <ClInclude Include="SpectraSTQuery.hpp" />
+    <ClInclude Include="SpectraSTReplicates.hpp" />
+    <ClInclude Include="SpectraSTSearch.hpp" />
+    <ClInclude Include="SpectraSTSearchOutput.hpp" />
+    <ClInclude Include="SpectraSTSearchParams.hpp" />
+    <ClInclude Include="SpectraSTSearchTask.hpp" />
+    <ClInclude Include="SpectraSTSearchTaskStats.hpp" />
+    <ClInclude Include="SpectraSTSimScores.hpp" />
+    <ClInclude Include="SpectraSTSpLibImporter.hpp" />
+    <ClInclude Include="SpectraSTTsvLibImporter.hpp" />
+    <ClInclude Include="SpectraSTTxtSearchOutput.hpp" />
+    <ClInclude Include="SpectraSTXHunterLibImporter.hpp" />
+    <ClInclude Include="SpectraSTXlsSearchOutput.hpp" />
+    <ClInclude Include="XMLWalker.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\tpplib\tpplib.vcxproj">
+      <Project>{e0aac1af-6a80-4446-935a-3b54797e720f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

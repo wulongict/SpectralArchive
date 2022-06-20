@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BuildServerSettings">
+    <option name="LOGIN" value="" />
+    <option name="SERVER_URL" value="http://buildserver" />
+    <option name="REMEMBER_ME" value="true" />
+    <option name="USE_IDEA_PROXY_SETTINGS" value="true" />
+    <option name="INSPECTIONS_BUILD_TYPE_IDS" />
+    <option name="DUPLICATES_BUILD_TYPE_IDS" />
+    <option name="COVERAGE_SETTINGS" />
+    <option name="TEST_STATUS_ENABLED" value="true" />
+    <option name="TEST_STATUS_SHOW_SUCCESSFUL" value="false" />
+    <option name="POSTPONE_SUITABLE_CONFIGURATIONS_SEARCH" value="false" />
+    <option name="ARTIFACTS_BUILD_TYPE_IDS" />
+    <option name="PERFORM_COMMIT_IF_SUCCESSFUL" value="true" />
+    <option name="PERFORM_COMMIT_IF_NO_NEW_FAILED_TESTS" value="false" />
+    <option name="REQUEST_CONFIRMATON" value="false" />
+    <option name="PRE_TESTED_COMMIT" value="true" />
+    <option name="FILTER_BY_STATUS" value="false" />
+    <option name="FILTER_MARKED_AS_FIXED" value="false" />
+    <option name="SHOW_CLOSE_PROMPT" value="true" />
+    <option name="TOOL_WINDOW_SELECTED_CONTENT_INDEX" value="0" />
+    <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
+    <generated>
+      <config projectName="comet_source_2016012" targetName="mstoolkit" />
+      <config projectName="comet_source_2016012" targetName="comet" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="34450391-cdc1-45ef-a07b-ec5ee313c963" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/LibraryRetrieval" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/LibraryRetrieval" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Release/library_retrieval.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Release/library_retrieval.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/Comet.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/Comet.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometInterfaces.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometInterfaces.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometMassSpecUtils.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometMassSpecUtils.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometPostAnalysis.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometPostAnalysis.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometPreprocess.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometPreprocess.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometSearch.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometSearch.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometSearchManager.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometSearchManager.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteOut.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteOut.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWritePepXML.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWritePepXML.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWritePercolator.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWritePercolator.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteSqt.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteSqt.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteTxt.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/CometWriteTxt.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/Threading.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/CometSearch/Threading.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/MSObject.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/MSObject.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/MSReader.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/MSReader.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/RAWReader.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/RAWReader.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/Spectrum.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/Spectrum.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/mzMLWriter.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/mzMLWriter.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/pepXMLWriter.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/MSToolkit/pepXMLWriter.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmlrole.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmlrole.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok_impl.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok_impl.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok_ns.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/expat-2.2.0/xmltok_ns.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/BasicChromatogram.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/BasicChromatogram.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/BasicSpectrum.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/BasicSpectrum.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/Czran.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/Czran.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/MSNumpress.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/MSNumpress.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/PWIZface.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/PWIZface.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/RAMPface.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/RAMPface.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mz5handler.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mz5handler.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzMLReader.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzMLReader.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzParser.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzParser.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzpMz5Config.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzpMz5Config.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzpMz5Structs.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzpMz5Structs.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzp_base64.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/mzp_base64.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxhandler.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxhandler.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxmzmlhandler.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxmzmlhandler.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxmzxmlhandler.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/mzParser/saxmzxmlhandler.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/sqlite-3.7.7.1/sqlite3.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/sqlite-3.7.7.1/sqlite3.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/adler32.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/adler32.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/compress.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/compress.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/crc32.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/crc32.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/deflate.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/deflate.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzclose.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzclose.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzlib.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzlib.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzread.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzread.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzwrite.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/gzwrite.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/infback.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/infback.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inffast.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inffast.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inflate.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inflate.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inftrees.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/inftrees.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/trees.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/trees.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/uncompr.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/uncompr.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/zutil.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/MSToolkit/src/zlib-1.2.8/zutil.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/comet_source_2016012.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/comet_source_2016012.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/comet_source_2016012/comet_source_2016012.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/LibSearchEngine.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../cmake-build-release/mzXMLReader/CMakeFiles/LibraryRetrieval.dir/LibSearchEngine.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/comet_source_2016012.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/comet_source_2016012.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Progress/1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/Progress/count.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/comet_source_2016012.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/feature_tests.bin" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/CometPreprocess.o" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/CometPreprocess.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/CometWritePepXML.o" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/CometWritePepXML.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/CometWritePercolator.o" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/CometWritePercolator.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/CometWriteSqt.o" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/CometWriteSqt.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/Makefile_backup" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CometSearch/libcometsearch.a" beforeDir="false" afterPath="$PROJECT_DIR$/CometSearch/libcometsearch.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MSToolkit/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/MSObject.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/MSReader.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/MSReaderLite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/MSToolkit/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/Spectrum.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/adler32.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/compress.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/crc32.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/deflate.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/infback.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/inffast.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/inflate.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/inftrees.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/libmstoolkit.a" beforeDir="false" afterPath="$PROJECT_DIR$/MSToolkit/libmstoolkit.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/libmstoolkitlite.a" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzMLWriter.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.BasicChromatogram.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.BasicChromatogram_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.BasicSpectrum.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.BasicSpectrum_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.Czran.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.Czran_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.MSNumpress.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.PWIZface.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.PWIZface_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.RAMPface.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.RAMPface_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mz5handler.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mz5handler_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzParser.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzParser_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzpMz5Config.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzpMz5Config_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzpMz5Structs.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzpMz5Structs_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzp_base64.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.mzp_base64_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxhandler.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxhandler_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxmzmlhandler.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxmzmlhandler_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxmzxmlhandler.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/mzp.saxmzxmlhandler_lite.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/trees.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/uncompr.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/xmlparse.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/xmlrole.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/xmltok.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MSToolkit/zutil.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mzXMLReader/LibSearchEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../mzXMLReader/LibSearchEngine.cpp" afterDir="false" />
+    </list>
+    <ignored path="comet_source_2016012.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <ignored path="$PROJECT_DIR$/CMakeFiles/" />
+    <ignored path="$PROJECT_DIR$/cmake-build-release/" />
+    <ignored path="$PROJECT_DIR$/MSToolkit/CMakeFiles/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
+  <component name="FUSProjectUsageTrigger">
+    <session id="1645155713">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="Makefile" value="7" />
+          <entry key="Makefile_backup" value="1" />
+          <entry key="README" value="1" />
+          <entry key="backmakefile" value="2" />
+          <entry key="c" value="1" />
+          <entry key="h" value="4" />
+          <entry key="txt" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CMakeLists.txt" value="6" />
+          <entry key="ObjectiveC" value="5" />
+          <entry key="PLAIN_TEXT" value="11" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="txt" value="775" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="CMakeLists.txt" value="775" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="comet_source_2016012" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CometSearch/CometPreprocess.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="7722">
+              <caret line="429" column="25" selection-start-line="429" selection-start-column="12" selection-end-line="429" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Makefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSToolkit/include/expat_config.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSToolkit/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-595">
+              <caret line="3" column="26" lean-forward="true" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CometSearch/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="5" column="164" lean-forward="true" selection-start-line="5" selection-start-column="164" selection-end-line="5" selection-end-column="164" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/backmakefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="54">
+              <caret line="3" column="162" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="162" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSToolkit/src/expat-2.2.0/xmlparse.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="576">
+              <caret line="32" column="12" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+              <folding>
+                <element signature="e#123#142#0" expanded="true" />
+                <element signature="e#297#331#0" expanded="true" />
+                <element signature="e#338#398#0" expanded="true" />
+                <element signature="e#560#582#0" expanded="true" />
+                <element signature="e#612#634#0" expanded="true" />
+                <element signature="e#662#686#0" expanded="true" />
+                <element signature="e#714#739#0" expanded="true" />
+                <element signature="e#884#1292#0" expanded="true" />
+                <element signature="e#1876#2033#0" expanded="true" />
+                <element signature="e#2485#2506#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSToolkit/include/expat.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+              <folding>
+                <element signature="e#185#637#0" expanded="true" />
+                <element signature="e#646#665#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSToolkit/include/mzParser.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1134">
+              <caret line="63" column="15" selection-start-line="63" selection-start-column="15" selection-end-line="63" selection-end-column="15" />
+              <folding>
+                <element signature="e#756#773#0" expanded="true" />
+                <element signature="e#945#981#0" expanded="true" />
+                <element signature="e#1027#1046#0" expanded="true" />
+                <element signature="e#1684#1935#0" expanded="true" />
+                <element signature="e#1975#2159#0" expanded="true" />
+                <element signature="e#2207#2552#0" expanded="true" />
+                <element signature="e#2572#2648#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>expat</find>
+      <find>MZ</find>
+      <find>MZ5</find>
+      <find>lite</find>
+      <find>include</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/MSToolkit/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/CometSearch/CMakeLists.txt" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="8" />
+    <option name="y" value="31" />
+    <option name="width" value="1916" />
+    <option name="height" value="1017" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="comet_source_2016012" type="b2602c69:ProjectViewProjectNode" />
+              <item name="comet_source_2016012" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="comet_source_2016012" type="b2602c69:ProjectViewProjectNode" />
+              <item name="comet_source_2016012" type="462c0819:PsiDirectoryNode" />
+              <item name="CometSearch" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SearchEverywhereHistoryKey" value="pfFa&#9;null&#9;null&#10;fXcorr&#9;null&#9;null&#10;xcorr&#9;null&#9;null&#10;szPeptide&#9;null&#9;null&#10;MAX_PEP&#9;null&#9;null" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.comet">
+    <configuration default="true" type="tests" factoryName="Attests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="comet_source_2016012" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="comet_source_2016012" TARGET_NAME="comet_source_2016012" CONFIG_NAME="Release" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="comet_source_2016012" RUN_TARGET_NAME="comet_source_2016012" EXPLICIT_BUILD_TARGET_NAME="all">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="comet_source_2016012" TARGET_NAME="comet_source_2016012" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="comet" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="comet_source_2016012" TARGET_NAME="comet" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="comet_source_2016012" RUN_TARGET_NAME="comet">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="comet_source_2016012" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://./" PASS_PARENT_ENVS_2="true" PROJECT_NAME="comet_source_2016012" TARGET_NAME="comet_source_2016012" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="comet_source_2016012" RUN_TARGET_NAME="comet_source_2016012">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="mstoolkit" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="comet_source_2016012" TARGET_NAME="mstoolkit" CONFIG_NAME="Release">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.comet_source_2016012" />
+      <item itemvalue="Application.Build All" />
+      <item itemvalue="Application.comet" />
+      <item itemvalue="Application.mstoolkit" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="34450391-cdc1-45ef-a07b-ec5ee313c963" name="Default" comment="" />
+      <created>1477897877187</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1477897877187</updated>
+      <workItem from="1477897878552" duration="3904000" />
+      <workItem from="1477911828230" duration="725000" />
+      <workItem from="1478081867957" duration="2959000" />
+      <workItem from="1535689830295" duration="8053000" />
+      <workItem from="1535728088432" duration="2955000" />
+      <workItem from="1535731077568" duration="117000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="18713000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="8" y="31" width="1916" height="1017" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1398079" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.61383927" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="CMake" order="7" weight="0.32739422" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="TeamCity" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32293987" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info active="true" anchor="bottom" id="Messages" order="12" visible="true" weight="0.32739422" />
+      <window_info anchor="bottom" id="Database Changes" order="13" show_stripe_button="false" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="LuaJ" order="3" />
+      <window_info anchor="right" id="PlantUML" order="4" />
+      <window_info anchor="right" id="Database" order="5" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/MSToolkit/include/RAWReader.h</url>
+          <line>19</line>
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Comet.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="20" selection-start-line="21" selection-start-column="20" selection-end-line="21" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/pepXMLWriter.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2430" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/nametab.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/Common.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/Spectrum.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2248" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/expat-2.2.0/xmltok.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/MSObject.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/MSReader.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/mzMLWriter.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/Spectrum.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/pepXMLWriter.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/mzParser/BasicChromatogram.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/MSToolkit/RAWReader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6480">
+          <caret line="360" selection-start-line="360" selection-end-line="360" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/CometDataInternal.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12618">
+          <caret line="701" column="41" selection-start-line="701" selection-start-column="30" selection-end-line="701" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/CometPostAnalysis.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6696">
+          <caret line="372" column="1" selection-start-line="372" selection-start-column="1" selection-end-line="372" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/CometSearch.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29088">
+          <caret line="1616" column="57" selection-start-line="1616" selection-start-column="57" selection-end-line="1616" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/RAWReader.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/trees.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1656">
+          <caret line="92" column="23" selection-start-line="92" selection-start-column="23" selection-end-line="92" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/Makefile_backup">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1243">
+          <caret line="29" column="16" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/README">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/Makefile_backup">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="131" selection-start-line="17" selection-start-column="131" selection-end-line="17" selection-end-column="131" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/CometPreprocess.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7722">
+          <caret line="429" column="25" selection-start-line="429" selection-start-column="12" selection-end-line="429" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/expat_config.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backmakefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="162" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="162" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/src/expat-2.2.0/xmlparse.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="12" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+          <folding>
+            <element signature="e#123#142#0" expanded="true" />
+            <element signature="e#297#331#0" expanded="true" />
+            <element signature="e#338#398#0" expanded="true" />
+            <element signature="e#560#582#0" expanded="true" />
+            <element signature="e#612#634#0" expanded="true" />
+            <element signature="e#662#686#0" expanded="true" />
+            <element signature="e#714#739#0" expanded="true" />
+            <element signature="e#884#1292#0" expanded="true" />
+            <element signature="e#1876#2033#0" expanded="true" />
+            <element signature="e#2485#2506#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/expat.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+          <folding>
+            <element signature="e#185#637#0" expanded="true" />
+            <element signature="e#646#665#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/include/mzParser.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1134">
+          <caret line="63" column="15" selection-start-line="63" selection-start-column="15" selection-end-line="63" selection-end-column="15" />
+          <folding>
+            <element signature="e#756#773#0" expanded="true" />
+            <element signature="e#945#981#0" expanded="true" />
+            <element signature="e#1027#1046#0" expanded="true" />
+            <element signature="e#1684#1935#0" expanded="true" />
+            <element signature="e#1975#2159#0" expanded="true" />
+            <element signature="e#2207#2552#0" expanded="true" />
+            <element signature="e#2572#2648#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSToolkit/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-595">
+          <caret line="3" column="26" lean-forward="true" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CometSearch/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="164" lean-forward="true" selection-start-line="5" selection-start-column="164" selection-end-line="5" selection-end-column="164" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
