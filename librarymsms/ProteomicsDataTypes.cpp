@@ -120,10 +120,10 @@ float *vpl_to_normalized_vec(vector<PeakList *> &vpl, int dim, bool useFlankingB
         throw runtime_error("out of memory!");
     }
     try {
-        Progress ps(vpl.size(), "Vectorize");
+        //Progress ps(vpl.size(), "Vectorize");
         // Attention: bug on overflow of index. i.
         for (long long i = 0; i < vpl.size(); i++) {
-            ps.increase();
+            //ps.increase();
             if (vpl[i] == nullptr) {
                 for (int k = 0; k < dim; k++) {
                     results[k + i * dim] = 0;
@@ -402,7 +402,7 @@ float *DataFile::toFloatVector(int dim, long &specnum, bool removeprecursor, boo
     if(end_spec_id<start_spec_id)    {
         end_spec_id = getSpectrumNum();
     }
-    cout << "Mz file contains peaks with lossy compression..." << endl;
+    //cout << "Mz file contains peaks with lossy compression..." << endl;
     int msLevel = 2;
     vector<PeakList *> vpl = toPeakList(tolerance, msLevel, removeprecursor, start_spec_id, end_spec_id);
     specnum = vpl.size();
@@ -1297,10 +1297,10 @@ vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, b
         end_spec_id = getSpectrumNum();
     }
 
-    Progress ps(end_spec_id-start_spec_id, "PeakList");
+    //Progress ps(end_spec_id-start_spec_id, "PeakList");
     vector<PeakList *> vpl;
     for (long i = start_spec_id; i < end_spec_id; i++) {
-        ps.increase();
+        //ps.increase();
         CSpectrum *spec = getSpectrum(i);
         if (spec == nullptr or spec->getMSLevel() != msLevel) {
             continue;
