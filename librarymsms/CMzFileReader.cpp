@@ -84,10 +84,10 @@ void CMzFileReader::toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool r
 	int ms2count = 0;
 
 	vector<vector<uint16_t >> batchMS(ms2specnum, vector<uint16_t>(PeakNum));
-	Progress ps(totalspecnum, "Generating mz format");
+	//Progress ps(totalspecnum, "Generating mz format");
 
 	for (int spec_id_k = 0; spec_id_k < totalspecnum; spec_id_k++) {
-		ps.increase();
+		//ps.increase();
 		CSpectrum *spec = df.getSpectrum(spec_id_k);
 
 		if(nullptr!=sf and sf->skip(spec)){

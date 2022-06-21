@@ -369,7 +369,7 @@ DataFile::DataFile(const string& filename, int start, int end) {
 }
 
 DataFile::~DataFile() {
-    cout << "Releasing spectrum " << m_Spectra.size() << endl;
+    //cout << "Releasing spectrum " << m_Spectra.size() << endl;
     for (auto x: m_Spectra) {
             delete x;
     }

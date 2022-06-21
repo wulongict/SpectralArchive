@@ -132,7 +132,7 @@ specfileinfo CAnnotationDB::addToGtTable(DataFile &df, ICGtInfoUpdate *updater) 
     shared_ptr<CBatchSQL> batchSQL = buildBatchSQL(1000, false);
     Progress ps(df.getSpectrumNum(), "add raw data spectrum to groundtruth table ");
     for (int j = 0; j < df.getSpectrumNum(); j++) {
-        cout << "source file " << df.getSourceFileName() << endl;
+        //cout << "source file " << df.getSourceFileName() << endl;
         ps.increase();
         CSpectrum *spec = df.getSpectrum(j);
         if (spec->getMSLevel() != 2) {
