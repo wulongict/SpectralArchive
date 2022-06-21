@@ -1,4 +1,4 @@
 cmake-build-release
 tmp
 build
-
+faiss-1.7.1/faiss_tmp*
