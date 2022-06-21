@@ -353,7 +353,7 @@ DataFile::DataFile(const string& filename, int start, int end) {
 
     // todo: we forget to release the pointer!
     if (fp) {
-        cout << "[Info] loading file: " << filename << endl;
+        //cout << "[Info] loading file: " << filename << endl;
 //        cout << "start loading " << start << " to " << end<< endl;
          fp->load(filename, m_Spectra,start,end);
         m_sourcefile = filename;
@@ -1042,9 +1042,9 @@ void mzXMLParser::load(string filename, vector<CSpectrum *> &spec) {
         exit(0);
     }
     int emptySpecNum = 0;
-    Progress ps(cramp->getLastScan(), filename);
+    //Progress ps(cramp->getLastScan(), filename);
     for (int k = 1; k <= cramp->getLastScan(); k++) {
-        ps.increase();
+        //ps.increase();
         rampScanInfo *scanInfo = cramp->getScanHeaderInfo(k);
         CSpectrum *p = new CSpectrum();
 
@@ -1087,7 +1087,7 @@ mzXMLParser::mzXMLParser() : ICFileParser() {}
 mzXMLParser::~mzXMLParser() = default;
 
 void mzXMLParser::load(string filename, vector<CSpectrum *> &spec, int start, int end) {
-    cout << "Warning: mzXML Reader do not support selecting spectra range, will implement later." << endl;
+    //cout << "Warning: mzXML Reader do not support selecting spectra range, will implement later." << endl;
 //    cout << "Warning: do not used this function!!! to be implemented" << endl;
     load(filename,spec);
 }
