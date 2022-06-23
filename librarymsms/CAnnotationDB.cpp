@@ -609,7 +609,7 @@ void CAnnotationDB::addColumnNeighborIfNotExist(bool verbosity) {
     m_dbmanager->getRow(dbEntry, sql, verbosity);
 //    dbEntry.print();
     if (dbEntry.empty()) {
-        cout << "to add one more column NEIGHBOR to our table " << sql << endl;
+        // cout << "to add one more column NEIGHBOR to our table " << sql << endl;
         //ALTER TABLE table_name
         //  ADD new_column_name column_definition;
         sql = R"(ALTER TABLE GROUNDTRUTH ADD NEIGHBOR VARCHAR)";
@@ -911,7 +911,9 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
     m_annotationdb->getSpecFileRows(rawfilename, results);
 
     if (results.empty() or results.size() > 1) {
-        cout << "[Error] File not found, or more than one file found, FileNum= " << results.size() << endl;
+        cout << "No raw file found." << endl;
+    } else if (results.size() > 1) {
+        cout << results.size() <<" raw files found."<< endl;
     } else {
         specfileinfo sfinfo(results[0]);
         int batchSize = 10000;

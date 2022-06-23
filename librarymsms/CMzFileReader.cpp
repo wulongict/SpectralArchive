@@ -16,7 +16,7 @@
 CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                              double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName) {
     m_mzFileName = mzFileName; // to be used.
-
+    m_mzs = nullptr;
     m_minPeakNum = minPeakNum;
     m_localMaxHalfWidth = localMaxHalfWidth;
     m_PeakNumPerSpectrum = 50;
@@ -28,6 +28,7 @@ CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist,
 
 CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
                              double localMaxHalfWidth, int minPeakNum, bool verbose) {
+                                m_mzs = nullptr;
 
     m_norm2_ptr=nullptr;
     m_minPeakNum = minPeakNum;
@@ -56,7 +57,7 @@ CMzFileReader::~CMzFileReader() {
 void CMzFileReader::init(bool redo, bool is_file_list, bool rmParentIon) {
     //cout << "Starting loading mzfile " << endl;
 //    spdlog::get("A")->info("loading file ...");
-    if (not File::isExist(getMzFilename()) or redo) {
+    if (not File::isExist(getMzFilename(),true) or redo) {
         vector<string> filelist;
         if (is_file_list) {
             string mzXMLList = getListFile();
@@ -172,16 +173,20 @@ void CMzFileReader::loadMzFile(bool verbose) {
     string mzfile = getMzFilename();
     long filebytes = 0;
     File::getfilesize(mzfile, filebytes);
+    // cout << "mz file and filebytes: " << mzfile << " " << filebytes << endl; 
     long peaknum = filebytes / 2;
     m_specnum = peaknum / m_PeakNumPerSpectrum;
 
-    if(verbose)cout << "filebytes: " << filebytes << " peaknum " << peaknum << " specnum " << m_specnum << endl;
+    // if(verbose)
+    // cout << "filebytes: " << filebytes << " peaknum " << peaknum << " specnum " << m_specnum << endl;
     if(m_mzs != nullptr) {
         // the mz file object is not empty.
-        delete [] m_mzs;
+        // cout << "will release the pointer first!" << " " << m_mzs << " pointer" << endl;
+        delete[] m_mzs;
         m_mzs = nullptr;
     }
     m_mzs = new uint16_t[peaknum];
+    // cout << "creating a pointer for spectra num: " << m_specnum << endl;
     ifstream fin(mzfile.c_str(), ios::in | ios::binary);
     fin.read((char *) m_mzs, filebytes);
     fin.close();
@@ -199,6 +204,11 @@ void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
 //    m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
     // write the  whole file
     m_scanInfo.exportToCombinedFile();
+    // you have to close the file before you open it.
+    fout.close();
+    
+
+    cout << "Start to reload" << endl;
 
 
     // update the object.
@@ -614,7 +624,7 @@ void CScanInfo::loadCombinedFile() {
 }
 
 bool CScanInfo::initWithCombinedFile() {
-    if(File::isExist(getCombinedScanFilename()))    {
+    if(File::isExist(getCombinedScanFilename(),true))    {
         string combined_filename = getCombinedScanFilename();
         long filesize;
         File::getfilesize(combined_filename, filesize);

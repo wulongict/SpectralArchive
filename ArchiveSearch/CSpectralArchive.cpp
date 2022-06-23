@@ -1200,7 +1200,7 @@ string CSpectralArchive::getPlatform() {
 }
 
 void CSpectralArchive::addpepxmlfile(string pepxmllist, string new_gt_file) {
-    if (not File::isExist(pepxmllist)) {
+    if (not File::isExist(pepxmllist,true)) {
 //        cout << "pepxmllist file not found: " << pepxmllist << endl;
 //        cout << "[Error] pepxml file does not exist! Doing Nothing!!! Function to be removed " << __LINE__ << __FILE__ << __FUNCTION__ << endl;
         return;

@@ -209,7 +209,7 @@ bool MultipleIndicesImpl::ifAllFileExist() {
 }
 
 bool MultipleIndicesImpl::ifFileExist(int i) {
-    return File::isExist(getIndexFileName(i));
+    return File::isExist(getIndexFileName(i),true);
 }
 
 long MultipleIndicesImpl::ntotal(int i) {
