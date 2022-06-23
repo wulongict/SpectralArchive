@@ -44,7 +44,7 @@ From the source code folder, run the following scripts.
 ## Usage
 ### Build archive
 #### Add MS data files
-First create a text file, mzxmllist, which contains a list of mzXML files to initialize a spectral archive. The raw files corresponding to the mzXML files above can be downloaded from pride archive [PXD000561](http://ftp.ebi.ac.uk/pride-archive/2014/04/PXD000561/).
+First create a text file, mzxmllist, which contains a list of mzXML files to initialize a spectral archive. The raw files corresponding to the mzXML files below can be downloaded from pride archive [PXD000561](http://ftp.ebi.ac.uk/pride-archive/2014/04/PXD000561/).
 ```bash
 $ cat mzxmllist
 Adult_Adrenalgland_Gel_Elite_49_f01.mzXML
@@ -99,7 +99,7 @@ Currently, it supports the following input formats of MS data file.
 
 ### Search archive
 #### Search a given mzXML file
-Run the following command to search a data file. 
+Run the following command to search a data file. Before searching against an archvie, make sure the spectra are annotated by search results under FDR control, e.g. annotated by pepXML files of iProphet/PeptidePropeht. 
 
 ```bash
 SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist --inputsource cmd --datafile <input>.mzXML
@@ -107,4 +107,11 @@ SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist --inputsource cm
 
 
 
+## Issues
+- When running archive tool, I got an error said "libdpgpu.so: cannot open shared object file: No such file or directory"?  
+    If the binary of archive tool is called /path/to/archive/bin, then try add the library path, /path/to/archive/lib to LD_LIBRARY_PATH variable.
+    One can check the RUNPATH of a binary or library file with following command: 
+    ```bash
+    objdump -x /path/to/the/binary-or-library-file | grep RUNPATH
+    ```
 
