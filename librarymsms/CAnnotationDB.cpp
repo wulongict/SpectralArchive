@@ -130,10 +130,10 @@ specfileinfo CAnnotationDB::addToGtTable(DataFile &df, ICGtInfoUpdate *updater) 
     int ms2counts= 0;
     specfileinfo sfinfo = getLastSpecFile();
     shared_ptr<CBatchSQL> batchSQL = buildBatchSQL(1000, false);
-    Progress ps(df.getSpectrumNum(), "add raw data spectrum to groundtruth table ");
+    //Progress ps(df.getSpectrumNum(), "add raw data spectrum to groundtruth table ");
     for (int j = 0; j < df.getSpectrumNum(); j++) {
         //cout << "source file " << df.getSourceFileName() << endl;
-        ps.increase();
+        //ps.increase();
         CSpectrum *spec = df.getSpectrum(j);
         if (spec->getMSLevel() != 2) {
             continue;
@@ -760,13 +760,13 @@ void CAnnotationDB::appendRawDataList(const string &m_mzXMLListFileName) {// IT 
         cerr << "the filename for list of mzxml is empty" << endl;
         throw runtime_error("empty mzxml list file name");
     }
-    cout << "add raw data to sql db : " << m_mzXMLListFileName << endl;
+    //cout << "add raw data to sql db : " << m_mzXMLListFileName << endl;
     CTable mzXMLTable(m_mzXMLListFileName, '\t', false, 0);
-    Progress ps(mzXMLTable.m_row, "Add raw data files");
+    //Progress ps(mzXMLTable.m_row, "Add raw data files");
     int skipped_file_num = 0;
     for (int i = 0; i < mzXMLTable.m_row; i++) {
         string specfile = mzXMLTable.getEntry(i, 0);
-        ps.increase();
+        //ps.increase();
         if(isSpecFileExist(specfile)){
             skipped_file_num ++;
 //            spdlog::get("A")->info("Processing file {} / {} : {} already exist, skip it",
