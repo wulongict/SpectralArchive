@@ -362,7 +362,7 @@ void CAnnotationDB::add(specfileinfo &sfinfo) {
     } else {
         // If we skip this file, we should not add the corresponding peaks/annotations also.
         // TODO: conflicts caused by duplicate file in database: Sep 2020
-        cout << "File already exist!  skip step" << endl;
+        cout << "File already exist in sqlite3 database!  skip step" << endl;
         spdlog::get("A")->error("duplicate file detected! {}", sfinfo.filename);
     }
 

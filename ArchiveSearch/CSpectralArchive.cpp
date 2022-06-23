@@ -183,15 +183,26 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
                                    bool usegpu,
                                    bool rebuildsqldb, int seedpvalue, const int topPeakNum,
                                    bool createfilenameBlackList,
-                                   bool saveBackgroundScore, bool verbose) : PeakNumPerSpec(
+                                   bool saveBackgroundScore, bool verbose, string archivename) : PeakNumPerSpec(
         topPeakNum) {
+    // checking the parameters.
+    if(mzXMLList.empty()){
+        cerr << "The archive file name is not provided. use --mzxmlfiles or -m to specify the file contains a list of ms/ms data files. (or use the config file to provide the archive filename.)" << endl;
+        throw runtime_error("empty archive name. ");
+    }
     m_verbose = verbose;
     cout << "Start to create archive object" << endl;
-    cout << "three steps" << endl << "1. create sql database " << endl << "2. create mz file " << endl
-         << "3. create index " << endl;
+    cout << "three steps" << endl 
+    << "1. create sql database " << endl 
+    << "2. create mz file " << endl 
+    << "3. create index " << endl;
     m_AnnotationDB = make_shared<CAnnotationDB>(createfilenameBlackList);
     m_usegpu = usegpu;
     m_mzXMLListFileName = mzXMLList;
+    if (archivename.empty()){
+        // empty archive name, then use the mzXMListFileName.
+        archivename = m_mzXMLListFileName;
+    }
     m_tol = tol;
     m_removeprecursor = removeprecursor;
     m_useflankingbins = useflankingbins;
@@ -200,11 +211,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     m_minPeakNum = minPeakNum;
     m_dim = 4096;
 
-    // checking the parameters.
-    if(m_mzXMLListFileName.empty()){
-        cerr << "the archive file name is not provided. use -m to specify the file contains a list of ms/ms data files. (or use the config file to provide the archive filename.)" << endl;
-        throw runtime_error("empty archive name. ");
-    }
+
 
     // todo: the mzXML/mzML raw files has been read for 3 times. DB, MZ, Index, why not just do it once? Jul 2021.
     cout << "[info] 1/3 Creating SQL Database " << endl;
@@ -364,18 +371,20 @@ void CSpectralArchive::addRawData(string mzXMLfile) {
     }
 
     if (m_AnnotationDB->isSpecFileExist(mzXMLfile)) {
-        cout << "File already exist, will not add again: " << mzXMLfile << endl;
+        cout << "File already exist in sqlite3 database, will not add again: " << mzXMLfile << endl;
     } else {
         DataFile df(mzXMLfile, 0, -1);
         m_AnnotationDB->appendNewDataFile(df);
         m_csa->append(df, m_removeprecursor, nullptr);
         m_indices->append(df);
         m_indices->write();
-        appendFileName(mzXMLfile);
+        // the mzXML file will not be updated.
+        //appendFileName(mzXMLfile);
     }
 }
 
 void CSpectralArchive::appendFileName(const string &mzXMLfile) {
+    // append the new mzXMLfile into the exist file list.
     vector<string> datafiles = readlines(m_mzXMLListFileName);
 
     auto it = find(datafiles.begin(), datafiles.end(), mzXMLfile);

@@ -99,7 +99,7 @@ void CFaissIndexWrapper::toCPU() {
 }
 
 void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
-    cout << "Creating empty index ..." << endl;
+    //cout << "Creating empty index ..." << endl;
     setPtr(faiss::index_factory(dim, indexstr.c_str()));
 }
 

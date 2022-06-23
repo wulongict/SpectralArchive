@@ -111,7 +111,7 @@ float *get_float_vector(BinningPeakList *bpl, int nLen, bool beverbose) {
 
 float *vpl_to_normalized_vec(vector<PeakList *> &vpl, int dim, bool useFlankingBins,const int topPeakNum) {
     long long num_spectra_current_batch = vpl.size();
-    spdlog::get("A")->info("Number of spectra loaded: {}", num_spectra_current_batch);
+    // spdlog::get("A")->info("Number of spectra loaded: {}", num_spectra_current_batch);
 
     float *results = new float[num_spectra_current_batch * dim];
 
@@ -360,7 +360,7 @@ DataFile::DataFile(const string& filename, int start, int end) {
     } else {
         cout << "[Error] File format error! ext = " << ext << endl;
     }
-    printSummary();
+    //printSummary();
     for(int i = 0; i < getSpectrumNum(); i ++){
 
         int scan = getSpectrum(i)->getScanNum();

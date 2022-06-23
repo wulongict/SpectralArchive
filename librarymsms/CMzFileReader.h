@@ -88,6 +88,7 @@ class CScanInfo {
     long m_lastResIdxOffset ;
     vector<CScanFile> m_readers;  // corresponding to more thatn one scan file
     string m_mzXMLListfile;
+    string m_scanfilename;
 public:
     CScanInfo();
     CScanFile & getScanFileReader(int fileid);
@@ -102,7 +103,7 @@ public:
     void clear();
 private:
     void loadFiles(const vector<string>& files);
-    void setCombinedFilename(string mzxmlfiles);
+    // void setCombinedFilename(string mzxmlfiles);
     string getCombinedScanFilename(){return m_mzXMLListfile + ".scan";}
     void loadCombinedFile();
     bool isEmpty();
@@ -124,10 +125,11 @@ class CMzFileReader: public ICMzFile {
     double m_localMaxHalfWidth;
     int m_minPeakNum;
     shared_ptr<vector<float>> m_norm2_ptr;
+    string m_mzFileName;
 
 public:
     CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
-                  double localMaxHalfWidth, int minPeakNum, bool verbose);
+                  double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName="");
 	CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
                   double localMaxHalfWidth, int minPeakNum, bool verbose);
 	// make shared

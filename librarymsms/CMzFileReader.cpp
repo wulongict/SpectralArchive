@@ -14,7 +14,8 @@
 
 
 CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
-                             double localMaxHalfWidth, int minPeakNum, bool verbose) {
+                             double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName) {
+    m_mzFileName = mzFileName; // to be used.
 
     m_minPeakNum = minPeakNum;
     m_localMaxHalfWidth = localMaxHalfWidth;
@@ -65,7 +66,7 @@ void CMzFileReader::init(bool redo, bool is_file_list, bool rmParentIon) {
         }
         createWithList(rmParentIon, filelist);
     }
-
+// reload the mz file again.
     loadScanMzToMemory(is_file_list, false);
     initPeakNum(false);
     spdlog::get("A")->info("mz/scan file is created!\n");
@@ -175,6 +176,11 @@ void CMzFileReader::loadMzFile(bool verbose) {
     m_specnum = peaknum / m_PeakNumPerSpectrum;
 
     if(verbose)cout << "filebytes: " << filebytes << " peaknum " << peaknum << " specnum " << m_specnum << endl;
+    if(m_mzs != nullptr) {
+        // the mz file object is not empty.
+        delete [] m_mzs;
+        m_mzs = nullptr;
+    }
     m_mzs = new uint16_t[peaknum];
     ifstream fin(mzfile.c_str(), ios::in | ios::binary);
     fin.read((char *) m_mzs, filebytes);
@@ -193,6 +199,13 @@ void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
 //    m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
     // write the  whole file
     m_scanInfo.exportToCombinedFile();
+
+
+    // update the object.
+    m_scanInfo.clear();
+    loadScanMzToMemory(true, false);
+    initPeakNum(false);
+    spdlog::get("A")->info("mz/scan object is refreshed!\n");
 
 }
 
@@ -419,7 +432,7 @@ void CScanFile::write_specinfo(ofstream &fout) {
 void CScanFile::write_specinfo() {
     ofstream scanout(m_scanFilename, ios::out);
     write_specinfo(scanout);
-    cout << "spec info saved as : " << m_scanFilename << endl;
+    spdlog::get("A")->info("scan file saved as {}\n", m_scanFilename);
 }
 
 bool CScanFile::isCreated() {
@@ -641,15 +654,16 @@ bool CScanInfo::initWithCombinedFile() {
     }
 }
 
-void CScanInfo::setCombinedFilename(string mzxmlfiles) {
-    m_mzXMLListfile = std::move(mzxmlfiles);
-}
+// void CScanInfo::setCombinedFilename(string mzxmlfiles) {
+//     m_mzXMLListfile = std::move(mzxmlfiles);
+// }
 
 void CScanInfo::load(string m_mzxml_filelist, bool isList, bool verbose) {
     if(verbose)cout << "loading meta info for mz files : isList: " << isList << endl;
     if(isList)    {
         if(verbose)cout << "loading list of mzXML files" << m_mzxml_filelist << endl;
-        setCombinedFilename(m_mzxml_filelist);
+        m_mzXMLListfile = m_mzxml_filelist;
+        
         loadCombinedFile();
 
     } else {

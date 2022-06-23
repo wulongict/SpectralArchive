@@ -140,7 +140,7 @@ public:
     CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor, bool useflankingbins,
                      int tol, int minPeakNum, bool myOwnIndex, CPQParam option, string indexstrings, bool usegpu,
                      bool rebuildsqldb, int seedpvalue, const int topPeakNum, bool createfilenameBlackList,
-                     bool saveBackgroundScore, bool verbose);
+                     bool saveBackgroundScore, bool verbose, string archivename="");
 
     ~CSpectralArchive();
 

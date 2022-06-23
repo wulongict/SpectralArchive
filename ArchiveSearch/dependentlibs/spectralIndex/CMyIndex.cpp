@@ -63,7 +63,7 @@ bool CMyIndex::empty() { return nullptr == cpq; }
 bool CMyIndex::istrained() { return cpq->isTrained(); }
 
 void CMyIndex::createEmptyIndex(int dim, string indexstr) {
-    cout << "Creating Empty Index " << indexstr << endl;
+    //cout << "Creating Empty Index " << indexstr << endl;
     int found = indexstr.find(",");
     if (found != string::npos) {
         string ivf = indexstr.substr(0, found), pqn = indexstr.substr(found + 1);

@@ -21,6 +21,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "the config file")
             ("help,h", po::bool_switch()->default_value(false), "print help information");
     configs_infile.add_options()
+            ("archivename,n", po::value<string>()->default_value(""),
+                    "the name of the spectral archive")
             ("mzxmlfiles,m", po::value<string>()->default_value(""),
              "the text file containing all the mzXML files")
             ("pepxmls,p", po::value<string>()->default_value(""),
@@ -173,6 +175,7 @@ int main(int argc, char *argv[]) {
         auto vm = getParam(argc, argv);
         string indexfilename = vm.at("indexfile").as<string>();
         string mzXMLList = vm.at("mzxmlfiles").as<string>();
+        string archivename = vm.at("archivename").as<string>();
         string pepxmls = vm.at("pepxmls").as<string>();
         bool rebuild = vm.at("rebuild").as<bool>();
         bool verbose = vm.at("verbose").as<bool>();
@@ -223,13 +226,13 @@ int main(int argc, char *argv[]) {
 
         CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
                                  minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
-                                 createFileNameBlackList, saveBackgroundScore, verbose);
+                                 createFileNameBlackList, saveBackgroundScore, verbose, archivename);
         // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
         archive.setnProbe(numprobe);
 
         if (update_index) {
             archive.update(new_experimental_data, new_search_result, new_search_result_list, new_experimental_datalist);
-            spdlog::get("A")->info("Index updating finished!");
+            spdlog::get("A")->info("Index updated!");
         } else {
             if (inputsource == "socket") {
                 //nginx
@@ -281,7 +284,8 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-        spdlog::get("A")->info("done");
+        
+        spdlog::get("A")->info("Spectral archive is refreshed! Size {}", archive.size());
         return 0;
     }
     catch (const exception &ex) {

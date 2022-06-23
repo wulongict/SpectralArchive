@@ -121,7 +121,7 @@ void MultipleIndicesImpl::shuffleVectors(int i, int numVec, float *p) {
 }
 
 void MultipleIndicesImpl::createEmptyIndices(vector<string> &indexstrs, int dim) {
-    cout << "getNUM " << getNum() << endl;
+    //cout << "getNUM " << getNum() << endl;
     for (int i = 0; i < getNum(); i++) {
         createEmptyIndex(i, indexstrs[i], dim);
     }
@@ -156,12 +156,12 @@ void MultipleIndicesImpl::display(int i) {
 }
 
 void MultipleIndicesImpl::display() {
-    cout << "--------Multi-Indices Info-----begin----" << endl;
+    // cout << "--------Multi-Indices Info-----begin----" << endl;
     for (int i = 0; i < getNum(); i++) {
         display(i);
         spdlog::get("A")->info("index: d = {}, is_trained = {}, ntotal ={}", getDim(i), istrained(i), ntotal(i));
     }
-    cout << "--------Multi-Indices Info----end-----" << endl;
+    // cout << "--------Multi-Indices Info----end-----" << endl;
 }
 
 bool MultipleIndicesImpl::istrained(int i) {
@@ -312,14 +312,16 @@ float * CMultiIndices::collectTrainingSpectra(const vector<string> &files, long 
     for (int i = 0; i < file_idx.size(); i++) {
         long count = 0;
         string filename = files[file_idx[i]];
-        cout << endl << "Processing file: " << i << " / " << file_idx.size() <<" : " <<  filename << endl;
+        // cout << endl << "Processing file: " << i << " / " << file_idx.size() <<" : " <<  filename << endl;
         DataFile df(filename,0,-1);
         float *p = df.toFloatVector(m_dim, count, m_removeprecursor, m_useFlankingBins, m_tolerance, 0, -1,
                                     m_topPeakNum);
         long newSpecNum = total + count <= SPECNUM ? count : SPECNUM - total;
         copy(p, p + m_dim * newSpecNum, vec + m_dim * total);
         total += newSpecNum;
-        cout << "[Training Set] Size " << total << "\t target: " << SPECNUM << endl;
+        // cout << "[Training Set] " << total << " / " << SPECNUM << endl;
+        spdlog::get("A")->info("Processing file {} / {} : {} : training set size {} / {}, new spectra {}",i, file_idx.size(), filename, total, SPECNUM, newSpecNum);
+        
         delete[] p;
         if (total == SPECNUM) {
             break;
@@ -336,11 +338,11 @@ void CMultiIndices::trainOnSingle(int dim, long &specnum, DataFile &splib, bool 
 }
 
 void CMultiIndices::train(int dim, long &specnum, float *vec) {
-    cout << "Start Training" << endl;
+    //cout << "Start Training" << endl;
     m_impl.createEmptyIndices(m_multiIndicesStr, dim);
     m_impl.train(specnum, dim, vec);
     m_impl.write();
-    cout << "End of training" << endl;
+    //cout << "End of training" << endl;
 }
 
 void CMultiIndices::toGpu() {
@@ -586,7 +588,7 @@ void CMultiIndices::append(DataFile &df) {
     for (long i = 0; i < df.getSpectrumNum(); i += batchsize) {
         long newspecnum = 0;
         long start_spec_id = i, end_spec_id = i + batchsize > df.getSpectrumNum() ? df.getSpectrumNum() : i + batchsize;
-        cout << "Processing MS2 spectra from " << start_spec_id << " to " << end_spec_id << endl;
+        cout << "Processing MS2 spectra from scan range:  " << start_spec_id << " - " << end_spec_id << endl;
         float *vec = df.toFloatVector(m_dim, newspecnum, m_removeprecursor, m_useFlankingBins, m_tolerance, start_spec_id,
                                       end_spec_id);
         m_impl.add(vec, newspecnum);
