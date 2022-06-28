@@ -27,8 +27,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "the text file containing all the mzXML files")
             ("pepxmls,p", po::value<string>()->default_value(""),
              "the text file containing all the pepxml files by X!Tandem or Comet")
-            ("indexfile,i", po::value<string>()->default_value("./"),
-             "if index does not exist, create index file using [mzxmlfiles], otherwise, load and use it directly ")
+            ("indexfile,i", po::value<string>()->default_value(""),
+             "[DEPRECATED] if index does not exist, create index file using [mzxmlfiles], otherwise, load and use it directly ")
             ("rebuild,r", po::bool_switch()->default_value(false),
              "build indexfile again! Ignore and overwrite the existing index file!")
              ("verbose,v", po::bool_switch()->default_value(false),

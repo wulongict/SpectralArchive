@@ -693,6 +693,7 @@ void CAnnotationDB::setDB(const string& filename) {
 
 void CAnnotationDB::getSpecFileRows(const string &raw_file_name, vector<vector<string>> &results) {
     string name_only = File::CFile(raw_file_name).basename;
+    // todo: add protection here.
     string sql = "select * from SPECFILES where FILENAME like \"%" + name_only + "%\";";
     cout << "[Info] Processing file name: " << name_only << endl;
     m_dbmanager->getMultipleRows(results, sql, false);
@@ -975,6 +976,7 @@ CGtUpdater::~CGtUpdater() {
             s.insert(psm.getEntry(i, psm.getColByHeader("filename")));
         }
         for (const auto & it : s) {
+            //TODO: the following position to be changed.
             string filename_prefix = "/nasbackup/wulong_backup/pxd000561/";
             string rawfilename = filename_prefix + File::CFile(it).filename;
             cout << "[Info] processing file " << rawfilename << endl;

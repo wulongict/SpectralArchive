@@ -119,7 +119,8 @@ void CFastCGIServer::startFastCGIServer() {
 
             if (uristr.find("/id/") != string::npos) {
                 // Long: update html_template_str every time... [to be optimized in the future]
-                string htmlfile = "/data/wulong/bitbucket/lorikeet/faiss_ivf256_pq16_gpu.index.json.html";
+
+                string htmlfile = "faiss_ivf256_pq16_gpu.index.json.html";
                 string html_template_str = readlinesfromfile(htmlfile);
                 this->getPageWithId(uristr, html_template_str);
             } else if (uristr.find("/identification") != string::npos) {

@@ -207,7 +207,14 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     m_removeprecursor = removeprecursor;
     m_useflankingbins = useflankingbins;
     m_pepxmlFileName = pepxml;
-    m_indexFileName = indexfile;
+    
+    // fixed index path issue. using the same path as archive settings.
+    if(indexfile.empty()){
+        m_indexFileName = File::CFile(m_mzXMLListFileName).path + "/";
+    } else{
+        m_indexFileName = indexfile;
+    }
+    
     m_minPeakNum = minPeakNum;
     m_dim = 4096;
 
@@ -1257,6 +1264,14 @@ void CSpectralArchive::getRawSpec(long queryindex, vector<double> &mz, vector<do
     int scan_num = gtinfo.ms2_scan;
     string filename = m_AnnotationDB->getSpecFileNameByID(gtinfo.fileid);
     cout << "got filename and scan num  " << filename << " at " << scan_num << endl;
+    // if file does not exist, append the prefix path of m_mzXMLFilename
+    if(not File::isExist(filename, true)){
+        // try add prefix.
+        filename = File::CFile(m_mzXMLListFileName).path + "/" + filename;
+        cout << "filename is fixed: " << filename <<endl;
+    }
+    
+    // if file does not exist, append the prefix path of m_mzXMLFilename
     bool status = getPeakList(filename, scan_num, mz, intensity);
     cout << "got the real peaks, with status " << status << endl;
 }

@@ -551,7 +551,7 @@ namespace File{
     bool isExist(const string &curOutputfile, bool beQuiet=false);
     struct CFile{
             string m_fullpathname;
-        string path;
+        string path; // path do not contain "/".
         string filename;
         string ext;
         string basename;

@@ -924,6 +924,10 @@ string make_timestring() {
 
 string readlinesfromfile(const string& filename) {
     std::ifstream t(filename);
+    if(not t.good()){
+        // file not exist!
+        throw runtime_error("Fail to open file: " + filename);
+    }
     std::string str;
 
     t.seekg(0, std::ios::end);
