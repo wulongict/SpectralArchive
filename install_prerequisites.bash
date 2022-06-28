@@ -19,7 +19,7 @@ else
 fi
 
 # part two install other packages.
-sudo apt-get install sqlite3 libsqlite3-dev libcgicc-dev liblog4cpp5-dev libboost-all-dev libfcgi-dev spawn-fcgi nginx curl log4cpp gnuplot gnuplot-qt  
+sudo apt-get install sqlite3 libsqlite3-dev libcgicc-dev liblog4cpp5-dev libboost-all-dev libfcgi-dev spawn-fcgi nginx curl  gnuplot gnuplot-qt  
 
 # part three: install faiss
 sudo apt-get install python3.8-dev swig python-numpy python-all-dev python3-all-dev liblapack-dev
