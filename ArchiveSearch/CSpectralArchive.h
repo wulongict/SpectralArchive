@@ -124,6 +124,7 @@ private:
     string m_indexFileName;
     bool m_removeprecursor;
     bool m_useflankingbins;
+    bool m_savebackgroundscore;
     shared_ptr<CAnnotationDB> m_AnnotationDB; // SQL db
     const int PeakNumPerSpec;
     shared_ptr<CPValueCalculator> m_pc; // pvalue

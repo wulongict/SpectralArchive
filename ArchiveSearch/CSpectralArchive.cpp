@@ -185,6 +185,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
                                    bool createfilenameBlackList,
                                    bool saveBackgroundScore, bool verbose, string archivename) : PeakNumPerSpec(
         topPeakNum) {
+            m_savebackgroundscore = saveBackgroundScore;
     // checking the parameters.
     if(mzXMLList.empty()){
         cerr << "The archive file name is not provided. use --mzxmlfiles or -m to specify the file contains a list of ms/ms data files. (or use the config file to provide the archive filename.)" << endl;
@@ -498,9 +499,11 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
     // MZ file peaklist, 50 number per spec
     do_pairwise_distance(calcEdge, query_index, annVec, annResults); // real distance between query and topN
 
-    // save the pairwise scores of close neighbors.
+    
+    if(m_savebackgroundscore){
+// save the pairwise scores of close neighbors.
     string dpscore_neighbor_file = "dpscore_neighbor_query_" + to_string(query_index) + ".txt";
-    ofstream fout (dpscore_neighbor_file.c_str(), ios::out);
+     ofstream fout (dpscore_neighbor_file.c_str(), ios::out);
     fout << "From\tTo\tDist\tDP" << endl;
     for (auto each : annVec){
         for(int i = 0; i < each->m_anns.size(); i ++)  {
@@ -510,6 +513,8 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
             << "\t" << each->m_anns[i].dotprod  << endl;
         }
      }
+    }
+   
 
     st.restart("pvlaue");
     bool do_pvalue_on_all = false;  // all: all the spectra in archive. NOT 10,000 background spectra
