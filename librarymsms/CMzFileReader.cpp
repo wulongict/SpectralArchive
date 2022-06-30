@@ -157,6 +157,8 @@ long CMzFileReader::getSpecNum() { return m_specnum; }
 
 // control all of the scan file put them into one single file.
 void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
+      //CScanInfo
+
     if(verbose) cout << "start loading scan mz to memory" << endl;
     loadMzFile(false);
 
@@ -545,12 +547,13 @@ void CScanInfo::exportToCombinedFile() {
     long lastResidx = -1;
 
     for (auto &eachFile: m_readers) {
-        cout << "processing " << eachFile.getFileName() << endl;
+        // cout << "processing " << eachFile.getFileName() << endl;
         lastResidx += eachFile.getScanNum();
         fout << lastResidx << "\t" << eachFile.getFileName() << endl;
         eachFile.write_specinfo(fout);
     }
-    cout << "scan file saved as: " << getCombinedScanFilename() << endl;
+    // cout << "scan file saved as: " << getCombinedScanFilename() << endl;
+    // todo: No need to keep these scan files...
 }
 
 void CScanInfo::appendSpecInfo(int _peaknum, float rt, float mz, int charge, int scan, int ms2count) {

@@ -121,7 +121,7 @@ class CMzFileReader: public ICMzFile {
     int m_PeakNumPerSpectrum;
     string m_mzxml_filelist;
     vector<int> m_peaknum;
-    CScanInfo m_scanInfo;
+    CScanInfo m_scanInfo; // the only place where CScanInfo is used.
     double m_localMaxHalfWidth;
     int m_minPeakNum;
     shared_ptr<vector<float>> m_norm2_ptr;
@@ -131,7 +131,8 @@ public:
     CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                   double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName="");
 	CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
-                  double localMaxHalfWidth, int minPeakNum, bool verbose);
+                  double localMaxHalfWidth, int minPeakNum, bool verbose);            //CScanInfo
+
 	// make shared
 	static shared_ptr<CMzFileReader> makeShared(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                                                 double localMaxHalfWidth, int minPeakNum, bool verbose){
@@ -146,8 +147,10 @@ public:
 	// functions to be removed!!
 	string getListFile();
     string getMzFilename();
-    void append(DataFile &df, bool rmParentIon, SpectraFilter *sf);
-    MzSpecInfo & getSpecMetaInfo(long queryidx, string &filename);
+
+    
+    void append(DataFile &df, bool rmParentIon, SpectraFilter *sf);  // CScanInfo
+    MzSpecInfo & getSpecMetaInfo(long queryidx, string &filename);   //CScanInfo
 
     long getSpecNum() override;
     string getClassName() override;
@@ -161,10 +164,16 @@ public:
 
 
 private:
-    void toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool rmParentIon, SpectraFilter *sf, bool verbose);
+    void toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool rmParentIon, 
+    SpectraFilter *sf, bool verbose);                  //CScanInfo
+
     void initPeakNum(bool verbose);
-    void loadScanMzToMemory(bool isList, bool verbose);
-    void createWithList(bool rmParentIon, const vector<string> &filelist);
+    
+    //CScanInfo
+    void loadScanMzToMemory(bool isList, bool verbose);                     //CScanInfo
+
+    
+    void createWithList(bool rmParentIon, const vector<string> &filelist);     //CScanInfo
     void init(bool redo, bool is_file_list, bool rmParentIon);
     int getPeakNumPerSpec() const override;
     void loadMzFile(bool verbose);
