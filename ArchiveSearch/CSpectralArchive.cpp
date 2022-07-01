@@ -262,6 +262,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     m_AnnotationDB->fixAllChargeState();
 }
 
+// function not used!
 void CSpectralArchive::createMzFileObject() {
     m_csa = CMzFileReader::makeShared(m_mzXMLListFileName, false, true, m_removeprecursor, intTol2double(m_tol),
                                        m_minPeakNum, false);
@@ -295,6 +296,11 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     addListOfRawData(new_experimental_datalist);
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
+    // only save index once in the end. 
+    // todo: the improve here is very small: 1%. may change it back to save in every addRawData call...
+    m_indices->write();  // as there is only one file, we could write here.
+    cout << "INDEX saved " << endl;
+    
 }
 
 // update list of spectra
@@ -310,9 +316,16 @@ void CSpectralArchive::updateListOfSpectra(string spectraList) {
 void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist) {
     if (new_experimental_datalist != "") {
         vector<string> files = readlines(new_experimental_datalist);
+        // Time estimation
+        SimpleTimer st;
         for (int i = 0; i < files.size(); i++) {
             cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
             addRawData(files[i]);
+            double time_elapsed = st.secondsElapsed();
+            double speed = time_elapsed/(i+1);
+            double time_to_be_used = (files.size()-1-i)*speed;
+
+            spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
         }
     }
 }
@@ -370,6 +383,10 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
     doAddSearchResult(pepxmlfile);
 }
 
+// update a single raw file
+// check if the mzXMLfile already exist in archive.
+// if not, add it to DB, MZ, and INDEX.
+// Attention: index is not saved. 
 void CSpectralArchive::addRawData(string mzXMLfile) {
     if (mzXMLfile.empty()) {
         cout << "Raw data file is not provided! The following files will not be updated: \n"
@@ -385,12 +402,13 @@ void CSpectralArchive::addRawData(string mzXMLfile) {
         m_AnnotationDB->appendNewDataFile(df);
         m_csa->append(df, m_removeprecursor, nullptr);
         m_indices->append(df);
-        m_indices->write();
+        // m_indices->write();  // as there is only one file, we could write here.
         // the mzXML file will not be updated.
-        //appendFileName(mzXMLfile);
+        // appendFileName(mzXMLfile);
     }
 }
 
+// this function should not be used.
 void CSpectralArchive::appendFileName(const string &mzXMLfile) {
     // append the new mzXMLfile into the exist file list.
     vector<string> datafiles = readlines(m_mzXMLListFileName);
@@ -426,9 +444,9 @@ void CSpectralArchive::addListOfSearchResults(string pepxmlfilelist) {
     }
     CTable pepxmllist(pepxmlfilelist, '\t', false, 0);
 
-    Progress ps(pepxmllist.m_row, "Updating ground truth");
+    // Progress ps(pepxmllist.m_row, "Updating ground truth");
     for (int i = 0; i < pepxmllist.m_row; i++) {
-        ps.increase();
+        // ps.increase();
         string currentfile = pepxmllist.getEntry(i, 0);
         cout << "\nUpdating GROUNDTRUTH table: " << i + 1 << " / " << pepxmllist.m_row << "  " << endl;
         doAddSearchResult(currentfile);

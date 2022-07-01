@@ -255,7 +255,8 @@ void MultipleIndicesImpl::getANNByShuffleQueries(int numQuery, int ret_num, cons
 
 CMultiIndices::CMultiIndices(string indexstring, string indexpath, string libname, bool doShuffle,
                              double tolerance, bool useMyOwn, shared_ptr<CPQParam> cpqParam, const int topPeakNum,
-                             bool removePrecursor, bool useFlankingBins, int dim) {
+                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(100000) {
+   
     m_topPeakNum = topPeakNum;
     option = cpqParam;
     m_tolerance = tolerance;
@@ -299,7 +300,7 @@ void CMultiIndices::trainOnFileList(string datafilelist) {
 }
 
 float * CMultiIndices::collectTrainingSpectra(const vector<string> &files, long & total) const {
-    long  SPECNUM = 100000;
+    
     total= 0;
     float * vec= new float[SPECNUM * m_dim];
     vector<int> file_idx(files.size(), 0);
@@ -337,11 +338,12 @@ void CMultiIndices::trainOnSingle(int dim, long &specnum, DataFile &splib, bool 
     delete[] vec;
 }
 
+// index saved after train
 void CMultiIndices::train(int dim, long &specnum, float *vec) {
     //cout << "Start Training" << endl;
     m_impl.createEmptyIndices(m_multiIndicesStr, dim);
     m_impl.train(specnum, dim, vec);
-    m_impl.write();
+    m_impl.write(); // save index after train
     //cout << "End of training" << endl;
 }
 
@@ -588,7 +590,7 @@ void CMultiIndices::append(DataFile &df) {
     for (long i = 0; i < df.getSpectrumNum(); i += batchsize) {
         long newspecnum = 0;
         long start_spec_id = i, end_spec_id = i + batchsize > df.getSpectrumNum() ? df.getSpectrumNum() : i + batchsize;
-        cout << "Processing MS2 spectra from scan range:  " << start_spec_id << " - " << end_spec_id << endl;
+        cout << "Scan:  " << start_spec_id << " - " << end_spec_id << endl;
         float *vec = df.toFloatVector(m_dim, newspecnum, m_removeprecursor, m_useFlankingBins, m_tolerance, start_spec_id,
                                       end_spec_id);
         m_impl.add(vec, newspecnum);
@@ -600,6 +602,7 @@ int CMultiIndices::getNum() { return m_indexNum; }
 
 CMultiIndices::~CMultiIndices() {}
 
+// append init files
 void CMultiIndices::appendList(string datafilelist) {
     vector<string> files = readlines(datafilelist);
     for (int i = 0; i < files.size(); i++) {
@@ -609,7 +612,7 @@ void CMultiIndices::appendList(string datafilelist) {
         append(df);
         m_impl.display();
     }
-    m_impl.write();
+    m_impl.write(); // append init files
 
 }
 

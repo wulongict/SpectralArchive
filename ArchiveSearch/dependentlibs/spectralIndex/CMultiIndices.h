@@ -97,6 +97,7 @@ class CMultiIndices {
 	int m_indexNum;
 	int m_topPeakNum;
 	int m_dim;
+	const long SPECNUM;
 public:
 	bool m_debug;
 

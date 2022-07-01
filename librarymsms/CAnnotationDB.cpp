@@ -86,12 +86,15 @@ specfileinfo::specfileinfo(string f, long s, long e, int id) {
 
 
 void specfileinfo::display() const {
-    cout << "== spectra file information == start ==" << endl;
-    cout << "fileid: " << fileid << endl
-         << "filename: " << filename << endl
-         << "start: " << start << endl
-         << "end: " << end << endl;
-    cout << "== spectra file information == end ==" << endl;
+    cout <<"fileid\tstart\tend\tfilename" << endl;
+    cout << fileid << "\t" << start << "\t" << end << "\t" << filename << endl; 
+    // printf("fileid\tstart\tend\tfilename\n%d\t%d\t%d\t")
+    // cout << "== spectra file information == start ==" << endl;
+    // cout << "fileid: " << fileid << endl
+    //      << "filename: " << filename << endl
+    //      << "start: " << start << endl
+    //      << "end: " << end << endl;
+    // cout << "== spectra file information == end ==" << endl;
 }
 
 specfileinfo::specfileinfo(vector<string> &result) {
@@ -695,7 +698,7 @@ void CAnnotationDB::getSpecFileRows(const string &raw_file_name, vector<vector<s
     string name_only = File::CFile(raw_file_name).basename;
     // todo: add protection here.
     string sql = "select * from SPECFILES where FILENAME like \"%" + name_only + "%\";";
-    cout << "[Info] Processing file name: " << name_only << endl;
+    
     m_dbmanager->getMultipleRows(results, sql, false);
 }
 
@@ -921,17 +924,17 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
         shared_ptr<CBatchSQL> batchSql = m_annotationdb->buildBatchSQL(batchSize, false);
 
         int nan_counts = 0;
-        Progress ps(sfinfo.end - sfinfo.start, string("Updating ground truth table with ") + m_gtfile);
+      //  Progress ps(sfinfo.end - sfinfo.start, string("Updating ground truth table with ") + m_gtfile);
         for (long i = sfinfo.start; i < sfinfo.end; i++) {
-            ps.increase();
+          //  ps.increase();
             string update_sql = createUpdateSqlOfRow(i, gt);
             if (update_sql.empty()) {
                 nan_counts++;
                 continue;
             }
             batchSql->append(update_sql);
-        }
-        cout << "MS2 updated: " << sfinfo.end - sfinfo.start - nan_counts << " / " << sfinfo.end - sfinfo.start << " ~ "
+        }cout << "[Info] Annotating PSMs in " << rawfilename ;
+        cout << ", annotation updated: " << sfinfo.end - sfinfo.start - nan_counts << " / " << sfinfo.end - sfinfo.start << " ~ "
              << setprecision(4) << 100 - nan_counts * 100.0 / (sfinfo.end - sfinfo.start) << "%" << endl;
     }
 

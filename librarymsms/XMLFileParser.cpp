@@ -820,7 +820,7 @@ PeptideProphetParser::PeptideProphetParser(string &filename) {
 }
 
 PeptideProphetParser::~PeptideProphetParser() {
-    cout << "[Info] calling " << __FUNCTION__  << endl;
+    // cout << "[Info] calling " << __FUNCTION__  << endl;
     delete[] m_buf;
 }
 
@@ -844,9 +844,9 @@ void PeptideProphetParser::export_psm_info(vector<PSMInfo> &psm) {
         }
         vector<xml_node<> *> spectrum_queries = find_all_siblings("spectrum_query", m_currentNode);
 
-        Progress ps(spectrum_queries.size(), "Parsing PSMs");
+        // Progress ps(spectrum_queries.size(), "Parsing PSMs");
         for (auto &y: spectrum_queries) {
-            ps.increase();
+            // ps.increase();
             psm.emplace_back(y);
         }
         m_filename2indeRange[newfile]=make_pair(psm.size()-spectrum_queries.size(), psm.size());

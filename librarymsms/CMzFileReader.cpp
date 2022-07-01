@@ -49,7 +49,9 @@ CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, Spe
 	spdlog::get("A")->info("mz file is created!\n");
 }
 
+// dump scaninfo to disk.
 CMzFileReader::~CMzFileReader() {
+    m_scanInfo.exportToCombinedFile();
     cout << "Releasing space of all spectra from memory" << endl;
     delete[] m_mzs;
 }
@@ -147,6 +149,7 @@ void CMzFileReader::toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool r
 	}
 
     m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
+    m_specnum += ms2count; // ms2count updated.
 }
 
 int CMzFileReader::getPeakNumPerSpec() const {
@@ -205,19 +208,21 @@ void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
     toMzScanFilePair(fout, df, rmParentIon, sf, false);
 //    m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
     // write the  whole file
-    m_scanInfo.exportToCombinedFile();
+    // do we need to export it here?
+    // m_scanInfo.exportToCombinedFile();  // export in destructor.
     // you have to close the file before you open it.
     fout.close();
     
 
-    cout << "Start to reload" << endl;
+// // why reload?
+//     cout << "Start to reload" << endl;
 
 
-    // update the object.
-    m_scanInfo.clear();
-    loadScanMzToMemory(true, false);
-    initPeakNum(false);
-    spdlog::get("A")->info("mz/scan object is refreshed!\n");
+//     // update the object.
+//     m_scanInfo.clear();
+//     loadScanMzToMemory(true, false);
+//     initPeakNum(false);
+//     spdlog::get("A")->info("mz/scan object is refreshed!\n");
 
 }
 
@@ -444,7 +449,7 @@ void CScanFile::write_specinfo(ofstream &fout) {
 void CScanFile::write_specinfo() {
     ofstream scanout(m_scanFilename, ios::out);
     write_specinfo(scanout);
-    spdlog::get("A")->info("scan file saved as {}\n", m_scanFilename);
+    spdlog::get("A")->info("scan file saved as {}", m_scanFilename);
 }
 
 bool CScanFile::isCreated() {
@@ -540,6 +545,7 @@ SpectraFilter::SpectraFilter(string pepxml) {
     m_ppp->filter_with_FDR(0.01, m_psms);
 }
 
+// save the combined scan file.
 void CScanInfo::exportToCombinedFile() {
     ofstream fout(getCombinedScanFilename(), ios::out);
     cout << "[Info] exporting " << getFileNum() << " .scan files to " << getCombinedScanFilename() << endl;
@@ -598,12 +604,13 @@ long CScanInfo::getTotalScanNum() const {
     return m_lastResIdxOffset + 1;
 }
 
+// append a new data file to get its scan info.
 void CScanInfo::appendFile(string file) {
     m_readers.emplace_back(CScanFile(std::move(file)));
 }
 
+// create a list of readers.
 void CScanInfo::loadFiles(const vector<string>& files) {
-    // create a list of readers.
     for(const auto& file: files){
         appendFile(file);
     }
@@ -618,6 +625,9 @@ CScanInfo::CScanInfo() {
     m_lastResIdxOffset = -1;
 }
 
+// loading the combiend file.
+// if it does not exist [fail to init]
+// then try load individual scan file, then combine them.
 void CScanInfo::loadCombinedFile() {
     if(not initWithCombinedFile()){
         vector<string> files= readlines(m_mzXMLListfile);

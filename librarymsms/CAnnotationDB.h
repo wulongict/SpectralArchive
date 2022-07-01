@@ -174,6 +174,7 @@ public:
 
     specfileinfo getLastSpecFile();
 
+    // add a new raw data.
     void appendNewDataFile(DataFile &df);
 
     void appendNewDataFile(DataFile &df,  ICGtInfoUpdate *updater);
