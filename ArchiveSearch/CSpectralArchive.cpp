@@ -246,8 +246,6 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
 
-    // output the size of archive.
-    cout << "[Info] size of archive: " <<this->size() << endl;
     // --------------------Now add some data files.
     this->update("","","",m_mzXMLListFileName);
 
@@ -302,6 +300,17 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     updateIndex(m_verbose);
     addRawData(new_experimental_data);
     addListOfRawData(new_experimental_datalist);
+    // after updated raw and list of raw, update the list of mzxmllist file. 
+    vector<string> datafiles = m_AnnotationDB->getListOfSpecFiles();
+    File::saveas(datafiles, m_mzXMLListFileName, true);
+    cout << m_mzXMLListFileName << " updated, number of raw files " << datafiles.size() << endl;
+    string scanFilename = m_mzXMLListFileName + ".scan";
+    bool found = File::isExist(scanFilename, true);
+    int rc = std::remove(scanFilename.c_str());
+    if(found and rc) { 
+        perror("remove of .scan file fails"); 
+        throw runtime_error("\nERROR: Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
+    }
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
     // only save index once in the end. 
@@ -311,6 +320,8 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     m_csa->refresh_mz_object_from_disk();
 
     cout << "INDEX saved " << endl;
+        // output the size of archive.
+    cout << "[Info] size of archive: " <<this->size() << endl;
     
 }
 
@@ -385,9 +396,9 @@ void CSpectralArchive::setnProbe(int nprobe) {
 // todo: change the algorithm to allow interact ...
 void CSpectralArchive::addSearchResult(string pepxmlfile) {
     if (pepxmlfile.empty()) {
-        cout << "No search result file provides! The following files will not be updated: \n"
-                "pepxml table, and gt table. "
-             << endl;
+        // cout << "No search result file provides! The following files will not be updated: \n"
+        //         "pepxml table, and gt table. "
+        //      << endl;
         return;
     }
     SimpleTimer st("update groundtruth table");
@@ -411,8 +422,11 @@ void CSpectralArchive::addRawData(string mzXMLfile) {
     } else {
         DataFile df(mzXMLfile, 0, -1);
         m_AnnotationDB->appendNewDataFile(df);
+        cout << "DB updated" << endl;
         m_csa->append(df, m_removeprecursor, nullptr);
+        cout << "DB MZ updated" << endl;
         m_indices->append(df);
+        cout << "DB MZ INDEX updated" << endl;
         // m_indices->write();  // as there is only one file, we could write here.
         // the mzXML file will not be updated.
         // appendFileName(mzXMLfile);
@@ -449,8 +463,8 @@ void CSpectralArchive::updateIndex(bool verbosity) {
 
 void CSpectralArchive::addListOfSearchResults(string pepxmlfilelist) {
     if (pepxmlfilelist.empty()) {
-        cout << "No search result list provided! The following files files will not be udpated:\n "
-                "pepxml table, and gt table." << endl;
+        // cout << "No search result list provided! The following files files will not be udpated:\n "
+        //         "pepxml table, and gt table." << endl;
         return;
     }
     CTable pepxmllist(pepxmlfilelist, '\t', false, 0);

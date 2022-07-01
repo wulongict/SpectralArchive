@@ -23,7 +23,6 @@ CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist,
     m_localMaxHalfWidth = localMaxHalfWidth;
     m_PeakNumPerSpectrum = 50;
     m_mzxml_filelist = mzxml_filelist;
-    refresh_mz_object_from_disk();
 
     //init(overwrite, islist, rmParentIon);
 }
@@ -54,7 +53,6 @@ CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, Spe
 
 // dump scaninfo to disk.
 CMzFileReader::~CMzFileReader() {
-    m_scanInfo.exportToCombinedFile();
     cout << "Releasing space of all spectra from memory" << endl;
     delete[] m_mzs;
 }
@@ -164,6 +162,7 @@ int CMzFileReader::getPeakNumPerSpec() const {
 long CMzFileReader::getSpecNum() { return m_specnum; }
 
 #include "CAnnotationDB.h"
+#include <cstdio>
 // control all of the scan file put them into one single file.
 void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
       //CScanInfo
@@ -176,6 +175,16 @@ void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
     if(m_scanInfo.getTotalScanNum() != m_specnum)    {
         cout << "spectrum num in mz file : " << m_specnum << " while in meta info " << m_scanInfo.getTotalScanNum() << endl;
         cout << "[Error] Scan Header and mz file are inconsistent" << endl;
+        cout << "Two step solution: " 
+        << endl << "1. remove *.scan file in the archive folder"
+        << endl << "2. append new mzXML files (see below) in database, but not in the archive list file (--mzxmlfiles)"
+        << endl;
+        int rc = std::remove(m_scanInfo.getCombinedScanFilename().c_str());
+        if(rc){
+            cout << "Fail to remove " << m_scanInfo.getCombinedScanFilename() << endl;
+        }else{
+            cout << "removed: " << m_scanInfo.getCombinedScanFilename() << endl;
+        }
         
         // try to fix it with some method. 
         CAnnotationDB db(false);
@@ -645,7 +654,7 @@ CScanInfo::CScanInfo() {
 
 // loading the combiend file.
 // if it does not exist [fail to init]
-// then try load individual scan file, then combine them.
+// then try load individual scan file, based on the list of files, then combine them.
 void CScanInfo::loadCombinedFile() {
     if(not initWithCombinedFile()){
         // The combined scan file dependens on the mzXMLfilelist
@@ -694,7 +703,7 @@ bool CScanInfo::initWithCombinedFile() {
             iss >> m_lastResIdxOffset >> filename;
         }
         delete buf;
-
+        cout << "num of files loaded: " << m_readers.size() << endl;
         return true;
     }
     else
@@ -737,7 +746,7 @@ void CScanInfo::clear() {
 
 shared_ptr<ICMzFile> CMzFileReaderFactory::create() {
     cout << "[Info] Creating CPU scorer Object" << endl;
-    
+
     return getMzFileObject();
 }
 

@@ -259,7 +259,7 @@ void MultipleIndicesImpl::getANNByShuffleQueries(int numQuery, int ret_num, cons
 
 CMultiIndices::CMultiIndices(string indexstring, string indexpath, string libname, bool doShuffle,
                              double tolerance, bool useMyOwn, shared_ptr<CPQParam> cpqParam, const int topPeakNum,
-                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(3000) {
+                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(100000) {
    
     m_topPeakNum = topPeakNum;
     option = cpqParam;
@@ -594,7 +594,7 @@ void CMultiIndices::append(DataFile &df) {
     for (long i = 0; i < df.getSpectrumNum(); i += batchsize) {
         long newspecnum = 0;
         long start_spec_id = i, end_spec_id = i + batchsize > df.getSpectrumNum() ? df.getSpectrumNum() : i + batchsize;
-        cout << "Scan:  " << start_spec_id << " - " << end_spec_id << endl;
+        cout << "Scan:  " << start_spec_id << " - " << end_spec_id << "\t";
         float *vec = df.toFloatVector(m_dim, newspecnum, m_removeprecursor, m_useFlankingBins, m_tolerance, start_spec_id,
                                       end_spec_id);
         m_impl.add(vec, newspecnum);

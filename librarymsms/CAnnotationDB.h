@@ -100,6 +100,11 @@ public:
     string toJsonNodes(CDBEntry &dbentry);
 
     CAnnotationDB(bool createFileNameBlackList);
+    ~CAnnotationDB();
+
+// return the list of raw files, used for refresh the mzxmlfile list.
+    vector<string> getListOfSpecFiles();
+ 
     // the code to be updated!
     //    void set(shared_ptr<CDataBaseManager> dbmanager);
     void setDB(const string& filename);

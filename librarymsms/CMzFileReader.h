@@ -101,10 +101,10 @@ public:
     long getTotalScanNum() const;
     void exportToCombinedFile();
     void clear();
+    string getCombinedScanFilename(){return m_mzXMLListfile + ".scan";}
 private:
     void loadFiles(const vector<string>& files);
     // void setCombinedFilename(string mzxmlfiles);
-    string getCombinedScanFilename(){return m_mzXMLListfile + ".scan";}
     void loadCombinedFile();
     bool isEmpty();
     int getFileId(long queryidx);

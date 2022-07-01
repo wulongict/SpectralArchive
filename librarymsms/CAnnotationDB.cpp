@@ -204,6 +204,29 @@ CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
                                       "REMARKS TEXT NOT NULL);";
 }
 
+CAnnotationDB::~CAnnotationDB()
+{
+    
+}
+
+vector<string> CAnnotationDB::getListOfSpecFiles()
+{
+    // before release the database.
+    vector<string> datafilelist;
+    if (m_dbmanager)
+    {
+
+        int fileNum = this->getTotalFileNum();
+        for (int i = 0; i < fileNum; i++)
+        {
+            string filename = this->getSpecFileNameByID(i);
+            // cout << "File name in DB: " << i << " " << filename << endl;
+            datafilelist.push_back(filename);
+        }
+        // try to refresh the mzxmlfile list
+    }
+    return datafilelist;
+}
 
 bool CAnnotationDB::createTable(const string& tableName, bool overwrite,bool verbosity) {
     bool renewed = false;
@@ -696,6 +719,7 @@ void CAnnotationDB::setDB(const string& filename) {
 
 }
 
+// search for raw file with name like the `raw_file_name`
 void CAnnotationDB::getSpecFileRows(const string &raw_file_name, vector<vector<string>> &results) {
     string name_only = File::CFile(raw_file_name).basename;
     // todo: add protection here.
