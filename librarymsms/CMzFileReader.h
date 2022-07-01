@@ -150,6 +150,9 @@ public:
 
     
     void append(DataFile &df, bool rmParentIon, SpectraFilter *sf);  // CScanInfo
+    void refresh_mz_object_from_disk();
+    
+
     MzSpecInfo & getSpecMetaInfo(long queryidx, string &filename);   //CScanInfo
 
     long getSpecNum() override;

@@ -218,35 +218,41 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     
     m_minPeakNum = minPeakNum;
     m_dim = 4096;
+    // -------------------------------------------parameters ready ----------------------------
 
 
 
     // todo: the mzXML/mzML raw files has been read for 3 times. DB, MZ, Index, why not just do it once? Jul 2021.
     cout << "[info] 1/3 Creating SQL Database " << endl;
     m_AnnotationDB->createDatabase(rebuildsqldb, m_mzXMLListFileName + ".sqlite3db", m_verbose);
-    m_AnnotationDB->appendRawDataList(m_mzXMLListFileName);
+    // m_AnnotationDB->appendRawDataList(m_mzXMLListFileName); // postpone later.
 
 
     cout << "[info] 2/3 Creating Processed Peak Lists (mz file object)" << endl;
     // todo: do not build the mz file now, make an empty one, and put data inside later.
+    // now this step does not read the whole list of mzXMLs.
     m_csa = CMzFileReader::makeShared(m_mzXMLListFileName, false, true, m_removeprecursor, intTol2double(m_tol),
                                        m_minPeakNum, verbose);
 
     cout << "[info] 3/3 Creating index" << endl;
     createIndices(myOwnIndex, make_shared<CPQParam>(option), indexstrings);
+    // load index, create if not exist.
     if(m_indices->isExist()){
         m_indices->loadIndices();
     }    else{
         m_indices->trainOnFileList(m_mzXMLListFileName);
-        m_indices->appendList(m_mzXMLListFileName); // append each file
+        // m_indices->appendList(m_mzXMLListFileName); // append each file, postpone later.
     }
 
-    cout << "Index created" << endl;
-    m_AnnotationDB->populateGtfilesTable(m_pepxmlFileName);  // GTFILES not used!
+
 
     // output the size of archive.
     cout << "[Info] size of archive: " <<this->size() << endl;
+    // --------------------Now add some data files.
+    this->update("","","",m_mzXMLListFileName);
 
+    cout << "Index created" << endl;
+    m_AnnotationDB->populateGtfilesTable(m_pepxmlFileName);  // GTFILES not used!
     if (m_usegpu)m_indices->toGpu(); // should we delay this? todo:
     // to start the service.
     getScorerFactoryPtr();
@@ -269,7 +275,9 @@ void CSpectralArchive::createMzFileObject() {
     getScorerFactoryPtr();
 }
 
-// todo: varialbe m_indexFileName is not used, only its path is used! We could remove it in the future!
+// create path multiIndices under the same path as m_indexFileName.
+// get number of indices to be created, using indexstr, split by ';'
+// create multiIndices object. each corresponding to a file in multiIndices folder. 
 void CSpectralArchive::createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings) {
     File::CFile fileObj(m_indexFileName);
     string path = fileObj.path + "/multiIndices";
@@ -299,6 +307,9 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     // only save index once in the end. 
     // todo: the improve here is very small: 1%. may change it back to save in every addRawData call...
     m_indices->write();  // as there is only one file, we could write here.
+    // mz file should also be exported.
+    m_csa->refresh_mz_object_from_disk();
+
     cout << "INDEX saved " << endl;
     
 }

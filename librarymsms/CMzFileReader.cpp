@@ -16,26 +16,28 @@
 CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                              double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName) {
     m_mzFileName = mzFileName; // to be used.
+    m_specnum = 0;
     m_mzs = nullptr;
+    m_norm2_ptr=nullptr;
     m_minPeakNum = minPeakNum;
     m_localMaxHalfWidth = localMaxHalfWidth;
     m_PeakNumPerSpectrum = 50;
     m_mzxml_filelist = mzxml_filelist;
-    m_norm2_ptr=nullptr;
 
-    init(overwrite, islist, rmParentIon);
+    //init(overwrite, islist, rmParentIon);
 }
 
 CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
                              double localMaxHalfWidth, int minPeakNum, bool verbose) {
-                                m_mzs = nullptr;
-
+    m_specnum = 0;
+    m_mzs = nullptr;
     m_norm2_ptr=nullptr;
     m_minPeakNum = minPeakNum;
     m_localMaxHalfWidth = localMaxHalfWidth;
-	cout << "sf = " << sf << endl;
 	m_PeakNumPerSpectrum = 50;
 	m_mzxml_filelist = df.getSourceFileName();
+	cout << "sf = " << sf << endl;
+
 
 	if(not File::isExist(getMzFilename()) or overwrite)    {
 	    ofstream fout(getMzFilename(), ios::out | ios::binary);
@@ -56,6 +58,7 @@ CMzFileReader::~CMzFileReader() {
     delete[] m_mzs;
 }
 
+// create mz/scan with list of files. 
 void CMzFileReader::init(bool redo, bool is_file_list, bool rmParentIon) {
     //cout << "Starting loading mzfile " << endl;
 //    spdlog::get("A")->info("loading file ...");
@@ -150,6 +153,7 @@ void CMzFileReader::toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool r
 
     m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
     m_specnum += ms2count; // ms2count updated.
+    cout << "mz file contains " << m_specnum << " spectra " << endl;
 }
 
 int CMzFileReader::getPeakNumPerSpec() const {
@@ -201,7 +205,18 @@ uint16_t *CMzFileReader::getSpecBy(long queryindex)  {
     return m_mzs + queryindex * m_PeakNumPerSpectrum;
 }
 
+  void CMzFileReader::refresh_mz_object_from_disk()
+    {
+        cout << "Start to reload" << endl;
+        // update the object.
+        m_scanInfo.clear();
+        loadScanMzToMemory(true, false);
+        initPeakNum(false);
+        spdlog::get("A")->info("mz/scan object is refreshed!\n");
+    }
 
+// update MZ file with spectra in DataFile
+// create scan file for DataFile.
 void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
     ofstream fout(getMzFilename(), ios::app | ios::binary);
 //    m_scanInfo.appendFile(df.getSourceFileName());
@@ -212,17 +227,7 @@ void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
     // m_scanInfo.exportToCombinedFile();  // export in destructor.
     // you have to close the file before you open it.
     fout.close();
-    
 
-// // why reload?
-//     cout << "Start to reload" << endl;
-
-
-//     // update the object.
-//     m_scanInfo.clear();
-//     loadScanMzToMemory(true, false);
-//     initPeakNum(false);
-//     spdlog::get("A")->info("mz/scan object is refreshed!\n");
 
 }
 
@@ -709,6 +714,7 @@ void CScanInfo::clear() {
 
 shared_ptr<ICMzFile> CMzFileReaderFactory::create() {
     cout << "[Info] Creating CPU scorer Object" << endl;
+    
     return getMzFileObject();
 }
 

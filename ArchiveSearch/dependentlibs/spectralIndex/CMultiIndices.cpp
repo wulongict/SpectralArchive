@@ -15,6 +15,10 @@
 MultipleIndicesImpl::MultipleIndicesImpl() : m_useCpu(true) {
 }
 
+// create multiple indices, set the filename
+// assign seeds 0 to N-1 for N indices, to make random algorithm reproducible. 
+// Attention: in different version of gcc, the shuffle function changes. 
+//            This might cause problem. So use the proper shuffle function. 
 void MultipleIndicesImpl::initialize(int numIndex, string indexpath, string basename, bool useMyOwn,
                                      shared_ptr<CPQParam> option) {
     m_numIndexUsed = numIndex;
@@ -62,7 +66,7 @@ void MultipleIndicesImpl::createEmptyIndex(int i, string indexstr, int dim) {
 }
 
 void MultipleIndicesImpl::train(long specnum, int dim, float *vec) {
-    cout << "total number of data we have: " << getNum() << endl;
+    cout << "Total number of index to create: " << getNum() << endl;
     int batchSize = specnum / getNum();
     spdlog::get("A")->info("batchSize = {} numIndex = {}", batchSize, getNum());
     float *vecBatch = new float[batchSize * dim];
@@ -255,7 +259,7 @@ void MultipleIndicesImpl::getANNByShuffleQueries(int numQuery, int ret_num, cons
 
 CMultiIndices::CMultiIndices(string indexstring, string indexpath, string libname, bool doShuffle,
                              double tolerance, bool useMyOwn, shared_ptr<CPQParam> cpqParam, const int topPeakNum,
-                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(100000) {
+                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(3000) {
    
     m_topPeakNum = topPeakNum;
     option = cpqParam;

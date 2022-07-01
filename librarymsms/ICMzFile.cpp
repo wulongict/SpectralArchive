@@ -652,6 +652,8 @@ shared_ptr<ICMzFile> createScorer(bool use_gpu, string mzXMLListFileName) {
 }
 
 shared_ptr<ICMzFile> ICMzFactory::getMzFileObject() {
+    assert(m_csa!=nullptr);
+    cout << "pointer of csa " << m_csa << endl;
     int num = m_csa->getPeakNum(0L);
     float norm = m_csa->getSquaredNorm(0L);
     cout << "initialized m_csa: num =" << num << "\t norm="<< norm << endl;

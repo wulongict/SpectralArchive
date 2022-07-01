@@ -689,6 +689,8 @@ int CAnnotationDB::getFileIDWithEndIdx(long index_total) {
     return start_id;
 }
 
+// open database file for use 
+// create database if not exist
 void CAnnotationDB::setDB(const string& filename) {
     m_dbmanager = make_shared<CDataBaseManager>(filename);
 

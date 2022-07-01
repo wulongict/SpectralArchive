@@ -186,6 +186,8 @@ void ConvertTable() {
     creategroundtruthTable();
 }
 
+// Open database for use
+// create if not exist!
 void CDataBaseManager::openDB(const string& databaseFileName) {
     if (m_db != nullptr) {
         cout << "Can not open another database before closing the previous one" << endl;
@@ -329,6 +331,8 @@ void CDataBaseManager::getMultipleRows(vector<vector<string>> &result, const str
 
 }
 
+// create database for use
+// create if not exist
 CDataBaseManager::CDataBaseManager(const string& databaseFileName) {
     m_db = nullptr;
     openDB(databaseFileName);

@@ -106,6 +106,8 @@ public:
     void addNeighborInfo(CArxivSearchResult &archiveRes);
     void createBlackListWithCE(bool verbose);
     void createBlackListWithFileName(const string &datafilename, bool verbose);
+    // init database, create if not exist
+    // creating empty tables in database.
     void createDatabase(bool rebuild, string dbfilename, bool verbose) {
         setDB(dbfilename);
         createTables(rebuild, verbose);
