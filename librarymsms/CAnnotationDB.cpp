@@ -917,7 +917,7 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
     m_annotationdb->getSpecFileRows(rawfilename, results);
 
     if (results.empty() or results.size() > 1) {
-        cout << "No raw file found." << endl;
+        cout << "No raw file found with name: " << rawfilename << endl;
     } else if (results.size() > 1) {
         cout << results.size() <<" raw files found."<< endl;
     } else {

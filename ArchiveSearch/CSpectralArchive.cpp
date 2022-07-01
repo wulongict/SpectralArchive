@@ -400,9 +400,9 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
 // Attention: index is not saved. 
 void CSpectralArchive::addRawData(string mzXMLfile) {
     if (mzXMLfile.empty()) {
-        cout << "Raw data file is not provided! The following files will not be updated: \n"
-                "mzxml list, index file, compact mz file, spec table, and gt table."
-             << endl;
+        // cout << "Raw data file is not provided! The following files will not be updated: \n"
+        //         "mzxml list, index file, compact mz file, spec table, and gt table."
+        //      << endl;
         return;
     }
 

@@ -23,6 +23,7 @@ CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist,
     m_localMaxHalfWidth = localMaxHalfWidth;
     m_PeakNumPerSpectrum = 50;
     m_mzxml_filelist = mzxml_filelist;
+    refresh_mz_object_from_disk();
 
     //init(overwrite, islist, rmParentIon);
 }
@@ -162,6 +163,7 @@ int CMzFileReader::getPeakNumPerSpec() const {
 
 long CMzFileReader::getSpecNum() { return m_specnum; }
 
+#include "CAnnotationDB.h"
 // control all of the scan file put them into one single file.
 void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
       //CScanInfo
@@ -174,6 +176,16 @@ void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
     if(m_scanInfo.getTotalScanNum() != m_specnum)    {
         cout << "spectrum num in mz file : " << m_specnum << " while in meta info " << m_scanInfo.getTotalScanNum() << endl;
         cout << "[Error] Scan Header and mz file are inconsistent" << endl;
+        
+        // try to fix it with some method. 
+        CAnnotationDB db(false);
+        string sqldbname = m_mzxml_filelist + ".sqlite3db";
+        db.setDB(sqldbname);
+        int filenum = db.getTotalFileNum();
+        for (int i =0; i < filenum; i ++){
+            string filename = db.getSpecFileNameByID(i);
+            cout << "get " << i << "-th file name: " << filename <<  endl; 
+        }
         throw runtime_error("Error: Scan header file and mz file are inconsistent!") ;
     }
 }
@@ -615,6 +627,7 @@ void CScanInfo::appendFile(string file) {
 }
 
 // create a list of readers.
+// load all the scan files corresponding to the list of files.
 void CScanInfo::loadFiles(const vector<string>& files) {
     for(const auto& file: files){
         appendFile(file);
@@ -635,41 +648,47 @@ CScanInfo::CScanInfo() {
 // then try load individual scan file, then combine them.
 void CScanInfo::loadCombinedFile() {
     if(not initWithCombinedFile()){
+        // The combined scan file dependens on the mzXMLfilelist
+        // if the file list is not updated, the combined scan file will be wrong.
         vector<string> files= readlines(m_mzXMLListfile);
         loadFiles(files);
         exportToCombinedFile();
     }
 }
 
+// load if file exist.
 bool CScanInfo::initWithCombinedFile() {
-    if(File::isExist(getCombinedScanFilename(),true))    {
+    if (File::isExist(getCombinedScanFilename(), true))
+    {
         string combined_filename = getCombinedScanFilename();
         long filesize;
         File::getfilesize(combined_filename, filesize);
-        char *buf = new char[filesize+1];
-        buf[filesize]='\0';
+        char *buf = new char[filesize + 1];
+        buf[filesize] = '\0';
         {
-        ifstream fin(getCombinedScanFilename(), ios::in);
-        fin.read(buf,filesize);
-        fin.close();
-    }
+            ifstream fin(getCombinedScanFilename(), ios::in);
+            fin.read(buf, filesize);
+            fin.close();
+        }
 
-        istringstream  iss(buf);
+        istringstream iss(buf);
 
         cout << "reading file " << getCombinedScanFilename() << endl;
         string filename;
         long lastval = -1;
         iss >> m_lastResIdxOffset >> filename;
-//        CountProgress pc(10,"loading scan file");
+        //        CountProgress pc(10,"loading scan file");
         long totalCounts = 0;
-        while(!iss.eof())  {
-//            pc.increase();
+        while (!iss.eof())
+        {
+            //            pc.increase();
             long len = m_lastResIdxOffset - lastval;
             lastval = m_lastResIdxOffset;
             appendFile(filename);
             totalCounts += len;
-    //            cout << "[Error] loading " <<getFileNum() <<"-ith file " << filename << " len " << len  << " total len: " << totalCounts << endl;
-            if(len > 0) {
+            //            cout << "[Error] loading " <<getFileNum() <<"-ith file " << filename << " len " << len  << " total len: " << totalCounts << endl;
+            if (len > 0)
+            {
                 m_readers.back().readLines(iss, len);
             }
             iss >> m_lastResIdxOffset >> filename;
@@ -677,7 +696,9 @@ bool CScanInfo::initWithCombinedFile() {
         delete buf;
 
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
 }
@@ -686,6 +707,8 @@ bool CScanInfo::initWithCombinedFile() {
 //     m_mzXMLListfile = std::move(mzxmlfiles);
 // }
 
+// for list of mzxml files, call loadCombinedFile
+// for single file, call load files.
 void CScanInfo::load(string m_mzxml_filelist, bool isList, bool verbose) {
     if(verbose)cout << "loading meta info for mz files : isList: " << isList << endl;
     if(isList)    {
