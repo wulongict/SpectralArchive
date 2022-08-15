@@ -431,7 +431,7 @@ void CScanFile::create(long &cnts, bool verbose) {
         return;
     }
 
-    if(not load()){
+    if(not load(verbose)){
         init();
     }
     cnts = getLastQueryIDX() ;
@@ -512,11 +512,14 @@ CScanFile::CScanFile(const CScanFile &other) {
     m_resIdxOffset = other.m_resIdxOffset;
 }
 
-bool CScanFile::load() {
+bool CScanFile::load(bool verbose) {
     bool ret = false;
     if(File::isExist(m_scanFilename))    {
         ifstream fin(m_scanFilename, ios::in);
-        cout << "loading file: " << m_scanFilename << endl;
+        if(verbose)
+        {
+            cout <<verbose <<  ": loading file: " << m_scanFilename << endl;
+        }
         copy(istream_iterator<MzSpecInfo>(fin), istream_iterator<MzSpecInfo>(),
              back_inserter(infos));
         fixResIdx();
@@ -573,6 +576,7 @@ SpectraFilter::SpectraFilter(string pepxml) {
 
 // save the combined scan file.
 void CScanInfo::exportToCombinedFile() {
+    // sometimes if the file already exist, we can skip this writing step. 
     ofstream fout(getCombinedScanFilename(), ios::out);
     cout << "[Info] exporting " << getFileNum() << " .scan files to " << getCombinedScanFilename() << endl;
 
@@ -638,11 +642,12 @@ void CScanInfo::appendFile(string file) {
 // create a list of readers.
 // load all the scan files corresponding to the list of files.
 void CScanInfo::loadFiles(const vector<string>& files) {
+    bool verbose = false;
     for(const auto& file: files){
         appendFile(file);
     }
     for(auto &eachScanFile: m_readers){
-        eachScanFile.create(m_lastResIdxOffset, false);  // Do not use varialbe m_cnt like this.
+        eachScanFile.create(m_lastResIdxOffset, verbose);  // Do not use varialbe m_cnt like this.
     }
 }
 
@@ -667,7 +672,7 @@ void CScanInfo::loadCombinedFile() {
 
 // load if file exist.
 bool CScanInfo::initWithCombinedFile() {
-    if (File::isExist(getCombinedScanFilename(), true))
+    if (File::isExist(getCombinedScanFilename(), false))
     {
         string combined_filename = getCombinedScanFilename();
         long filesize;

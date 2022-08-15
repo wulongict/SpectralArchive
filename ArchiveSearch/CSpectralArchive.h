@@ -81,27 +81,85 @@ struct SAnnGTSummary
 {
     long totalnum;
     long correctnum;
+    bool m_recallOfTrueNeighbor;
+    int m_recallTNNtopK;
+    int m_minPeakNumInSpec;
+    double m_recallTNNminDP;
+    ofstream m_fout;
+    string logFileName;
+    int m_nprobe; // number of buckets to look into.
+    int m_indexNum;
+
     map<long, int> m_queryindex2scan;
     map<long, string> m_queryindex2filename;
     shared_ptr<PeptideProphetParser> ppp;
-    bool m_recallOfTrueNeighbor;
-    int m_recallTNNtopK;
-    double m_recallTNNminDP;
-    ofstream m_fout;
-    string outputfile;
 
-    void setRecallTNN(bool recallTNN, int topK, double recallTNNminDP)
+    void setIndexNum(int indexNum){
+        if(indexNum != m_indexNum){
+            m_indexNum = indexNum;
+            resetAccumulativeCounts();
+        }
+    }
+
+    void setNProbe(int nprobe){
+        if(nprobe != m_nprobe){
+            m_nprobe = nprobe;
+            resetAccumulativeCounts();
+        }
+    }
+
+    void setRecallTNN(bool recallTNN, int topK, double recallTNNminDP, int minPeakNumInSpec)
     {
-        m_recallOfTrueNeighbor = recallTNN;
-        m_recallTNNtopK = topK;
-        m_recallTNNminDP = recallTNNminDP;
-        if(m_recallOfTrueNeighbor){
-            m_fout.open(outputfile.c_str(), ios::out|ios::app);
+        setRecallTNN(recallTNN);
+        setRecallTNNTopK(topK);
+        setRecallTNNMinDP(recallTNNminDP);
+        setRecallTNNminPeakNumInQuery(minPeakNumInSpec);
+
+        if(m_recallOfTrueNeighbor and not m_fout.is_open()){
+            // only do this when it is not opened.
+            m_fout.open(logFileName.c_str(), ios::out|ios::app);
         }
 
     }
 
-    void outputTofile(string &str){
+    void setRecallTNN(bool recallTNN)
+    {
+        if (recallTNN != m_recallOfTrueNeighbor)
+        {
+            m_recallOfTrueNeighbor = recallTNN;
+            resetAccumulativeCounts();
+        }
+    }
+    void setRecallTNNTopK(int topK)
+    {
+        if (topK != m_recallTNNtopK)
+        {
+            m_recallTNNtopK = topK;
+            resetAccumulativeCounts();
+        }
+    }
+    void setRecallTNNMinDP(double recallTNNminDP)
+    {
+        double epsilon = 1e-6;
+        if (fabs(recallTNNminDP - m_recallTNNminDP) > epsilon)
+        {
+            m_recallTNNminDP = recallTNNminDP;
+            resetAccumulativeCounts();
+        }
+    }
+    void setRecallTNNminPeakNumInQuery(int minPeakNumInSpec)
+    {
+        if (minPeakNumInSpec != m_minPeakNumInSpec)
+        {
+            m_minPeakNumInSpec = minPeakNumInSpec;
+            resetAccumulativeCounts();
+        }
+    }
+    void resetAccumulativeCounts(){
+        totalnum = 0; correctnum=0;
+        }
+
+    void writeToLogFile(string &str){
         if(m_fout) m_fout << str ;
     }
 
@@ -143,6 +201,12 @@ public:
                      bool rebuildsqldb, int seedpvalue, const int topPeakNum, bool createfilenameBlackList,
                      bool saveBackgroundScore, bool verbose, string archivename="");
 
+    void setRecallTNN(bool recallTNN, int topK, double recallTNNminDP, int minPeakNumInSpec) 
+    {
+        agtsummary.setRecallTNN(recallTNN, topK, recallTNNminDP,minPeakNumInSpec);
+
+    }
+
     ~CSpectralArchive();
 
     void searchNeighborsWithin(double min_dp, long start = 0, long end = -1);
@@ -153,8 +217,9 @@ public:
 
     void updateListOfSpectra(string spectraList);
 
-    void searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe, vector<uint16_t> &query,
-                     bool visualize);
+    void searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe, 
+    vector<uint16_t> &query,
+                     bool visualize, double minTNNDP, int indexNum, int TNNtopK);
     void addRemark(long query_index, string &remarks);
     void getRemark(long query_index, string &remarks);
     void searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile,
@@ -176,9 +241,9 @@ public:
 
 private:
 	void appendFileName(const string &mzXMLfile);
-	void addListOfRawData(const string &new_experimental_datalist);
+	void addListOfRawData(const string &new_experimental_datalist, bool &newFileAdded);
 	void addpepxmlfile(string pepxmllist, string new_gt_file);
-    void addRawData(string mzXMLfile);
+    void addRawData(string mzXMLfile, bool &newFileAdded);
     void addSearchResult(string pepxmlfile);
     void addListOfSearchResults(string pepxmlfilelist);
 	void calcPvalue(int query_index, int tol, string outputbasename, bool normalize) ;
@@ -199,8 +264,8 @@ private:
     void getScorerFactoryPtr();
     void massdiff(ICQuery &q, CArxivSearchResult &annRes);
     void populateGroundTruthTable() ;
-	void searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes);
-    void searchICQuery(ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes);
+	void searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum);
+    void searchICQuery(ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum);
     void visualization_of_score_distribution(long query_index, vector<CAnnSpectra*> &annSpecList, bool tworound, int topN);
     void visualizeRawScores(const string &outputbasename, vector<int> &all_scores, bool noZeros) const;
     void visualizeCDF(string outputbasename, vector<int> &all_scores, bool noZero, bool logCDF) ;

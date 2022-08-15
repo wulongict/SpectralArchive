@@ -78,7 +78,7 @@ public:
     // create scan header and export to filename
     void init();
 
-    bool load();
+    bool load(bool verbose);
 
     void fixResIdx();
 };
@@ -165,7 +165,7 @@ public:
     void dpscore(double tolerance, vector<vector<long>> &allRetIdx, int threadnum, vector<vector<float>>& accDist, ICQuery &query ,vector<vector<int>> &dpscores) override;
 
 
-
+    void init(bool redo, bool is_file_list, bool rmParentIon);
 private:
     void toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool rmParentIon, 
     SpectraFilter *sf, bool verbose);                  //CScanInfo
@@ -177,7 +177,7 @@ private:
 
     
     void createWithList(bool rmParentIon, const vector<string> &filelist);     //CScanInfo
-    void init(bool redo, bool is_file_list, bool rmParentIon);
+    
     int getPeakNumPerSpec() const override;
     void loadMzFile(bool verbose);
 

@@ -196,6 +196,9 @@ struct contentParser {
     vector<uint16_t> mzspec;
     int visualization;
     string remarks;
+    double minTNNDP;
+    int indexNum;
+    int TNNtopK;
 
     contentParser() {
         visualization = 0; // NO
@@ -205,6 +208,9 @@ struct contentParser {
         topN = 10;
         queryindex = -1;  // NO
         remarks = "NONE";
+        minTNNDP = -1;
+        indexNum = -1;
+        TNNtopK = -1;
     }
 
 
@@ -216,6 +222,17 @@ struct contentParser {
             string info = x.substr(pos + key.length() + 1);
             int pos = info.find_first_not_of("0123456789");
             val = atoi(info.substr(0, pos).c_str());
+            return true;
+        }
+    }
+    bool update_defaultFloat_through_string(string x, double &val, string key) {
+        int pos = x.find(key + "=");
+        if (pos == string::npos) {
+            return false;
+        } else {
+            string info = x.substr(pos + key.length() + 1);
+            int pos = info.find_first_not_of("0123456789.");
+            val = atof(info.substr(0, pos).c_str());
             return true;
         }
     }
@@ -285,6 +302,11 @@ struct contentParser {
         bool f = update_spec_from_string(content, mzspec);
         bool g = update_int_through_string(content, visualization, "VISUALIZATION");
         bool h = update_remarks_through_string(content, remarks, "$");
+        bool i = update_defaultFloat_through_string(content, minTNNDP, "MINTNNDP");
+        bool j = update_int_through_string(content, TNNtopK, "TNNTOPK");
+        bool k = update_int_through_string(content, indexNum, "TNNINDEXNUM");
+        
+
 //        return a or b or c or d or f or g;
     }
 };
@@ -322,7 +344,7 @@ void CFastCGIServer::searchQueryId(string &content) {
             spdlog::get("A")->info("start searching: queryindex={}, topn={} edge={}", ps.queryindex, ps.topN,
                                    ps.calcEdge);
             m_archive.searchQuery(ps.queryindex, message, ps.topN, ps.calcEdge, ps.nprobe, ps.mzspec,
-                                  ps.visualization == 1);
+                                  ps.visualization == 1,ps.minTNNDP,ps.indexNum,ps.TNNtopK);
             response(message, "text/html");
             m_summary->update(st.stop());
             cout << "\n    Server Id    " << m_id << endl;
@@ -500,7 +522,7 @@ void CFastCGIServer::identification(string &content) {
 
     string jsonstring;
     vector<uint16_t> query;
-    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query, false);
+    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query, false,-1,-1,-1);
 }
 
 void CFastCGIServer::searchPeptideSequence(string &content) {

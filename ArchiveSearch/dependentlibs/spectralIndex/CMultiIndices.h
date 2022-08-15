@@ -52,6 +52,9 @@ public:
 	void write();
 	bool ifAllFileExist();
 	int getNum() const;
+	void setNum(int indexNum){if(indexNum>0 and indexNum<= getNumOfIndexBuilt()) m_numIndexUsed = indexNum;
+	cout << "[Info] only using " << m_numIndexUsed << "indexing files " << endl;} 
+	int getNumOfIndexBuilt() const{return m_ShuffleIndex.size();}
 	void setNprobe(int nprobe);
 	void train(long specnum, int dim,float *vec);
 	void createEmptyIndices(vector<string> &indexstrs, int dim);
@@ -107,6 +110,7 @@ public:
     ~CMultiIndices();
 
     int getNum();
+	int getNumOfindexInUse(){return m_impl.getNum();}
     void create(long &specnum, DataFile &splib, bool removeprecursor, bool useFlankingBins);
 	void trainOnSingle(int dim, long &specnum, DataFile &splib, bool removeprecursor, bool useFlankingBins);
 	bool isExist(){return m_impl.ifAllFileExist();} // to be called : todo
@@ -121,7 +125,7 @@ public:
     void toGpu();
     void toCpu();
     void display();
-    void getAnns(ICQuery& q, int ret_num, vector<vector<long>> &results);
+    void getAnns(ICQuery& q, int ret_num, vector<vector<long>> &results, int indexNum);
     void recallOfAnn(DataFile &df, string ipropepxmlfilename, CMzFileReader &compactRawData, bool useflankingbin, int dim,
                      DataFile &splib, bool use_gpu, int indexChoice, int batchsize, string outputpath, int ret_num,
                      long spec_start, long spec_end);

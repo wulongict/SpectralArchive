@@ -56,6 +56,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "calculate the recall of true neighbor (defined as most similar spectrum by dot product score) ")
             ("recallTrueNeighborTopK", po::value<int>()->default_value(10),
              " Consider top K true neighbors; default 10  ")
+             ("recallTrueNeighborMinPeakNumInQuery", po::value<int>()->default_value(10),
+             " Skip query spectra with very few peaks.  default 10  ")
             ("recallTrueNeighborMinDP", po::value<double>()->default_value(0.6),
              "minimum dot product allowed for filter true nearest neighbors; default 0.6  ")
             ("minDpOfNeighborRecordedInSqlDB", po::value<double>()->default_value(0.5),
@@ -215,6 +217,7 @@ int main(int argc, char *argv[]) {
         int searchBatchSize = vm["searchBatchSize"].as<int>();
         bool recallTrueNeighbor = vm["recall_true_neighbor"].as<bool>();
         int recallTNNtopK = vm["recallTrueNeighborTopK"].as<int>();
+        int minPeakNumInSpec = vm["recallTrueNeighborMinPeakNumInQuery"].as<int>();
         double recallTNNMinDP = vm["recallTrueNeighborMinDP"].as<double>();
         double minDpOfNeighborRecordedInSqlDB = vm["minDpOfNeighborRecordedInSqlDB"].as<double>();
         bool createFileNameBlackList = vm["createFileNameBlackList"].as<bool>();
@@ -227,6 +230,7 @@ int main(int argc, char *argv[]) {
         CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
                                  minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
                                  createFileNameBlackList, saveBackgroundScore, verbose, archivename);
+        archive.setRecallTNN(recallTrueNeighbor, recallTNNtopK, recallTNNMinDP, minPeakNumInSpec); // the parameter is set here. 
         // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
         archive.setnProbe(numprobe);
 
@@ -275,7 +279,8 @@ int main(int argc, char *argv[]) {
                 }
                 else {
                     double mzTol = 2 * tolerance * 2000.0 / 65535;
-                    CMzFileReader mzfile(datafile, false, false, true, mzTol, minPeakNum, verbose);
+                    CMzFileReader mzfile(datafile, false, false, removeprecursor, mzTol, minPeakNum, verbose);
+                    mzfile.init(false, false, removeprecursor); // added back.
 
                     archive.searchMzFileInBatch(mzfile, first, last, searchfile, topn, numPvalueCalculator,
                                                 recallTrueNeighbor,

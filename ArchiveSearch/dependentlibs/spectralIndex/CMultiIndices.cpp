@@ -392,7 +392,7 @@ void CMultiIndices::recallOfAnn(DataFile &df, string ipropepxmlfilename, CMzFile
         iota(queries.begin(), queries.end(), k);
         k += numQuery;
         CMzQuery mzquery(compactRawData, dim, queries, useflankingbin);
-        getAnns(mzquery, ret_num, results);
+        getAnns(mzquery, ret_num, results,-1);
         mzquery.print(8);
         verifyEachQuery(df, splib, indexChoice, ret_num, ppp, probThreshold, ps, results,
                         queries, m_impl.getNum(), fout, recallANNs);
@@ -477,7 +477,8 @@ int CMultiIndices::findPeptide(DataFile &splib, const vector<long> &int_ind, con
     return top_recall;
 }
 
-void CMultiIndices::getAnns(ICQuery &q, int ret_num, vector<vector<long>> &results) {
+void CMultiIndices::getAnns(ICQuery &q, int ret_num, vector<vector<long>> &results,int indexNum) {
+    m_impl.setNum(indexNum);
     float *vquery = q.L2Normalization().get();
     getAnnsForQueries(q.size(), ret_num, vquery, results, false);
 //    cout << "size: " << q.size() << "\t" << results.size() << endl;
@@ -603,6 +604,7 @@ void CMultiIndices::append(DataFile &df) {
 }
 
 int CMultiIndices::getNum() { return m_indexNum; }
+
 
 CMultiIndices::~CMultiIndices() {}
 

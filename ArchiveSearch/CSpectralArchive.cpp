@@ -298,19 +298,24 @@ CSpectralArchive::~CSpectralArchive() {}
 void CSpectralArchive::update(string new_experimental_data, string new_search_result, string new_search_result_list,
                               string new_experimental_datalist) {
     updateIndex(m_verbose);
-    addRawData(new_experimental_data);
-    addListOfRawData(new_experimental_datalist);
+    bool newFilesAdded = false;
+    addRawData(new_experimental_data, newFilesAdded);
+    addListOfRawData(new_experimental_datalist, newFilesAdded);
     // after updated raw and list of raw, update the list of mzxmllist file. 
-    vector<string> datafiles = m_AnnotationDB->getListOfSpecFiles();
-    File::saveas(datafiles, m_mzXMLListFileName, true);
-    cout << m_mzXMLListFileName << " updated, number of raw files " << datafiles.size() << endl;
-    string scanFilename = m_mzXMLListFileName + ".scan";
-    bool found = File::isExist(scanFilename, true);
-    int rc = std::remove(scanFilename.c_str());
-    if(found and rc) { 
-        perror("remove of .scan file fails"); 
-        throw runtime_error("\nERROR: Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
+    if(newFilesAdded){
+        vector<string> datafiles = m_AnnotationDB->getListOfSpecFiles();
+        File::saveas(datafiles, m_mzXMLListFileName, true);
+        cout << m_mzXMLListFileName << " updated, number of raw files " << datafiles.size() << endl;
+        string scanFilename = m_mzXMLListFileName + ".scan";
+        bool found = File::isExist(scanFilename, true);
+        cout << "Removing scan file: " << scanFilename << endl;
+        int rc = std::remove(scanFilename.c_str());
+        if(found and rc) { 
+            perror("remove of .scan file fails"); 
+            throw runtime_error("\nERROR: Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
+        }
     }
+    
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
     // only save index once in the end. 
@@ -335,20 +340,34 @@ void CSpectralArchive::updateListOfSpectra(string spectraList) {
 
 }
 
-void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist) {
+void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist, bool &newFileAdded) {
     if (new_experimental_datalist != "") {
         vector<string> files = readlines(new_experimental_datalist);
-        // Time estimation
-        SimpleTimer st;
-        for (int i = 0; i < files.size(); i++) {
-            cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
-            addRawData(files[i]);
-            double time_elapsed = st.secondsElapsed();
-            double speed = time_elapsed/(i+1);
-            double time_to_be_used = (files.size()-1-i)*speed;
-
-            spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
+        int L = files.size();
+        for(int i = 0; i < L; i ++){
+            if(files[i].empty() or m_AnnotationDB->isSpecFileExist(files[i])) continue;
+            files.push_back(files[i]);
         }
+        files.erase(files.begin(), files.begin()+L);
+        cout << files.size() << " out of " << L << " files will be added" << endl;
+        if ( files.empty()){
+            return; 
+        }
+        else{
+            //  newFileAdded = true;
+            // Time estimation
+            SimpleTimer st;
+            for (int i = 0; i < files.size(); i++) {
+                cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
+                addRawData(files[i], newFileAdded);
+                double time_elapsed = st.secondsElapsed();
+                double speed = time_elapsed/(i+1);
+                double time_to_be_used = (files.size()-1-i)*speed;
+
+                spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
+            }
+        }
+       
     }
 }
 
@@ -390,6 +409,13 @@ long CSpectralArchive::size() {
 
 void CSpectralArchive::setnProbe(int nprobe) {
     m_indices->setNprobe(nprobe, false);
+    agtsummary.setNProbe(nprobe);
+    // if(nprobe != agtsummary.m_nprobe){
+    //     agtsummary.m_nprobe = nprobe;
+    //     agtsummary.correctnum=0;
+    //     agtsummary.totalnum = 0;
+    // }
+    
 }
 
 // this is relies on the mzxml and pepxml relationship.
@@ -409,7 +435,7 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
 // check if the mzXMLfile already exist in archive.
 // if not, add it to DB, MZ, and INDEX.
 // Attention: index is not saved. 
-void CSpectralArchive::addRawData(string mzXMLfile) {
+void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     if (mzXMLfile.empty()) {
         // cout << "Raw data file is not provided! The following files will not be updated: \n"
         //         "mzxml list, index file, compact mz file, spec table, and gt table."
@@ -420,6 +446,7 @@ void CSpectralArchive::addRawData(string mzXMLfile) {
     if (m_AnnotationDB->isSpecFileExist(mzXMLfile)) {
         cout << "File already exist in sqlite3 database, will not add again: " << mzXMLfile << endl;
     } else {
+        newFileAdded = true;
         DataFile df(mzXMLfile, 0, -1);
         m_AnnotationDB->appendNewDataFile(df);
         cout << "DB updated" << endl;
@@ -521,15 +548,26 @@ void CSpectralArchive::syncIndicesWithSpecFileTable() {
 // Note: query id can be -1
 // When first query id is -1, we search with the spectrum in query pointer!
 void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe,
-                                   vector<uint16_t> &query, bool visualize) {
-    m_indices->setNprobe(nprobe, false);
+                                   vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK) {
+    setnProbe(nprobe);
+    if(agtsummary.m_recallOfTrueNeighbor){
+        if(minTNNDP>=0.0 and minTNNDP<=1.0){
+            agtsummary.setRecallTNNMinDP(minTNNDP);
+        }
+        if(indexNum>=1 and indexNum<=m_indices->getNum()){
+            agtsummary.setIndexNum(indexNum);
+        }
+        if(TNNtopK>=1){
+            agtsummary.setRecallTNNTopK(TNNtopK);
+        }
+    }
     SimpleTimer st("query");
     CArxivSearchResult annResults;
     vector<long> queryIds = {query_index};
     vector<int> dpscores; // background score
     ICQuery *q = createICQuery(&query, &queryIds, m_useflankingbins, getDim(), *m_pScorer);
     bool verbose = false;
-    searchICQuery(topN, *q, m_tol, verbose, annResults); // index FAISS, use topN=100 to filter
+    searchICQuery(topN, *q, m_tol, verbose, annResults,indexNum); // index FAISS, use topN=100 to filter
 
     st.restart("mass diff analysis");
     bool do_massDiff_analysis = false;
@@ -747,6 +785,7 @@ struct IdxScore {
 void
 CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTrueNN, bool isLowMassAcc, int topK,
                                           int dp_UInt) {
+    // get True Nearest Neighbors from the spectral archive. 
     if (m_csa->getSpecNum() == 0) {
         cout << "[Error] mz file is empty: " << endl;
     }
@@ -754,6 +793,7 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
     Progress ps(query.getSpecNum(), "accurate dotproduct to all");
     for (int i = 0; i < query.getSpecNum(); i++) {
         ps.increase();
+        if(query.getMzSpec(i).getPeakNum()<agtsummary.m_minPeakNumInSpec) continue;
         vector<long> allidx(m_csa->getSpecNum(), 0);
         vector<int> allscores(m_csa->getSpecNum(), 0);
         iota(allidx.begin(), allidx.end(), 0);
@@ -769,23 +809,23 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
                 res.emplace_back(allidx[k], allscores[k]);
             }
         }
-        cout << "number of candidates with dp score larger than " << dp_UInt << ": " << res.size() << endl;
+        cout << endl << "number of candidates with dp score larger than " << dp_UInt << ": " << res.size() << endl;
         string tmp = to_string("candidates dp > ", " ", dp_UInt, res.size(), "\n");
-        agtsummary.outputTofile(tmp);
+        agtsummary.writeToLogFile(tmp);
         stable_sort(res.begin(), res.end(), [](const IdxScore &x, const IdxScore &y) { return x.Score > y.Score; });
         if (res.size() > topK) res.erase(res.begin() + topK, res.end());
 //        res.resize(topK);
 //        long idx = *std::min_element(allidx.begin(), allidx.end(),
 //                                     [&](const long &x, const long &y) { return allscores[x] > allscores[y]; });
         cout << endl << "QueryID\tRank\tIdx\tScore\tDP" << endl;
-        tmp = "QueryID Rank Idx Score DP\n";
-        agtsummary.outputTofile(tmp);
+        tmp = "QueryID\tRank\tIdx\tScore\tDP\n";
+        agtsummary.writeToLogFile(tmp);
         for (int k = 0; k < res.size(); k++) {
             topKTrueNN[i].push_back(res[k].idx);
             double dp = res[k].Score * 1.0 / 42925;
-            tmp = to_string("", " ", i, k, res[k].idx, res[k].Score, dp, "\n");
-            agtsummary.outputTofile(tmp);
-            cout << i << "\t" << k << "\t" << res[k].idx << "\t" << res[k].Score << "\t" << dp << endl;
+            tmp = to_string("", "\t", query.getQueryIndex(i), k, res[k].idx, res[k].Score, dp, "\n");
+            agtsummary.writeToLogFile(tmp);
+            cout << query.getQueryIndex(i) << "\t" << k << "\t" << res[k].idx << "\t" << res[k].Score << "\t" << dp << endl;
         }
 
         //m_csa->calcDotProduct(50, m_tol, query.getSpecBy(i), 32, allidx, allscores);
@@ -844,50 +884,84 @@ void CSpectralArchive::getAccurateTopNeighbor(ICQuery &query, vector<long> &topI
     }
 }
 
-void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes) {
+void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum) {
     if (m_indices == nullptr) {
         cout << "Error: Empty index!" << endl;
         throw string("Invalid index in !") + string(__FUNCTION__) + ":" + to_string(__LINE__);
     }
 
-    int numRet2nd = 1024;
+    int ret_num = 1024;
+
 
     int indexChoice = -1;
-    vector<vector<long>> cpu_results;
+    vector<vector<long>> results;
     int querySize = query.size();
-    m_indices->getAnns(query, numRet2nd, cpu_results);
-//    cout << querySize << "\t" << cpu_results.size() << endl;
+    cout << "changing index num to " << indexNum << endl;
+    m_indices->getAnns(query, ret_num, results,indexNum);
+//    cout << querySize << "\t" << results.size() << endl;
 
     if (agtsummary.m_recallOfTrueNeighbor) {
+        string tmp = to_string("nprobe","\t",agtsummary.m_nprobe,"\n");
+        agtsummary.writeToLogFile(tmp);
         vector<vector<long>> topKTrueNN;
         const int MAX_SCORE = 42925;
         double mindp = agtsummary.m_recallTNNminDP;
-        int dpScoreInt = mindp * MAX_SCORE;
+        int minDpScoreInt = mindp * MAX_SCORE;
         int topK = agtsummary.m_recallTNNtopK;
-        getkTrueNearestNeighbor(query, topKTrueNN, false, topK, dpScoreInt);
-        if (topKTrueNN.size() == cpu_results.size()) {// WHY!!!
+        bool isLowMassAcc = false;
+        getkTrueNearestNeighbor(query, topKTrueNN, isLowMassAcc, topK, minDpScoreInt);
+        if (topKTrueNN.size() == results.size()) {// WHY!!!
             if(verbose) cout << "[OK] same size for top k true neighbors, and top k approx neighbors " << endl;
         }
 
         for (int j = 0; j < querySize; j++) {
+            if(query.getMzSpec(j).getPeakNum()<agtsummary.m_minPeakNumInSpec){
+                continue;
+            }
             vector<long> collectIdx;
-            m_indices->collectANNs(indexChoice, numRet2nd, cpu_results, j, collectIdx, verbose);
-            int idx = -1;
-            string tmp = "rank TruthID Found ReportID query " + to_string(j) + "\n";
-            cout << "rank\tTruthID\tFound\tReportID query " << j << endl;
-            map<int, int> z;
+            m_indices->collectANNs(indexChoice, ret_num, results, j, collectIdx, verbose);
+            long queryIndex = query.getQueryIndex(j);
+            string tmp = "rank\tTruthID\tFound\tReportID\tRecall@rank\tquery\t" + to_string(queryIndex) + "\n";
+            cout << "rank\tTruthID\tFound\tReportID\tRecall@rank\tquery\t" << queryIndex << endl;
+            map<long, int> z;  
+            // mapping id to its last occurence 
+            // therefore we got list of unique keys. id.
             for (int k = 0; k < collectIdx.size(); k++) {
                 z[collectIdx[k]] = k;
             }
+            // stats
+            int numOfTNN = topKTrueNN[j].size();
+            int numberOfTNNsFound = 0;
+            long queryindex = query.getQueryIndex(j);
             for (int k = 0; k < topKTrueNN[j].size(); k++) {
-                bool isfound = (z.count(topKTrueNN[j][k]) == 0) ? false : (idx = z[topKTrueNN[j][k]], true);
-                tmp = to_string(tmp, " ", k, topKTrueNN[j][k], boolalpha, isfound, "\n");
+                int idx = -1;
+                // bool isfound = (z.count(topKTrueNN[j][k]) == 0) ? false : (idx = z[topKTrueNN[j][k]], true);
+                bool isfound = false;
+                if (z.count(topKTrueNN[j][k]) == 0){
+                    // k-th TNN not found.
+                    isfound = false;
+                }else{
+                    // k-th TNN found.
+                    idx = z[topKTrueNN[j][k]];
+                    isfound = true;
+                    numberOfTNNsFound += 1;
+                }
+
+
+                tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], boolalpha, isfound,(isfound ? collectIdx[idx] : idx), numberOfTNNsFound*1.0/(k+1), "\n");
                 cout << k << "\t" << topKTrueNN[j][k] << boolalpha << "\t" << isfound << "\t"
-                     << (isfound ? collectIdx[idx] : idx) << endl;
-                long queryindex = query.getQueryIndex(j);
+                     << (isfound ? collectIdx[idx] : idx)<< "\t" << numberOfTNNsFound*1.0/(k+1)<< endl;
+
+                
                 agtsummary.increase(isfound, queryindex);
             }
-            agtsummary.outputTofile(tmp);
+            agtsummary.writeToLogFile(tmp);
+            tmp = to_string("","\t","QueryIndex",queryIndex, 
+            "#TNN", numOfTNN, "#TNNFound",  numberOfTNNsFound, 
+            "oneQueryRecall", numberOfTNNsFound*1.0/numOfTNN, "nprobe", agtsummary.m_nprobe, 
+            "indexNum", m_indices->getNumOfindexInUse(),"mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
+            agtsummary.writeToLogFile(tmp);
+            cout << tmp << flush;
         }
         agtsummary.print();
     }
@@ -896,7 +970,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
     vector<vector<long>> allRetIdx(querySize, vector<long>());
 //    verbose =true;
     for (int i = 0; i < querySize; i++) {
-        m_indices->collectANNs(indexChoice, numRet2nd, cpu_results, i, allRetIdx[i], verbose);
+        m_indices->collectANNs(indexChoice, ret_num, results, i, allRetIdx[i], verbose);
         filterWithMinPeakNum(verbose, allRetIdx[i]);
         m_AnnotationDB->filterwithblacklist(verbose, allRetIdx[i]);
     }
@@ -912,8 +986,8 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 // calculate real distances.
 // keep top N neighbors
 void
-CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes) {
-    searchICQuery(query, tolerance, verbose, archiveRes);
+CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum) {
+    searchICQuery(query, tolerance, verbose, archiveRes,indexNum);
     archiveRes.keepTopN(topN, verbose);
 }
 
@@ -1103,13 +1177,17 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
                                            int topHitsNum, int numOfpValues, bool recalltrueneighbor, int batchSize,
                                            int bgspec_seed, int recallTNNtopK, double recallTNNminDP,
                                            bool skipBackgroundScoreCalc, bool useFlankingBins) {
-    agtsummary.setRecallTNN(recalltrueneighbor, recallTNNtopK, recallTNNminDP);
+    // agtsummary.setRecallTNN(recalltrueneighbor, recallTNNtopK, recallTNNminDP, recallTNNminPeakNumInSpec);
     agtsummary.setvalidationfile(validationfile);
     string JsonFile = querySpectra.getMzFilename() + to_string("_","_",first,last) +"_out.json";
     string allJsonStrs ="{\n";
     int initSize = allJsonStrs.size();
     SimpleTimer st("Search Mz file");
-    if (last < 0 or last > querySpectra.getSpecNum()) last = querySpectra.getSpecNum();
+    if (last < 0 or last > querySpectra.getSpecNum()) {
+        last = querySpectra.getSpecNum();
+        spdlog::get("A")->info("Warning: resetting range [first, last] -> [{}, {}], because of the total number of querySpectra is {}", first, last, last);
+    }
+
     if (first < 0 or first > querySpectra.getSpecNum() or first >= last) {
         spdlog::get("A")->info("Warning: the range [first, last] -> [{}, {}] is invlaid. ", first, last);
         first = 0;
@@ -1140,7 +1218,7 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
         CMzQuery query(querySpectra, m_dim, idxlist, useFlankingBins);
         if(m_verbose)cout << "Size of query: " << query.size() << endl;
         CArxivSearchResult searchRes;
-        searchICQuery(topHitsNum, query, m_tol, m_verbose, searchRes);
+        searchICQuery(topHitsNum, query, m_tol, m_verbose, searchRes,-1);
         if(m_verbose)cout << "Searching in archive done"<< endl;
         vector<vector<int>> ptrDPs(numOfpValues, vector<int>());
         vector<vector<vector<int>>> ptrDP_all_pv_query(numOfpValues, vector<vector<int>>(idxlist.size(), vector<int>()));
@@ -1378,7 +1456,7 @@ void CSpectralArchive::searchNeighborsWithin(double min_dp, long start, long end
 //        exit(-1);
 
         ICQuery *query = createICQuery(nullptr, &idxlist, true, getDim(), *m_pScorer);
-        searchICQuery(*query, m_tol, false, archiveRes);
+        searchICQuery(*query, m_tol, false, archiveRes,-1);
         archiveRes.keepWithMinDP(min_dp);
         // save the results to database
         ps.increase(len);
@@ -2124,22 +2202,32 @@ SArchiveMatch::validationAllNeighbors(float &dist, float &evalue, SPsmAnnotation
 
 
 SAnnGTSummary::SAnnGTSummary() {
+    m_recallOfTrueNeighbor = false;
     totalnum = 0;
     correctnum = 0;
+
+    m_nprobe = 0;
+    m_indexNum = 0;
+    m_recallTNNminDP = 0;
+    m_minPeakNumInSpec = 1;
+    logFileName = "TNNRecall.log";
+
     ppp = nullptr;
-    m_recallOfTrueNeighbor = false;
-    outputfile = "TNNRecall.log";
+    
+    
+    
 }
 
 void SAnnGTSummary::print() {
     double ratio = correctnum * 1.0 / totalnum;
-    string tmp = to_string("", " ", "correct", correctnum, "totalnum", totalnum, "ratio", ratio, "\n");
-    outputTofile(tmp);
-    spdlog::get("A")->info("TNNRecall Correct {} Total {} ratio {}", correctnum, totalnum, correctnum * 1.0 / totalnum);
-    cout << "correct " << correctnum << " totalnum " << totalnum << " ratio " << correctnum * 1.0 / totalnum << endl;
+    string tmp = to_string("", " ", "correct", correctnum, "totalnum", totalnum, "recall", ratio, "\n");
+    writeToLogFile(tmp);
+    spdlog::get("A")->info("TNNRecall found {} #TNN_total {} overall_recall {:.4f} nprobe {} indexNum {} minDP {} minPeak {} topK {}", correctnum, totalnum, correctnum * 1.0 / totalnum, m_nprobe, m_indexNum, m_recallTNNminDP, m_minPeakNumInSpec, m_recallTNNtopK);
+    // cout << "correct " << correctnum << " totalnum " << totalnum << " ratio " << correctnum * 1.0 / totalnum << endl;
 }
 
 // todo: to be replaced
+// The validation on pepxml file is never used?
 void SAnnGTSummary::increase(bool iscorrect, long queryindex) {
     if (queryindex != -1 and ppp != nullptr and m_queryindex2scan.size() > 0 and m_queryindex2filename.size() > 0) {
         int scan = m_queryindex2scan[queryindex];
