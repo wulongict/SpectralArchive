@@ -58,7 +58,7 @@ void specfileinfo::init() {
     filename = "";
     start = 0;
     end = 0;
-    fileid = -1;
+    fileid = inValidFileID();
 }
 
 void specfileinfo::init(vector<string> &result) {
@@ -116,6 +116,12 @@ specfileinfo::specfileinfo(CDBEntry &dbentry) {
     }
 
 }
+
+bool specfileinfo::isGood() {
+    return inValidFileID() != fileid;
+}
+
+int specfileinfo::inValidFileID() {return -1;}
 
 
 void CAnnotationDB::appendNewDataFile(DataFile &df) {
@@ -288,6 +294,11 @@ string CAnnotationDB::getGroundTruthFileWithSameName(const string &specfile) {
 }
 
 void CAnnotationDB::searchSpecFileName(const string& specfile, vector<string> &filenames) {
+    // to be used in all the sql cases.
+    if(string::npos!=specfile.find_first_of("\'\":,%$#*^!=\\;?><")){
+        cout << "In valid string found in pattern " << specfile << endl;
+        return;
+    }
     string sql = "select * from SPECFILES where FILENAME like  \"%" + specfile + "\" limit 10;";
     CDBEntry dbentry;
     m_dbmanager->getRow(dbentry,sql, false);

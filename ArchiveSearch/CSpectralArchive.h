@@ -79,8 +79,8 @@ double intTol2double(int tol);
 
 struct SAnnGTSummary
 {
-    long totalnum;
-    long correctnum;
+    long totalTNNnum;
+    long correctTNNnum;
     bool m_recallOfTrueNeighbor;
     int m_recallTNNtopK;
     int m_minPeakNumInSpec;
@@ -89,6 +89,7 @@ struct SAnnGTSummary
     string logFileName;
     int m_nprobe; // number of buckets to look into.
     int m_indexNum;
+    int m_num_queries_searched;
 
     map<long, int> m_queryindex2scan;
     map<long, string> m_queryindex2filename;

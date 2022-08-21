@@ -1285,7 +1285,10 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
         CTimeSummary::getInstance()->pauseTimer("getting_json_output");
         searchRes.moveTo(vqrs, start - first);
 
+
+
     }
+    CTimeSummary::getInstance()->startTimer("save_json_output");
     allJsonStrs += "\n}\n";
     ofstream fout(JsonFile.c_str(), ios::out);
     if(fout.is_open()){
@@ -1293,15 +1296,20 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
         fout.close();
         if(m_verbose) cout << "Json file saved as " << JsonFile << endl;
     }
+    CTimeSummary::getInstance()->pauseTimer("save_json_output");
 
 
     spdlog::get("A")->info("Retrieving annotation from database...");
+    CTimeSummary::getInstance()->startTimer("getting_tsv_output");
     CMzFileSearchResults mzSR(*m_AnnotationDB, topHitsNum);
     mzSR.retrieveAnnotation(vqrs);
+    CTimeSummary::getInstance()->pauseTimer("getting_tsv_output");
 
     spdlog::get("A")->info("Exporting result into tsv file");
+    CTimeSummary::getInstance()->startTimer("save_tsv_output");
     string outfile = to_string(querySpectra.getListFile(), "_", first, last, ".psmtsv");
     mzSR.exportTsv(outfile);
+    CTimeSummary::getInstance()->pauseTimer("save_tsv_output");
 
     if (not validationfile.empty() and File::isExist(validationfile)) {
         mzSR.validation(validationfile, querySpectra);
@@ -1356,13 +1364,17 @@ void CSpectralArchive::getScorerFactoryPtr() {
 //    }
 //#endif
     if (m_usegpu) {
-#ifdef __CUDA__
-        m_scorerFactory = make_shared<CMzCUDAFactory>();
-#else
-        m_usegpu = false;
-        cout << "GPU is not available. Switch to use CPU" << endl;
+        // 2022 Aug: tested today find the gpu version is slower than cpu version.
+        // use cpu to calcualte pairwise dot product anyway
+        // always use CPU.
         m_scorerFactory = make_shared<CMzFileReaderFactory>();
-#endif
+//#ifdef __CUDA__
+//        m_scorerFactory = make_shared<CMzCUDAFactory>();
+//#else
+//        m_usegpu = false;
+//        cout << "GPU is not available. Switch to use CPU" << endl;
+//        m_scorerFactory = make_shared<CMzFileReaderFactory>();
+//#endif
     } else {
         m_scorerFactory = make_shared<CMzFileReaderFactory>();
     }
@@ -1512,6 +1524,67 @@ void CSpectralArchive::searchNeighborsWithin(double min_dp, long start, long end
 
 }
 
+
+void CSpectralArchive::remove(int lastNfile) {
+    cout << "Number of files to be removed " << lastNfile << endl;
+    if(lastNfile<=0){
+        cout << "skip removing files for N = " << lastNfile << endl;
+        return;
+    }
+    if(lastNfile > m_AnnotationDB->getTotalFileNum()){
+        cout << "can not remove more than " << m_AnnotationDB->getTotalFileNum() << " files" << endl;
+        lastNfile = m_AnnotationDB->getTotalFileNum();
+    }
+    // clean mz and scan file.
+    int FileNum = m_AnnotationDB->getTotalFileNum();
+    m_csa->removeLastNFile(lastNfile);
+
+    // clean index
+    specfileinfo sf = m_AnnotationDB->getSpecFileInfo(FileNum - lastNfile);
+    long last = m_AnnotationDB->getTotalSpecNum();
+    vector<long> idx(last - sf.start,0);
+    iota(idx.begin(), idx.end(), sf.start);
+    cout << "removing vectors from index " << idx.front() << " - " << idx.back() << endl;
+    m_indices->removeIds(idx);
+    m_indices->write();
+
+    m_AnnotationDB->deleteLastNFile(lastNfile);
+
+
+//    m_csa->removeLastNFile(lastNfile);
+//    for(int i = 0; i < lastNfile; i ++){
+//        specfileinfo sf =    m_AnnotationDB->getLastSpecFile();
+//        if(sf.isGood()){
+//            m_AnnotationDB->deleteLastNFile();
+//            vector<long> idx(sf.end-sf.start,0);
+//            iota(idx.begin(), idx.end(),sf.start);
+//            m_indices->removeIds(idx);
+//
+//        }
+//    }
+//    m_indices->write();
+//    cout << "Size of archive after files removed "<<size() << endl;
+}
+
+int CSpectralArchive::getNumOfFilesToRemoveForShrinkingArchiveTo(long numberofSpec) {
+
+    int FileNum = m_AnnotationDB->getTotalFileNum();
+    int removeLastNfile = 0;
+    if (numberofSpec < 0 or numberofSpec >= m_AnnotationDB->getTotalSpecNum()) {
+        // do not remove
+        removeLastNfile = 0;
+    } else {
+        // remove some of the files.
+        for (int i = 1; i <= FileNum; i++) {
+            specfileinfo sf = m_AnnotationDB->getSpecFileInfo(FileNum - i);
+            if (sf.start <= numberofSpec) {
+                removeLastNfile = i;
+                break;
+            }
+        }
+    }
+    return removeLastNfile;
+}
 
 
 struct SPeptideSet {
@@ -2246,9 +2319,10 @@ SArchiveMatch::validationAllNeighbors(float &dist, float &evalue, SPsmAnnotation
 
 
 SAnnGTSummary::SAnnGTSummary() {
+    m_num_queries_searched = 0;
     m_recallOfTrueNeighbor = false;
-    totalnum = 0;
-    correctnum = 0;
+    totalTNNnum = 0;
+    correctTNNnum = 0;
 
     m_nprobe = 0;
     m_indexNum = 0;
@@ -2262,12 +2336,12 @@ SAnnGTSummary::SAnnGTSummary() {
     
 }
 
-void SAnnGTSummary::print() {
-    double ratio = correctnum * 1.0 / totalnum;
-    string tmp = to_string("", " ", "correct", correctnum, "totalnum", totalnum, "recall", ratio, "\n");
+void SAnnGTSummary::printTNNSummary() {
+    double ratio = correctTNNnum * 1.0 / totalTNNnum;
+    string tmp = to_string("", " ", "correct", correctTNNnum, "totalTNNnum", totalTNNnum, "recall", ratio, "\n");
     writeToLogFile(tmp);
-    spdlog::get("A")->info("TNNRecall found {} #TNN_total {} overall_recall {:.4f} nprobe {} indexNum {} minDP {} minPeak {} topK {}", correctnum, totalnum, correctnum * 1.0 / totalnum, m_nprobe, m_indexNum, m_recallTNNminDP, m_minPeakNumInSpec, m_recallTNNtopK);
-    // cout << "correct " << correctnum << " totalnum " << totalnum << " ratio " << correctnum * 1.0 / totalnum << endl;
+    spdlog::get("A")->info("TNNRecall found {} #TNN_total {} overall_recall {:.4f} nprobe {} indexNum {} minDP {} minPeak {} topK {}", correctTNNnum, totalTNNnum, correctTNNnum * 1.0 / totalTNNnum, m_nprobe, m_indexNum, m_recallTNNminDP, m_minPeakNumInSpec, m_recallTNNtopK);
+    // cout << "correct " << correctTNNnum << " totalTNNnum " << totalTNNnum << " ratio " << correctTNNnum * 1.0 / totalTNNnum << endl;
 }
 
 // todo: to be replaced
@@ -2286,8 +2360,8 @@ void SAnnGTSummary::increase(bool iscorrect, long queryindex) {
             return;
         }
     }
-    totalnum++;
-    if (iscorrect) correctnum++;
+    totalTNNnum++;
+    if (iscorrect) correctTNNnum++;
 }
 
 void SAnnGTSummary::setvalidationfile(string peptideprophetpepxmlfile) {
@@ -2307,13 +2381,15 @@ void SAnnGTSummary::setqueryindexMap(CMzFileReader &querySpectra) {
         m_queryindex2filename[i] = filename;
     }
 }
-
 void CSocketServerSummary::print() {
     cout << "----------------------------------------------------" << endl
          << "#XHR\tTime\t#Total(s)" << endl << setprecision(2)
          << num_of_search_done << "\t" << time_used_for_current_search << "\t"
          << total_time_used_for_search << endl
          << "------------------------------------------------------" << endl;
+    CTimeSummary::getInstance()->print(cout, num_of_search_done);
+    cout << "------------------------------------------------------" << endl;
+
 }
 std::mutex summary_lock;
 void CSocketServerSummary::update(double time_used_in_sec) {
