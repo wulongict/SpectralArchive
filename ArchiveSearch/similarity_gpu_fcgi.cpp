@@ -44,6 +44,10 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             ("indexstrs", po::value<string>()->default_value(
                     "IVF256,PQ16;IVF256,PQ16;IVF256,PQ16;IVF256,PQ16;IVF256,PQ16;IVF256,PQ16"),
              "the string for creating indices.")
+            ("indexshuffleseeds", po::value<string>()->default_value("default"),
+             "the string for creating indices with shuffle seeds. if the value is not default,"
+             " a customized seeds list can be: customized:a;b;c;d;e;f when there are six indexes. "
+             "The characters a-f should be integers. default equivalent to customized:0;1;2;3;4;5.")
             ("updategtlist", po::value<string>()->default_value(""),
              "update peptide annotation table with input file list (pepxmllist)")
             ("use_gpu,g", po::bool_switch()->default_value(false),
@@ -73,6 +77,10 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "input absolute queryindex from mzxmlfiles. This is for check the groundtruth. One should always find itself with any query; ")
             ("numprobe", po::value<int>()->default_value(256),
              "number of clusters to be inspected. default: 256 ")
+            ("popDataFileNum", po::value<int>()->default_value(0),
+             "number of data files to be removed from tail of the archive. For nonzero value n, the last n data files will be removed. default: 0 ")
+            ("shrinkto", po::value<int>()->default_value(-1),
+             "shrink the archive to a smaller size. specify the number of spectra. Data files will be removed until the archive is smaller than this size. -1 means no shrink value. default: -1 ")
             ("numPvalueCalculator", po::value<int>()->default_value(1),
              "the different pvalues to be calculated. Recommended 1, or 3. default: 1 ")
             ("saveBackgroundScore", po::value<bool>()->default_value(false),
@@ -166,7 +174,7 @@ void displayTitle() {
 // http://spec.ust.hk:8709/id/3704218?TOPN=30
 
 // run the web appliaction: ./scripts/webinterface_8710.bash
-
+#include "CTimerSummary.h"
 int main(int argc, char *argv[]) {
     try {
         initlog("spectral_clustering.log", "A");
@@ -185,6 +193,9 @@ int main(int argc, char *argv[]) {
         string indexFactoryStr = vm.at("indexstring").as<string>();
         string inputsource = vm.at("inputsource").as<string>();
         int topn = vm.at("topn").as<int>();
+        int popDataFileNum = vm.at("popDataFileNum").as<int>();
+        int shrinkto = vm.at("shrinkto").as<int>();
+
         int numPvalueCalculator = vm.at("numPvalueCalculator").as<int>();
         bool saveBackgroundScore = vm.at("saveBackgroundScore").as<bool>();
         int bgspecseed = vm.at("bgspecseed").as<int>();
@@ -212,6 +223,7 @@ int main(int argc, char *argv[]) {
         bool skipBackgroundScoreCalc=vm["skipBackgroundScoreCalc"].as<bool>();
         int initcenoption = vm.at("centroidinit").as<int>();
         string indexstrs = vm.at("indexstrs").as<string>();
+        string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
         int tolerance = vm["tolerance"].as<int>();
         int minPeakNum = vm["minPeakNum"].as<int>();
         int searchBatchSize = vm["searchBatchSize"].as<int>();
@@ -227,17 +239,26 @@ int main(int argc, char *argv[]) {
         option._option = static_cast<CPQParam::PQ_OPTIONS>(initcenoption);
         const int topPeakNum = 50;
 
+        // pass seeds in.
         CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
                                  minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
-                                 createFileNameBlackList, saveBackgroundScore, verbose, archivename);
+                                 createFileNameBlackList, saveBackgroundScore, verbose, archivename, indexshuffleseeds);
         archive.setRecallTNN(recallTrueNeighbor, recallTNNtopK, recallTNNMinDP, minPeakNumInSpec); // the parameter is set here. 
         // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
         archive.setnProbe(numprobe);
+        int removeFileNumToShrink = archive.getNumOfFilesToRemoveForShrinkingArchiveTo(shrinkto);
 
-        if (update_index) {
+        popDataFileNum = popDataFileNum > removeFileNumToShrink ? popDataFileNum: removeFileNumToShrink;
+        if (popDataFileNum > 0 ){
+            // remove data get top priority. after remove, program will exit.
+            // remove information of the last file
+            archive.remove(popDataFileNum);
+        }
+        else if (update_index) {
             archive.update(new_experimental_data, new_search_result, new_search_result_list, new_experimental_datalist);
             spdlog::get("A")->info("Index updated!");
-        } else {
+        }
+        else  {
             if (inputsource == "socket") {
                 //nginx
                 spdlog::get("A")->info("Starting index server via socket.. ");
@@ -278,6 +299,7 @@ int main(int argc, char *argv[]) {
                     throw runtime_error("--datafile should not be empty!");
                 }
                 else {
+
                     double mzTol = 2 * tolerance * 2000.0 / 65535;
                     CMzFileReader mzfile(datafile, false, false, removeprecursor, mzTol, minPeakNum, verbose);
                     mzfile.init(false, false, removeprecursor); // added back.
@@ -289,12 +311,15 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-        
-        spdlog::get("A")->info("Spectral archive is refreshed! Size {}", archive.size());
+        ostringstream oss;
+        CTimeSummary::getInstance()->print(oss, archive.getNumOfQueriesSearched());
+
+        spdlog::get("A")->info("Time report:\n{}\n", oss.str());
+        spdlog::get("A")->info("Spectroscape task is finished. The spectra number in archive is {}.", archive.size());
         return 0;
     }
     catch (const exception &ex) {
-        cout << "[Error] " << ex.what() << " program will exit!" << endl;
+//        cout << "[Error] " << ex.what() << " program will exit!" << endl;
         spdlog::get("A")->info("program exit with error: {}", ex.what());
         return -1;
     }

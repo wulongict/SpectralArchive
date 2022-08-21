@@ -20,6 +20,7 @@ public:
     void write();
     void setfilename(string filename);
     string getfilename();
+    virtual void removeIds(vector<long> &idx)=0;
 
     virtual void toGPU()=0;
     virtual void toCPU()=0;
