@@ -19,6 +19,7 @@ class CMyIndex: public ICIndexWrapper {
 public:
 //    CMyIndex(CPQParam option);
     CMyIndex(shared_ptr<CPQParam> optionptr);
+    void removeIds(vector<long> &idx) override;
 //    CMyIndex();
     virtual ~CMyIndex();
     void read(string filename);

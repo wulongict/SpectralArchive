@@ -16,6 +16,9 @@
 #if FAISS_VERSION_MAJOR == 1 and FAISS_VERSION_MINOR >=6
 // this header is available in faiss 1.6.4
 #include <faiss/index_factory.h>
+#include <faiss/IndexIVFPQ.h>
+#include <fstream>
+
 #endif
 // GPU CUDA
 
@@ -34,6 +37,38 @@ void CFaissIndexWrapper::read(string filename) {
 }
 
 void CFaissIndexWrapper::display() {
+    // write the bucket size to a file, calcualte the imbalanceness. as entropy.
+    // getfilename()
+    int number_of_lists = ((faiss::IndexIVFPQ*)m_index)->nlist;
+    vector<long> size_of_list(number_of_lists,0);
+
+    cout << "size of the buckets" << endl;
+    double sum = 0;
+    for(int i = 0; i < number_of_lists; i ++){
+        long sizelist = ((faiss::IndexIVFPQ*)m_index)->get_list_size(i);
+        size_of_list[i] = sizelist;
+        sum += sizelist;
+//        cout << i << "\t" << sizelist << endl;
+    }
+    double entropy = 0;
+    for(int i = 0; i < number_of_lists; i ++){
+        if(size_of_list[i]>0){
+            double p = size_of_list[i]/sum;
+            entropy -= p* log2(p); // use log2 entropy means bits of information.
+        }
+    }
+    cout <<  getfilename() << "\tEntropy\t" << entropy << "\tmaxEntropy\t" << -log2(1.0/number_of_lists)<< endl;
+    string outputfile = getfilename() + "_nlist.txt";
+    ofstream fout(outputfile.c_str(), ios::out);
+    fout << "Entropy\t" << entropy << endl;
+    for(int i = 0; i < number_of_lists; i ++){
+        fout << i << "\t" << size_of_list[i] << endl;
+    }
+    fout.close();
+    cout << "nlist information saved as " << outputfile << endl;
+    int sacodesize = ((faiss::IndexIVFPQ*)m_index)->sa_code_size(); // 17
+//    ((faiss::IndexIVFPQ*)m_index)->range_search()
+    cout << "size of code in bytes per vector: " << sacodesize << endl;
 #if FAISS_VERSION_MAJOR == 1 and FAISS_VERSION_MINOR <6
     getPtr()->display();
 #endif
@@ -126,4 +161,12 @@ CFaissIndexWrapper::~CFaissIndexWrapper() {
 
 void CFaissIndexWrapper::add(long newspecnum, float *vec) {
     getPtr()->add(newspecnum, vec);
+}
+
+void CFaissIndexWrapper::removeIds(vector<long> &idx) {
+    faiss::IDSelectorRange sel(idx.front(), idx.back()+1);
+    cout << "removing index of size " << idx.size() << endl;
+    int n = m_index->remove_ids(sel);
+    cout << n << " vectors removed from index" << endl;
+
 }

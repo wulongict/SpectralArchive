@@ -22,6 +22,7 @@ include_directories(../External/Eigen ../External/spdlog-1.x/include
 		/usr/local/cuda/include
 		)
 set(SOURCE_FILES
+		CTimerSummary.cpp
         CSpectralArchive.cpp
 		FastCgiInterface.cpp
         )

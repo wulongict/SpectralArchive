@@ -28,6 +28,7 @@
 #include "dependentlibs/pvalueEstimation/CTailEstimation.h"
 #include "dependentlibs/randomSpecParser.h" // getPeakList
 #include "dependentlibs/MzRTMap.h"
+#include "CTimerSummary.h"
 using namespace std;
 
 bool add_new_data_file_to_mzXMLList(string mzXMLList, string newdatafile) {
@@ -145,15 +146,15 @@ public:
         m_size = queryidx.size();
         m_outfile = outputfilename;
         m_gtInDB.assign(m_size, SPsmAnnotation());
-        cout << "retrival of ground truth " << endl;
+//        cout << "retrival of ground truth " << endl;
         for (int i = 0; i < m_size; i++) {
             annodb->retrieveGtinfo(queryidx[i], m_gtInDB[i]);
         }
-        cout << "retrieval of peak num" << endl;
+//        cout << "retrieval of peak num" << endl;
         for (int i = 0; i < m_size; i++) {
             m_gtInDB[i].peaknum = mzfile->getPeakNum(queryidx[i]);
         }
-        cout << "start summary" << endl;
+//        cout << "start summary" << endl;
 
         PSMSummary summary("background peptides");
         ofstream fout(m_outfile.c_str(), ios::out);
@@ -163,7 +164,7 @@ public:
             summary.significant_num += gt.significance;
             fout << gt << endl;
         }
-        cout << "done summary" << endl;
+//        cout << "done summary" << endl;
     }
 
     ~CGtOutput() {
@@ -171,19 +172,14 @@ public:
     }
 };
 
-// the creation of a spectral archive contains three step, each step will read the mzXML/mzML raw data,
-// How can we avoid this?
-// This strategy makes the three parsts: indices, mzFile, sqlDB, independent from each other.
-// It is possible to Read once for three components,, but we need to change a lot.
-// todo: initialize from raw data file one by one.
+
 // init by the name, then add the list of mzXMLs one by one.
 CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor,
-                                   bool useflankingbins,
-                                   int tol, int minPeakNum, bool myOwnIndex, CPQParam option, string indexstrings,
-                                   bool usegpu,
-                                   bool rebuildsqldb, int seedpvalue, const int topPeakNum,
-                                   bool createfilenameBlackList,
-                                   bool saveBackgroundScore, bool verbose, string archivename) : PeakNumPerSpec(
+                                   bool useflankingbins, int tol, int minPeakNum, bool myOwnIndex, CPQParam option,
+                                   string indexstrings,
+                                   bool usegpu, bool rebuildsqldb, int seedpvalue, const int topPeakNum,
+                                   bool createfilenameBlackList, bool saveBackgroundScore, bool verbose,
+                                   string archivename, string indexshuffleseeds) : PeakNumPerSpec(
         topPeakNum) {
             m_savebackgroundscore = saveBackgroundScore;
     // checking the parameters.
@@ -222,27 +218,30 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
 
-    // todo: the mzXML/mzML raw files has been read for 3 times. DB, MZ, Index, why not just do it once? Jul 2021.
-    cout << "[info] 1/3 Creating SQL Database " << endl;
+
+    cout << "[info] 1/3 Connecting to SQL Database " << endl;
     m_AnnotationDB->createDatabase(rebuildsqldb, m_mzXMLListFileName + ".sqlite3db", m_verbose);
-    // m_AnnotationDB->appendRawDataList(m_mzXMLListFileName); // postpone later.
 
-
-    cout << "[info] 2/3 Creating Processed Peak Lists (mz file object)" << endl;
-    // todo: do not build the mz file now, make an empty one, and put data inside later.
-    // now this step does not read the whole list of mzXMLs.
+    cout << "[info] 2/3 Initialize parameters of peak list file " << endl;
     m_csa = CMzFileReader::makeShared(m_mzXMLListFileName, false, true, m_removeprecursor, intTol2double(m_tol),
                                        m_minPeakNum, verbose);
 
-    cout << "[info] 3/3 Creating index" << endl;
-    createIndices(myOwnIndex, make_shared<CPQParam>(option), indexstrings);
+    cout << "[info] 3/3 Initialize index" << endl;
+    // pass seeds in.
+    createIndices(myOwnIndex, make_shared<CPQParam>(option), indexstrings, indexshuffleseeds);
+
+
+    // loading index  create if not exist.
     // load index, create if not exist.
     if(m_indices->isExist()){
         m_indices->loadIndices();
     }    else{
         m_indices->trainOnFileList(m_mzXMLListFileName);
-        // m_indices->appendList(m_mzXMLListFileName); // append each file, postpone later.
     }
+    m_indices->display();
+    // index ready. either trained or loaded.
+    // database connection ready.
+    // mz file to be loaded.
 
 
 
@@ -254,7 +253,8 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     if (m_usegpu)m_indices->toGpu(); // should we delay this? todo:
     // to start the service.
     getScorerFactoryPtr();
-    m_pc = make_shared<CPValueCalculator>(m_pScorer->getSpecNum(), 1, seedpvalue, m_tol, saveBackgroundScore,verbose);
+    int threadnum=1;
+    m_pc = make_shared<CPValueCalculator>(m_pScorer->getSpecNum(), threadnum, seedpvalue, m_tol, saveBackgroundScore,verbose);
     m_pc->buildFragIndex(m_pScorer, verbose);
 
     // generate summary of archive.
@@ -273,21 +273,23 @@ void CSpectralArchive::createMzFileObject() {
     getScorerFactoryPtr();
 }
 
+// init parameters for each index. filename, seed.etc..
 // create path multiIndices under the same path as m_indexFileName.
 // get number of indices to be created, using indexstr, split by ';'
 // create multiIndices object. each corresponding to a file in multiIndices folder. 
-void CSpectralArchive::createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings) {
-    File::CFile fileObj(m_indexFileName);
-    string path = fileObj.path + "/multiIndices";
-
+void CSpectralArchive::createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings, string indexshuffleseeds) {
     int cnts = count(indexstrings.begin(), indexstrings.end(), ';') + 1;
     if (cnts > 6 and cnts < 1) {
         cout << "Error: invalid cnts " << cnts << endl;
         throw runtime_error("Invalid parameters!");
     }
+
+    File::CFile fileObj(m_indexFileName);
+    string path = fileObj.path + "/multiIndices";
     createDirectory(path);
     double index_tol = intTol2double(m_tol);
-    m_indices = make_shared<CMultiIndices>(indexstrings, path, fileObj.basename, true, index_tol, myOwnIndex, option,
+    // pass seeds from here.
+    m_indices = make_shared<CMultiIndices>(indexstrings, indexshuffleseeds,path, fileObj.basename, true, index_tol, myOwnIndex, option,
                                            PeakNumPerSpec, m_removeprecursor, m_useflankingbins, m_dim);
 
 
@@ -306,6 +308,7 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
         vector<string> datafiles = m_AnnotationDB->getListOfSpecFiles();
         File::saveas(datafiles, m_mzXMLListFileName, true);
         cout << m_mzXMLListFileName << " updated, number of raw files " << datafiles.size() << endl;
+
         string scanFilename = m_mzXMLListFileName + ".scan";
         bool found = File::isExist(scanFilename, true);
         cout << "Removing scan file: " << scanFilename << endl;
@@ -318,14 +321,11 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
-    // only save index once in the end. 
-    // todo: the improve here is very small: 1%. may change it back to save in every addRawData call...
     m_indices->write();  // as there is only one file, we could write here.
-    // mz file should also be exported.
+
+    // mz file loaded.
     m_csa->refresh_mz_object_from_disk();
 
-    cout << "INDEX saved " << endl;
-        // output the size of archive.
     cout << "[Info] size of archive: " <<this->size() << endl;
     
 }
@@ -354,8 +354,6 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
             return; 
         }
         else{
-            //  newFileAdded = true;
-            // Time estimation
             SimpleTimer st;
             for (int i = 0; i < files.size(); i++) {
                 cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
@@ -412,8 +410,8 @@ void CSpectralArchive::setnProbe(int nprobe) {
     agtsummary.setNProbe(nprobe);
     // if(nprobe != agtsummary.m_nprobe){
     //     agtsummary.m_nprobe = nprobe;
-    //     agtsummary.correctnum=0;
-    //     agtsummary.totalnum = 0;
+    //     agtsummary.correctTNNnum=0;
+    //     agtsummary.totalTNNnum = 0;
     // }
     
 }
@@ -431,15 +429,10 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
     doAddSearchResult(pepxmlfile);
 }
 
-// update a single raw file
-// check if the mzXMLfile already exist in archive.
-// if not, add it to DB, MZ, and INDEX.
-// Attention: index is not saved. 
+
+
 void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     if (mzXMLfile.empty()) {
-        // cout << "Raw data file is not provided! The following files will not be updated: \n"
-        //         "mzxml list, index file, compact mz file, spec table, and gt table."
-        //      << endl;
         return;
     }
 
@@ -474,7 +467,6 @@ void CSpectralArchive::appendFileName(const string &mzXMLfile) {
 }
 
 void CSpectralArchive::updateIndex(bool verbosity) {
-//    spdlog::get("A")->info("refresh index");
     m_AnnotationDB->createTable("SPECFILES", false,m_verbose);
     syncIndicesWithSpecFileTable();
     if (not m_AnnotationDB->isTableExist("GROUNDTRUTH")) {
@@ -495,6 +487,7 @@ void CSpectralArchive::addListOfSearchResults(string pepxmlfilelist) {
         return;
     }
     CTable pepxmllist(pepxmlfilelist, '\t', false, 0);
+    cout << "reading pepxml file from " << pepxmlfilelist << endl;
 
     // Progress ps(pepxmllist.m_row, "Updating ground truth");
     for (int i = 0; i < pepxmllist.m_row; i++) {

@@ -29,9 +29,9 @@ CFragIndex::CFragIndex(int PeakPerSpec) {
 void CFragIndex::buildIndex(shared_ptr<ICMzFile> &mzfile, vector<long> &bgSpectraIds) {
     m_bgSpectraNum = bgSpectraIds.size();
     m_norm.assign(m_bgSpectraNum, 0);
-    Progress ps(m_bgSpectraNum,"building fragment index");
+//    Progress ps(m_bgSpectraNum,"building fragment index");
     for(long i = 0; i < bgSpectraIds.size(); i ++)    {
-        ps.increase();
+//        ps.increase();
         float norm_i = m_id2rank->getNorm(mzfile->getSpecBy(bgSpectraIds.at(i)));
         setNorm(norm_i,i);
         CMzSpec spec = mzfile->getMzSpec(bgSpectraIds.at(i));

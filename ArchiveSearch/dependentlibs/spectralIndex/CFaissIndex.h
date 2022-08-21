@@ -7,6 +7,7 @@
 
 #include "ICIndexWrapper.h"
 #include <faiss/Index.h>
+#include <faiss/impl/AuxIndexStructures.h>
 
 class CFaissIndexWrapper: public ICIndexWrapper {
     faiss::Index *m_index;
@@ -14,6 +15,7 @@ class CFaissIndexWrapper: public ICIndexWrapper {
     bool m_isCPU;
 public:
     CFaissIndexWrapper();
+    void removeIds(vector<long> &idx) override;
     virtual ~CFaissIndexWrapper();
     void read(string filename) override ;
     void add(long newspecnum, float *vec) override;

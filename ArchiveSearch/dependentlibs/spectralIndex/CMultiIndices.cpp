@@ -18,9 +18,10 @@ MultipleIndicesImpl::MultipleIndicesImpl() : m_useCpu(true) {
 // create multiple indices, set the filename
 // assign seeds 0 to N-1 for N indices, to make random algorithm reproducible. 
 // Attention: in different version of gcc, the shuffle function changes. 
-//            This might cause problem. So use the proper shuffle function. 
+//            This might cause problem. So use the proper shuffle function.
+// This function will create no indexes, but make the parameters ready.
 void MultipleIndicesImpl::initialize(int numIndex, string indexpath, string basename, bool useMyOwn,
-                                     shared_ptr<CPQParam> option) {
+                                     shared_ptr<CPQParam> option, string indexshuffleseeds) {
     m_numIndexUsed = numIndex;
     m_ShuffleIndex.assign(numIndex, nullptr);
 
@@ -36,8 +37,27 @@ void MultipleIndicesImpl::initialize(int numIndex, string indexpath, string base
         getShuffledIndex(i)->setfilename(filename);
     }
 
+    // seeds should be initialized in a better way.
     m_seeds.assign(numIndex, 0);
-    iota(m_seeds.begin(), m_seeds.end(), 0);
+    if(indexshuffleseeds == "default"){
+        iota(m_seeds.begin(), m_seeds.end(), 0);
+    }else{
+        int pos = indexshuffleseeds.find_first_of(":")    ;
+        if(string::npos == pos) cout << "Error: invalid seeds" << endl;
+        indexshuffleseeds = indexshuffleseeds.substr(pos+1);
+        vector<string> values;
+        split_string(indexshuffleseeds, values, ';');
+        if(values.size() != m_seeds.size()) cout << "Error: invalid seeds" << endl;
+        for (int i = 0; i < values.size(); i ++){
+            m_seeds[i] = stringTo<int>(values[i]);
+        }
+
+
+    }
+    cout << "Seeds\t" ;
+    for(auto x: m_seeds) cout << x << "\t";
+    cout << endl;
+
 }
 
 void MultipleIndicesImpl::trainIndex(int i, int batchSize, float *vecBatch) {
@@ -237,13 +257,14 @@ int MultipleIndicesImpl::getNum() const {
 }
 
 void MultipleIndicesImpl::setNprobe(int nprobe) {
+    m_nprobe = nprobe;
     for (int i = 0; i < getNum(); i++) {
         getShuffledIndex(i)->setnProb(nprobe);
     }
 }
 
 void MultipleIndicesImpl::getANNByShuffleQueries(int numQuery, int ret_num, const float *vquery,
-                                                 vector<vector<long>> &multipleInd, int i, vector<float> &dist,
+                                                 vector<vector<long>> &multipleInd,vector<vector<double>> &results_dist, int i, vector<float> &dist,
                                                  vector<long> &ind) {
     int dim = getDim(i);
     long totalLen = numQuery * dim;
@@ -254,13 +275,31 @@ void MultipleIndicesImpl::getANNByShuffleQueries(int numQuery, int ret_num, cons
     search(i, ret_num, dist, ind, shuffledVquery, numQuery);
 
     multipleInd.push_back(vector<long>(ind.begin(), ind.end()));
+    results_dist.push_back(vector<double>(dist.begin(), dist.end()));
+
     delete[] shuffledVquery;
 }
 
-CMultiIndices::CMultiIndices(string indexstring, string indexpath, string libname, bool doShuffle,
+void MultipleIndicesImpl::removeIds(vector<long> &idx) {
+    for(int i = 0; i < getNumOfIndexBuilt(); i ++){
+        // for each index, remove those ids.
+        m_ShuffleIndex[i]->removeIds(idx);
+    }
+}
+
+void MultipleIndicesImpl::setNum(int indexNum) {
+    if (indexNum > 0 and indexNum <= getNumOfIndexBuilt()) m_numIndexUsed = indexNum;
+//    cout << "[Info] only using " << m_numIndexUsed << " indexing files " << endl;
+}
+
+bool MultipleIndicesImpl::usingCPU() {
+    return m_useCpu;
+}
+
+CMultiIndices::CMultiIndices(string indexstring, string indexshuffleseeds,string indexpath, string libname, bool doShuffle,
                              double tolerance, bool useMyOwn, shared_ptr<CPQParam> cpqParam, const int topPeakNum,
-                             bool removePrecursor, bool useFlankingBins, int dim):SPECNUM(100000) {
-   
+                             bool removePrecursor, bool useFlankingBins, int dim): TRAINING_SPEC_NUM(100000) {
+
     m_topPeakNum = topPeakNum;
     option = cpqParam;
     m_tolerance = tolerance;
@@ -268,7 +307,8 @@ CMultiIndices::CMultiIndices(string indexstring, string indexpath, string libnam
     split_string(indexstring, m_multiIndicesStr, ';');
 //    printIndicesStr();
     m_indexNum = m_multiIndicesStr.size();
-    m_impl.initialize(m_indexNum, indexpath, libname, useMyOwn, option);
+    // custom seeds from here.
+    m_impl.initialize(m_indexNum, indexpath, libname, useMyOwn, option, indexshuffleseeds);
     m_debug = false;
     m_removeprecursor = removePrecursor;
     m_useFlankingBins = useFlankingBins;
@@ -304,31 +344,31 @@ void CMultiIndices::trainOnFileList(string datafilelist) {
 }
 
 float * CMultiIndices::collectTrainingSpectra(const vector<string> &files, long & total) const {
-    
+
     total= 0;
-    float * vec= new float[SPECNUM * m_dim];
+    // m_dim=4096; training_spec_num=100K; in total: 4096 X 100K = 4K X 100 K = 400 M
+    float * vec= new float[TRAINING_SPEC_NUM * m_dim];
     vector<int> file_idx(files.size(), 0);
 
     iota(file_idx.begin(), file_idx.end(), 0);
     int seed = 42;
     gcc5shuffle(file_idx.begin(), file_idx.end(), mt19937(seed));
 
-    cout << "[Info] Start to collect " << SPECNUM << " MS2 spectra for training.. " << endl;
+    cout << "[Info] Start to collect " << TRAINING_SPEC_NUM << " MS2 spectra for training.. " << endl;
     for (int i = 0; i < file_idx.size(); i++) {
         long count = 0;
         string filename = files[file_idx[i]];
-        // cout << endl << "Processing file: " << i << " / " << file_idx.size() <<" : " <<  filename << endl;
+
         DataFile df(filename,0,-1);
         float *p = df.toFloatVector(m_dim, count, m_removeprecursor, m_useFlankingBins, m_tolerance, 0, -1,
                                     m_topPeakNum);
-        long newSpecNum = total + count <= SPECNUM ? count : SPECNUM - total;
+        long newSpecNum = total + count <= TRAINING_SPEC_NUM ? count : TRAINING_SPEC_NUM - total;
         copy(p, p + m_dim * newSpecNum, vec + m_dim * total);
         total += newSpecNum;
-        // cout << "[Training Set] " << total << " / " << SPECNUM << endl;
-        spdlog::get("A")->info("Processing file {} / {} : {} : training set size {} / {}, new spectra {}",i, file_idx.size(), filename, total, SPECNUM, newSpecNum);
-        
+        spdlog::get("A")->info("Processing file {} / {} : {} : training set size {} / {}, new spectra {}", i, file_idx.size(), filename, total, TRAINING_SPEC_NUM, newSpecNum);
+
         delete[] p;
-        if (total == SPECNUM) {
+        if (total == TRAINING_SPEC_NUM) {
             break;
         }
     }
@@ -387,14 +427,15 @@ void CMultiIndices::recallOfAnn(DataFile &df, string ipropepxmlfilename, CMzFile
     Progress ps(spec_end - spec_start, "ANN-Recall Analysis");
     while (k < spec_end) {
         vector<vector<long>> results;
+        vector<vector<double>> results_dist;
         int numQuery = batchsize > spec_end - k ? spec_end - k : batchsize;
         vector<long> queries(numQuery, 0);
         iota(queries.begin(), queries.end(), k);
         k += numQuery;
         CMzQuery mzquery(compactRawData, dim, queries, useflankingbin);
-        getAnns(mzquery, ret_num, results,-1);
+        getAnns(mzquery, ret_num, results,results_dist,-1);
         mzquery.print(8);
-        verifyEachQuery(df, splib, indexChoice, ret_num, ppp, probThreshold, ps, results,
+        verifyEachQuery(df, splib, indexChoice, ret_num, ppp, probThreshold, ps, results, results_dist,
                         queries, m_impl.getNum(), fout, recallANNs);
     }
     fout.close();
@@ -405,7 +446,7 @@ void CMultiIndices::recallOfAnn(DataFile &df, string ipropepxmlfilename, CMzFile
 
 void CMultiIndices::verifyEachQuery(DataFile &df, DataFile &splib, int indexChoice, int ret_num,
                                     PeptideProphetParser &ppp, double probThreshold, Progress &ps,
-                                    const vector<vector<long>> &results,
+                                    const vector<vector<long>> &results,const vector<vector<double>> &result_dists,
                                     const vector<long> &queries, int indexNum, ofstream &fout,
                                     CRecallStat &recallANNs) const {
     // this function is only used once, to be removed in the future .
@@ -424,7 +465,8 @@ void CMultiIndices::verifyEachQuery(DataFile &df, DataFile &splib, int indexChoi
             not psminfo.isDecoy(true, 0)) {
                 recallANNs.verify();
                 vector<long> int_ind;
-                collectANNs(indexChoice, ret_num, results, i, int_ind, false);
+                vector<double> dist_ann;
+                collectANNs(indexChoice, ret_num, results, result_dists,i, int_ind, dist_ann, false);
                 if (scan == 27504 and m_debug) {
                     cout << "id" << i << "\tQuery: " << idx << endl << "Neighbors: ";
                     for (auto e : int_ind) cout << e << "\t";
@@ -477,23 +519,29 @@ int CMultiIndices::findPeptide(DataFile &splib, const vector<long> &int_ind, con
     return top_recall;
 }
 
-void CMultiIndices::getAnns(ICQuery &q, int ret_num, vector<vector<long>> &results,int indexNum) {
+void CMultiIndices::getAnns(ICQuery &q, int ret_num, vector<vector<long>> &results,vector<vector<double>> &results_dist,int indexNum) {
     m_impl.setNum(indexNum);
     float *vquery = q.L2Normalization().get();
-    getAnnsForQueries(q.size(), ret_num, vquery, results, false);
+    getAnnsForQueries(q.size(), ret_num, vquery, results, results_dist,false);
 //    cout << "size: " << q.size() << "\t" << results.size() << endl;
 }
 
-void CMultiIndices::getAnnsForQueries(int numQuery, int ret_num, float *vquery, vector<vector<long>> &multipleInd,
+void CMultiIndices::getAnnsForQueries(int numQuery, int ret_num, float *vquery, vector<vector<long>> &multipleInd,vector<vector<double>> &results_dist,
                                       bool verbose) {
     if(verbose)cout << "Number of ANNs in each index: " ;
+//    cout <<
+    SimpleTimer st;
+    string tmp = to_string("ANNTime\t","\t","useCPU", m_impl.usingCPU(), "archiveSize",this->total(),"queryNum", numQuery, "indexNum", m_impl.getNum(), "nprobe", m_impl.getNprobe());
     for (int i = 0; i < m_impl.getNum(); i++) {
-//        SimpleTimer st(to_string("ANN Timer", ": ", i));
+        double now = st.secondsElapsed();
         vector<float> dist(numQuery * ret_num, 0);
         vector<long> ind(numQuery * ret_num, 0);
-        m_impl.getANNByShuffleQueries(numQuery, ret_num, vquery, multipleInd, i, dist, ind);
+        m_impl.getANNByShuffleQueries(numQuery, ret_num, vquery, multipleInd, results_dist, i, dist, ind);
         if(verbose) cout << i << ": " << multipleInd[i].size() <<" ";
+        double time_used = st.secondsElapsed()-now;
+        tmp = to_string("","\t", tmp, time_used);
     }
+    spdlog::get("A")->info(tmp);
     if(verbose)cout << endl;
 }
 
@@ -535,19 +583,37 @@ public:
 
 };
 
-void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vector<long>> &results, int idx,
-                                vector<long> &int_ind, bool verbose) const {
+void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vector<long>> &results, const vector<vector<double>> &results_dist, int idx,
+                                vector<long> &int_ind, vector<double> &dist, bool verbose) const {
     if (indexChoice == -1) {
         for (int j = 0; j < m_impl.getNum(); j++) {
             int_ind.insert(int_ind.end(), results[j].begin() + idx * ret_num,
                            results[j].begin() + (idx + 1) * ret_num);
+            dist.insert(dist.end(), results_dist[j].begin() + idx * ret_num,
+                        results_dist[j].begin() + (idx + 1) * ret_num);
         }
 //        stableUniqueVector_deprecated(int_ind, true);
+        vector<long> tmp(int_ind.begin(), int_ind.end()); // keep a record of the ids.
         stableUniqueVectorSet(int_ind,verbose,ret_num);
+        // now keep the corresponding distances.
+        map<long, double> idx2dist;
+
+        for(int i = 0; i < tmp.size(); i ++){
+            if(idx2dist.count(tmp[i])==0){ // new key. add
+                idx2dist[tmp[i]] = dist[i];
+            }
+        }
+        vector<double> tmp_dist;
+        for(int i = 0; i < int_ind.size(); i++){
+            tmp_dist.push_back(idx2dist[int_ind[i]]);
+        }
+        tmp_dist.swap(dist);
+
     } else {
         int j = indexChoice;
         int_ind.insert(int_ind.end(), results[j].begin() + idx * ret_num,
                        results[j].begin() + (idx + 1) * ret_num);
+        dist.insert(dist.end(), results[j].begin() + idx * ret_num, results[j].begin() + (idx + 1) * ret_num);
     }
 //    cout << "With choice of INDEX " << indexChoice << " #candidates "  << int_ind.size() << endl;
 }
@@ -630,7 +696,8 @@ CShuffledVector::CShuffledVector(long specnum) {
 
 void CShuffledVector::getVector(float *src, int offset, int d, int n, float *dest) {
     for (int k = 0; k < n; k++) {
-        copy(src + m_shuffledIdx[offset + k] * d, src + m_shuffledIdx[offset + k] * d + d, dest + k * d);
+        long position = m_shuffledIdx[offset + k] * d;
+        copy(src + position, src + position + d, dest + k * d);
     }
 }
 

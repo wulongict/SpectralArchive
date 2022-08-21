@@ -90,3 +90,7 @@ int CMyIndex::dim() { return cpq->getDim(); }
 void CMyIndex::toCPU() {}
 
 void CMyIndex::toGPU() {}
+
+void CMyIndex::removeIds(vector<long> &idx) {
+    cout << "under construction " << endl;
+}
