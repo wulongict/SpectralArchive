@@ -157,7 +157,7 @@ struct SAnnGTSummary
         }
     }
     void resetAccumulativeCounts(){
-        totalnum = 0; correctnum=0;
+        totalTNNnum = 0; correctTNNnum=0;
         }
 
     void writeToLogFile(string &str){
@@ -166,7 +166,7 @@ struct SAnnGTSummary
 
     SAnnGTSummary();
     ~SAnnGTSummary(){}
-    void print();
+    void printTNNSummary();
     void increase(bool iscorrect, long queryindex=-1);
 
     void setvalidationfile(string peptideprophetpepxmlfile);
@@ -174,6 +174,11 @@ struct SAnnGTSummary
     void setqueryindexMap(CMzFileReader &querySpectra);
 };
 string convertChromatogramToSVG(shared_ptr<Chromatogram> chr, string filename, string output_title="");
+class SimpleTimer;
+
+
+
+
 class CSpectralArchive {
 private:
     SAnnGTSummary agtsummary;
@@ -200,13 +205,20 @@ public:
     CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor, bool useflankingbins,
                      int tol, int minPeakNum, bool myOwnIndex, CPQParam option, string indexstrings, bool usegpu,
                      bool rebuildsqldb, int seedpvalue, const int topPeakNum, bool createfilenameBlackList,
-                     bool saveBackgroundScore, bool verbose, string archivename="");
+                     bool saveBackgroundScore, bool verbose, string archivename="", string indexshuffleseeds="default");
+
+    long getNumOfQueriesSearched(){
+        return agtsummary.m_num_queries_searched;
+    }
 
     void setRecallTNN(bool recallTNN, int topK, double recallTNNminDP, int minPeakNumInSpec) 
     {
         agtsummary.setRecallTNN(recallTNN, topK, recallTNNminDP,minPeakNumInSpec);
 
     }
+    // remove data file from archive.
+    void remove(int lastNfile);
+    int getNumOfFilesToRemoveForShrinkingArchiveTo(long numberofSpec);
 
     ~CSpectralArchive();
 
@@ -244,11 +256,18 @@ private:
 	void appendFileName(const string &mzXMLfile);
 	void addListOfRawData(const string &new_experimental_datalist, bool &newFileAdded);
 	void addpepxmlfile(string pepxmllist, string new_gt_file);
+
+/*
+ * update a single raw file
+ * check if the mzXMLfile already exist in archive.
+ * if not, add it to DB, MZ, and INDEX.
+ * Attention: index is not saved.
+ * */
     void addRawData(string mzXMLfile, bool &newFileAdded);
     void addSearchResult(string pepxmlfile);
     void addListOfSearchResults(string pepxmlfilelist);
 	void calcPvalue(int query_index, int tol, string outputbasename, bool normalize) ;
-    void createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings);
+    void createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings, string indexshuffleseeds);
     void createMzFileObject();
     void do_pvalue_onfraction(vector<CAnnSpectra *> &vqrSimple, ICQuery &q, long query_index,
                               bool plot_figure, vector<int> *ptrDPs, SLinearRegressionModel *ptrLR);
@@ -259,7 +278,7 @@ private:
     void exportResponse(int query_index, vector<CAnnSpectra*> &annSpecList, string &jsonstring, vector<int> *ptrDPs, SLinearRegressionModel *ptrLRModel);
     void filterWithMinPeakNum(bool verbose, vector<long> &retIdx) ;
     void getAccurateTopNeighbor(ICQuery &query, vector<long> &topIdx, bool isLowMassAcc);
-    void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTrueNN, bool isLowMassAcc, int topK,
+    void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTrueNN,vector<vector<double>> &topKTrueNNScore, bool isLowMassAcc, int topK,
                                  int dp_UInt);
     int getDim();
     void getScorerFactoryPtr();
