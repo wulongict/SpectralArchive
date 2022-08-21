@@ -11,6 +11,7 @@
 #include "ProteomicsDataTypes.h"
 using namespace std;
 
+// this one support the approxmated distance.
 CAnnSpectra::CAnnSpectra(vector<long> &ind, vector<float> &dist,
                          vector<float> &appdist, long queryidx) : m_dim{0},  m_has_spec{false} {
     m_queryidx = queryidx;
@@ -20,6 +21,7 @@ CAnnSpectra::CAnnSpectra(vector<long> &ind, vector<float> &dist,
     }
 }
 
+// approxmated distances are all zeros.
 CAnnSpectra::CAnnSpectra(vector<long> &neighborIdx, vector<float> &dist, long queryidx,vector<int> &dpscore) : m_dim{0}, m_has_spec{false}{
     m_queryidx = queryidx;
     if(neighborIdx.size() != dist.size() )    {
@@ -43,7 +45,7 @@ CAnnSpectra::CAnnSpectra(vector<long> &neighborIdx, vector<float> &dist, long qu
 
 }
 
-
+// all of the approximate distance are zero values.
 CAnnSpectra::CAnnSpectra(int dim, vector<long> &ind, vector<float> &dist, vector<float> &specs, long queryidx) : m_dim{
         dim}, m_has_spec{true} {
     m_queryidx = queryidx;
@@ -67,6 +69,11 @@ CAnnSpectra &CAnnSpectra::keepTopN(int n, bool verbose) {
     sort(m_anns.begin(), m_anns.end(), [](const SAnnSpectrum &x, const SAnnSpectrum &y) {
         return x.dist < y.dist;
     });
+    ;
+    // I wish to print true and approximate distance here, but it does not work because tha appdist here are all zero.
+//    for(auto each:  m_anns){
+//        cout << "ANN-dist-dp\t" << m_queryidx << "\t" << each.idx << "\t" << each.appdist << "\t" << each.dotprod << "\t" << each.dist << endl;
+//    }
     if (size() <= n) {
         if(verbose)cout << "size of query result: " << size() << " <= " << n << endl;
     } else {
@@ -369,6 +376,7 @@ void CArxivSearchResult::init(ICQuery &query, bool verbose, vector<vector<long>>
     for (int i = 0; i < querySize; i++) {
         if (verbose) query.getMzSpec(i).display();
 
+        // we are calling the second one. but only the third on support approximate distance.
         CAnnSpectra *p = new CAnnSpectra(allRetIdx[i], accDist[i], query.getQueryIndex(i),dpscores[i]);
         push_back(p);
         if(p!= nullptr and p->empty())

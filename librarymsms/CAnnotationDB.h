@@ -42,6 +42,8 @@ struct specfileinfo
     void init(CDBEntry &dbentry);
     specfileinfo(string f, long s, long e, int id);
     void display() const;
+    int inValidFileID();
+    bool isGood();
 };
 
 class CBatchSQL
@@ -94,7 +96,7 @@ class CAnnotationDB
     bool m_createFileNameBlackList;
 
 public:
-
+    void deleteLastNFile(int n);
     string toJsonNode(CDBEntry &dbentry,int i);
 
     string toJsonNodes(CDBEntry &dbentry);
@@ -113,12 +115,12 @@ public:
     void createBlackListWithFileName(const string &datafilename, bool verbose);
     // init database, create if not exist
     // creating empty tables in database.
-    void createDatabase(bool rebuild, string dbfilename, bool verbose) {
-        setDB(dbfilename);
-        createTables(rebuild, verbose);
+    void createDatabase(bool rebuild, string dbfilename, bool verbose);
 
-    }
+    // create table if not exist.
     bool createTable(const string& tableName, bool overwrite, bool verbosity);
+
+    // create tables if not exist. call createTable
     void createTables(bool rebuild, bool verbose);
     shared_ptr<CDataBaseManager>  getDB();
 

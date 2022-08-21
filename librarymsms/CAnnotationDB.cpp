@@ -760,10 +760,10 @@ void CAnnotationDB::filterwithblacklist(bool verbose, vector<long> &retIdx) {
     retIdx.erase(it,retIdx.end());
 }
 
-// Create tables in SQL database
+// Create tables if not exist
 // Table: SPECFILES SPECREMARKS GROUNDTRUTH
 void CAnnotationDB::createTables(bool rebuild, bool verbose) {
-    cout << "Create Tables " << endl;
+//    cout << "Create Tables " << endl;
     // create all the tables
     for(auto &eachTable : m_createTableSql){
         bool tableRenewed = createTable(eachTable.first,rebuild, verbose);
@@ -912,7 +912,38 @@ shared_ptr<CDBEntry> CAnnotationDB::searchPeptide(const string &peptide) {
     return dbentry;
 }
 
+void CAnnotationDB::deleteLastNFile(int n) {
+    if (n <= 0) {
+        return;
+    }
+    int FileNum = getTotalFileNum();
+    if (n > FileNum) {
+        n = FileNum;
+    }
+    int lastFileId = FileNum - n;
 
+
+//    specfileinfo sf = getLastSpecFile();
+//    sf.display();
+//    if (sf.isGood()){
+//    cout << "deleting from database " << endl;
+    string sql = "delete from GROUNDTRUTH where FILEID >= " + to_string(lastFileId) + ";";
+    m_dbmanager->execAsTransaction(sql, true);
+    sql = "delete from SPECFILES where FILE_ID >= " + to_string(lastFileId) + ";";
+    m_dbmanager->execAsTransaction(sql, true);
+//    cout << "done deleting from database" << endl;
+//    }
+//    cout << "This is the current last file " << endl;
+//    getLastSpecFile().display();
+
+    cout << "DB updated" << endl;
+}
+
+void CAnnotationDB::createDatabase(bool rebuild, string dbfilename, bool verbose) {
+    setDB(dbfilename);
+    createTables(rebuild, verbose);
+
+}
 
 
 CGtUpdater::CGtUpdater(CAnnotationDB *annodb, string gtfile) {
