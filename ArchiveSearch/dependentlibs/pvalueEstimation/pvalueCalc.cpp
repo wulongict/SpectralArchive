@@ -216,6 +216,8 @@ public:
     }
 };
 
+#include "../../CTimerSummary.h"
+
 // Update the p-value of a list of query, and corresponding ANNs
 // Input:
 // indexListForQuery, (idx)
@@ -257,6 +259,7 @@ void CPValueCalculator::run(vector<long> &idxListForQuery, ICQuery &query, CArxi
 
 
     // if only one query, keep the DP and the LR.
+    CTimeSummary::getInstance()->startTimer("p-value-calculation-run-collecting-dp");
     if (idxListForQuery.size() == 1) {
         if (ptrDP != nullptr) {
             *ptrDP = vTaskfragidx[0].getDPs();
@@ -273,13 +276,14 @@ void CPValueCalculator::run(vector<long> &idxListForQuery, ICQuery &query, CArxi
             (*ptrLR_q)[i] = vTaskfragidx[i].getLRModel();
         }
     }
+    CTimeSummary::getInstance()->pauseTimer("p-value-calculation-run-collecting-dp");
 }
 
 void CPValueCalculator::buildFragIndex(shared_ptr<ICMzFile> &csa, bool verbose) {
     const int PEAK_NUM_PER_SPEC = csa->getPeakNumPerSpec();
     m_FragIdxPtr = make_shared<CFragIndex>(PEAK_NUM_PER_SPEC);
     m_FragIdxPtr->buildIndex(csa, m_indexlist);
-    if(verbose) cout << "frag index created" << endl;
+//    if(verbose) cout << "frag index created" << endl;
 }
 
 
@@ -325,7 +329,8 @@ CPvalueMultiCalculator::CPvalueMultiCalculator(int numCalc, long totalnum, int t
 //vector<SLinearRegressionModel> slRMs(numOfpValues, SLinearRegressionModel());
 //vector<vector<SLinearRegressionModel>> slRMs_pv_query(numOfpValues, vector<SLinearRegressionModel>(idxlist.size(), SLinearRegressionModel()));
 //
-
+#include "../../CTimerSummary.h"
+// idxListForQuery: the list of idx for query.
 void CPvalueMultiCalculator::run(vector<long> &idxListForQuery, ICQuery &query, CArxivSearchResult &vqr, bool plot,
                                  bool verbose,vector<vector<int>> *ptrDPs,
                                  vector<SLinearRegressionModel> *ptrLRs,
@@ -351,12 +356,14 @@ void CPvalueMultiCalculator::run(vector<long> &idxListForQuery, ICQuery &query, 
         if(slRMs_pv_query != nullptr){
             ptrLR_q = &(*slRMs_pv_query)[i];
         }
-
+        CTimeSummary::getInstance()->startTimer("p-value-calculation-run");
         m_pvalueCalc[i]->run(idxListForQuery, query, vqr,plot, verbose,ptrDP, ptrLR, ptrDP_q, ptrLR_q);
+        CTimeSummary::getInstance()->pauseTimer("p-value-calculation-run");
     }
 //    for (auto x: m_pvalueCalc) x->run(idxListForQuery, query, vqr, plot, verbose, ptrDP, ptrLR);
 }
 
+// generate 10000 spectra randomly selected from the total number of sepctra.
 void IndexListBuilder::build(vector<long> &m_indexlist, long totalSpecNum, int seed) {
     // todo: the following index should be used with param: csa in run()
     m_indexlist.assign(totalSpecNum, 0);

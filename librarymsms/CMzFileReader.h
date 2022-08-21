@@ -97,6 +97,8 @@ public:
     void load(string m_mzxml_filelist, bool isList, bool verbose);
     void appendFile(string file);
     int getFileNum();
+    void removeLastFile();
+    void removeLastNFiles(int n);
     void appendSpecInfo(int _peaknum, float rt, float mz, int charge, int scan, int ms2count);
     long getTotalScanNum() const;
     void exportToCombinedFile();
@@ -128,10 +130,18 @@ class CMzFileReader: public ICMzFile {
     string m_mzFileName;
 
 public:
+    // not adding file to the mz object. copy the parameters.
+    // remember to call init explicitly later.
     CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                   double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName="");
+
 	CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
                   double localMaxHalfWidth, int minPeakNum, bool verbose);            //CScanInfo
+
+
+
+  void removeLastFile();
+  void removeLastNFile(int n);
 
 	// make shared
 	static shared_ptr<CMzFileReader> makeShared(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
@@ -150,7 +160,11 @@ public:
 
     
     void append(DataFile &df, bool rmParentIon, SpectraFilter *sf);  // CScanInfo
+
+    // loading mz object to ram.
     void refresh_mz_object_from_disk();
+
+
     
 
     MzSpecInfo & getSpecMetaInfo(long queryidx, string &filename);   //CScanInfo

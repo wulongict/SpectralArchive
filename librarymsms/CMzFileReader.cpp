@@ -11,7 +11,8 @@
 #include <memory>
 #include "XMLFileParser.h"
 #include "ICQuery.h"
-
+#include "CAnnotationDB.h"
+#include <cstdio>
 
 CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist, bool rmParentIon,
                              double localMaxHalfWidth, int minPeakNum, bool verbose, string mzFileName) {
@@ -23,8 +24,6 @@ CMzFileReader::CMzFileReader(string mzxml_filelist, bool overwrite, bool islist,
     m_localMaxHalfWidth = localMaxHalfWidth;
     m_PeakNumPerSpectrum = 50;
     m_mzxml_filelist = mzxml_filelist;
-
-    //init(overwrite, islist, rmParentIon);
 }
 
 CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, SpectraFilter *sf,
@@ -59,8 +58,6 @@ CMzFileReader::~CMzFileReader() {
 
 // create mz/scan with list of files. 
 void CMzFileReader::init(bool redo, bool is_file_list, bool rmParentIon) {
-    //cout << "Starting loading mzfile " << endl;
-//    spdlog::get("A")->info("loading file ...");
     if (not File::isExist(getMzFilename(),true) or redo) {
         vector<string> filelist;
         if (is_file_list) {
@@ -71,7 +68,7 @@ void CMzFileReader::init(bool redo, bool is_file_list, bool rmParentIon) {
         }
         createWithList(rmParentIon, filelist);
     }
-// reload the mz file again.
+    // reload the mz file again.
     loadScanMzToMemory(is_file_list, false);
     initPeakNum(false);
     spdlog::get("A")->info("mz/scan file is created!\n");
@@ -161,8 +158,7 @@ int CMzFileReader::getPeakNumPerSpec() const {
 
 long CMzFileReader::getSpecNum() { return m_specnum; }
 
-#include "CAnnotationDB.h"
-#include <cstdio>
+
 // control all of the scan file put them into one single file.
 void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
       //CScanInfo
@@ -226,30 +222,20 @@ uint16_t *CMzFileReader::getSpecBy(long queryindex)  {
     return m_mzs + queryindex * m_PeakNumPerSpectrum;
 }
 
-  void CMzFileReader::refresh_mz_object_from_disk()
-    {
-        cout << "Start to reload" << endl;
-        // update the object.
-        m_scanInfo.clear();
-        loadScanMzToMemory(true, false);
-        initPeakNum(false);
-        spdlog::get("A")->info("mz/scan object is refreshed!\n");
-    }
+void CMzFileReader::refresh_mz_object_from_disk() {
+    m_scanInfo.clear();
+    loadScanMzToMemory(true, false);
+    initPeakNum(false);
+    spdlog::get("A")->info("mz/scan object is ready!\n");
+}
 
 // update MZ file with spectra in DataFile
 // create scan file for DataFile.
+// this part do not rely on the ram data. just append to mz file on disk. but you need reload to ram later.
 void CMzFileReader::append(DataFile &df, bool rmParentIon, SpectraFilter *sf){
     ofstream fout(getMzFilename(), ios::app | ios::binary);
-//    m_scanInfo.appendFile(df.getSourceFileName());
     toMzScanFilePair(fout, df, rmParentIon, sf, false);
-//    m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
-    // write the  whole file
-    // do we need to export it here?
-    // m_scanInfo.exportToCombinedFile();  // export in destructor.
-    // you have to close the file before you open it.
     fout.close();
-
-
 }
 
 void CMzFileReader::createWithList(bool rmParentIon, const vector<string> &filelist) {
@@ -259,11 +245,8 @@ void CMzFileReader::createWithList(bool rmParentIon, const vector<string> &filel
     for (int j = 0; j < total_file_num; j++) {
         cout << "Processing file " << j+1 << " / " << total_file_num << " : " << filelist[j] << endl;
         string filename = filelist[j];
-
         DataFile df(filename,0,-1);
-
         toMzScanFilePair(fout, df, rmParentIon, nullptr, false);
-
     }
     m_scanInfo.clear();
 }
@@ -275,6 +258,8 @@ string CMzFileReader::getListFile() {
 string CMzFileReader::getMzFilename() {
     return m_mzxml_filelist + ".mz";
 }
+
+
 
 // to calculate the score for all
 void CMzFileReader::calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int blockSize,
@@ -360,9 +345,9 @@ float CMzFileReader::getSquaredNorm(long queryindex) {
 //        cout << "First call--- initializing..." << endl;
         m_norm2_ptr=make_shared<vector<float>>(getSpecNum(),0);
 
-        Progress ps(getSpecNum(), "squared norm");
+//        Progress ps(getSpecNum(), "squared norm");
         for(long i = 0; i < getSpecNum(); i ++)  {
-            ps.increase();
+//            ps.increase();
             uint16_t  *p=getSpecBy(i);
             (*m_norm2_ptr)[i]=ICMzFile::getSquaredNorm(p, getPeakNumPerSpec());
         }
@@ -391,6 +376,77 @@ string CMzFileReader::getClassName() {
 
 float CMzFileReader::getSquaredNorm(uint16_t *p) {
     return ICMzFile::getSquaredNorm(p);
+}
+
+void CMzFileReader::removeLastFile() {
+    // only work when it is created by filelist
+    CScanFile scanfile = m_scanInfo.getScanFileReader(m_scanInfo.getFileNum()-1);
+    int scannum = scanfile.getScanNum();
+//      int numPeaksToDelete = scannum * m_PeakNumPerSpectrum;
+    m_specnum -= scannum;
+    // scans removed.
+    ofstream fout_mz(getMzFilename(), ios::out);
+    fout_mz.write((char *)m_mzs, m_specnum * m_PeakNumPerSpectrum * sizeof(uint16_t));
+    fout_mz.close();
+    cout << "mz file updated " << getMzFilename() << endl;
+
+    // scans saved.
+//    m_scanInfo.removeLastFile();
+    m_scanInfo.removeLastNFiles(1);
+    m_scanInfo.exportToCombinedFile();
+    cout << "scan file updated." << endl;
+
+    // scan file updated.
+    // refresh list file
+    ofstream fout(getListFile(), ios::out);
+    for(int i = 0; i < m_scanInfo.getFileNum(); i ++){
+        CScanFile scanfile = m_scanInfo.getScanFileReader(i);
+        string filename = scanfile.getFileName();
+        fout << filename << endl;
+    }
+    fout.close();
+    cout << "list file refreshed." << endl;
+}
+
+void CMzFileReader::removeLastNFile(int n) {
+    // only work when it is created by filelist
+    if(n<=0){
+        cout << "Invalid number of files to be removed " << n << "; please specify a positive value from 1 to " << m_scanInfo.getFileNum() << endl;
+    } else if(n>m_scanInfo.getFileNum()){
+        cout << "Only " << m_scanInfo.getFileNum() << " Files will be removed. " << endl;
+        n = m_scanInfo.getFileNum();
+    } else{
+        for(int i = 1; i <= n; i ++){
+            CScanFile scanfile = m_scanInfo.getScanFileReader(m_scanInfo.getFileNum()-i);
+            int scannum = scanfile.getScanNum();
+            m_specnum -= scannum;
+        }
+
+        // scans removed.
+        ofstream fout_mz(getMzFilename(), ios::out);
+        fout_mz.write((char *)m_mzs, m_specnum * m_PeakNumPerSpectrum * sizeof(uint16_t));
+        fout_mz.close();
+        cout << "mz file updated " << getMzFilename() << endl;
+
+        // scans saved.
+//    m_scanInfo.removeLastFile();
+        m_scanInfo.removeLastNFiles(n);
+        m_scanInfo.exportToCombinedFile();
+        cout << "scan file updated." << endl;
+
+        // scan file updated.
+        // refresh list file
+        ofstream fout(getListFile(), ios::out);
+        for(int i = 0; i < m_scanInfo.getFileNum(); i ++){
+            CScanFile scanfile = m_scanInfo.getScanFileReader(i);
+            string filename = scanfile.getFileName();
+            fout << filename << endl;
+        }
+        fout.close();
+        cout << "list file refreshed." << endl;
+    }
+
+
 }
 
 // read mzXML/mzML file
@@ -574,7 +630,7 @@ SpectraFilter::SpectraFilter(string pepxml) {
     m_ppp->filter_with_FDR(0.01, m_psms);
 }
 
-// save the combined scan file.
+// writing multiple scan file sequentially into one file.
 void CScanInfo::exportToCombinedFile() {
     // sometimes if the file already exist, we can skip this writing step. 
     ofstream fout(getCombinedScanFilename(), ios::out);
@@ -628,6 +684,7 @@ CScanFile &CScanInfo::getScanFileReader(int fileid) {
 int CScanInfo::getFileNum() {
     return m_readers.size();
 }
+
 
 
 long CScanInfo::getTotalScanNum() const {
@@ -748,6 +805,23 @@ void CScanInfo::clear() {
     vector<CScanFile>().swap(m_readers);
 //    m_readers.swap(vector<CScanFile>());
 }
+
+void CScanInfo::removeLastFile() {
+    if(m_readers.empty()){
+        cout << "skipping pop file for empty list " << endl;
+    } else{
+        m_readers.pop_back();
+    }
+
+}
+
+void CScanInfo::removeLastNFiles(int n) {
+    while(n>0){
+        removeLastFile();
+        n--;
+    }
+}
+
 
 shared_ptr<ICMzFile> CMzFileReaderFactory::create() {
     cout << "[Info] Creating CPU scorer Object" << endl;

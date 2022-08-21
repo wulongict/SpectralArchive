@@ -32,9 +32,6 @@ BinningPeakList::BinningPeakList(const vector<double> &x, const vector<double> &
         int idx = floor(x[i] / BinSize);
         if (idx >= BinNum) {
             peakcountOutOfRange ++;
-//            peakCountsOutOfReange++;
-            //cout << "Error: mz of this peak is out of range: mz = " << x[i] << " idx=" << idx << "  > MaxBinNum:" << BinNum-1 << endl;
-            //cout << "Solution: using MaxBinNum-1=" << BinNum-1 << " to replace idx=" << idx << endl;
             idx = BinNum - 1;
         }
         m_intensityList[idx] += y[i];
@@ -296,8 +293,7 @@ void PeakList::KeepTopN(int N) {
     double threshold = 0;
     vector<double> v = m_intensityList;
     sort(v.begin(), v.end(), std::greater<double>());
-    if (N > v.size()) {  }
-    else {
+    if (N <= v.size()) {
         threshold = v[N - 1];
     }
     vector<double> tmp_mz, tmp_intensity;

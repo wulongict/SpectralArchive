@@ -44,32 +44,21 @@ void L2Normalization(vector<float> &v, int dim) {
 }
 
 
-
 void L2Normalization(float *v, int dim) {
-    // todo: to be deleted
-    // still in use?
-//    double sum = accumulate(v[0],)
-    double sum = accumulate(v,v+dim,0.0L,[](const double &s, const double &x){return s+x*x;});
-//    for (int i = 0; i < dim; i++) {
-//        sum += (v[i] * v[i]);
-//    }
+    double sum = accumulate(v, v + dim, 0.0L, [](const double &s, const double &x) { return s + x * x; });
     if (sum > EPSILON) {
         sum = sqrt(sum);
-
-        transform(v,v+dim,v,[&](double x){return x/sum;});
-//        for (int i = 0; i < dim; i++) {
-//            v[i] /= sum;
-//        }
+        transform(v, v + dim, v, [&](double x) { return x / sum; });
     }
 }
 
-void getFloatVecPaddingZeros(BinningPeakList *bpl, int nLen, bool beverbose, vector<float> &v) {
+void getFloatVecPaddingZeros(BinningPeakList *bpl, int nLen, bool verbose, vector<float> &v) {
     int N = bpl->GetBinNum();
     if (N > nLen) {
         cout << "vector real length: " << N << " is larger than space : " << nLen << endl;
         throw out_of_range("vector size is shorter than real length");
     }
-    if (beverbose) cout << "getting memory" << endl;
+    if (verbose) cout << "getting memory" << endl;
     v.assign(nLen, 0);
     int nonzeroLen = bpl->nonzeros.size();
     for (int i = 0; i < nonzeroLen; i++) {
@@ -79,13 +68,13 @@ void getFloatVecPaddingZeros(BinningPeakList *bpl, int nLen, bool beverbose, vec
 }
 
 /// Get vector as a float array! This function is not very efficient! will be removed!
-float *get_float_vector(BinningPeakList *bpl, int nLen, bool beverbose) {
+float *get_float_vector(BinningPeakList *bpl, int nLen, bool verbose) {
     int N = bpl->GetBinNum();
     if (N > nLen) {
         cout << "vector real length: " << N << " is larger than space : " << nLen << endl;
         throw out_of_range("vector size is shorter than real length");
     }
-    if (beverbose) cout << "getting memory" << endl;
+    if (verbose) cout << "getting memory" << endl;
 
     float *v = new float[nLen];
 
@@ -94,15 +83,15 @@ float *get_float_vector(BinningPeakList *bpl, int nLen, bool beverbose) {
         throw runtime_error("out of memory!");
     }
 
-    if (beverbose) {
+    if (verbose) {
         cout << "now memory v is " << v << endl;
 
     }
-    if (beverbose) cout << "Start to get intensity" << endl;
+    if (verbose) cout << "Start to get intensity" << endl;
     for (int i = 0; i < N; i++) {
         v[i] = bpl->GetIntensity(i);
     }
-    if (beverbose) cout << "padding zeros at the end of the vector" << endl;
+    if (verbose) cout << "padding zeros at the end of the vector" << endl;
     for (int i = N; i < nLen; i++) {
         v[i] = 0;
     }
@@ -111,7 +100,6 @@ float *get_float_vector(BinningPeakList *bpl, int nLen, bool beverbose) {
 
 float *vpl_to_normalized_vec(vector<PeakList *> &vpl, int dim, bool useFlankingBins,const int topPeakNum) {
     long long num_spectra_current_batch = vpl.size();
-    // spdlog::get("A")->info("Number of spectra loaded: {}", num_spectra_current_batch);
 
     float *results = new float[num_spectra_current_batch * dim];
 

@@ -27,8 +27,8 @@ bool comparePeptide_I_equls_L(string &pepA, string &pepB);
 
 void L2Normalization(vector<float> &v, int dim);
 void L2Normalization(float *v, int dim);
-float *get_float_vector(BinningPeakList *bpl, int nLen, bool beverbose=false);
-void getFloatVecPaddingZeros(BinningPeakList *bpl, int nLen, bool beverbose, vector<float> &v);
+float *get_float_vector(BinningPeakList *bpl, int nLen, bool verbose=false);
+void getFloatVecPaddingZeros(BinningPeakList *bpl, int nLen, bool verbose, vector<float> &v);
 float * vpl_to_normalized_vec(vector<PeakList *> &vpl, int dim, bool useFlankingBins , const int topPeakNum);
 void Preprocess(PeakList *pkl, const int PeakNum);
 vector<string> readlines(const string &mzXMLList);

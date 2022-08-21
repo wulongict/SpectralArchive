@@ -598,6 +598,7 @@ void ICMzFile::dist(long query_index, vector<long> &ind, int tol, vector<float> 
     distOnSpec(queryspec, ind, tol, distances,dpscore);
 }
 
+// the dot product is normalized, then the score is converted to L2 distance.
 void ICMzFile::distOnSpec(uint16_t *queryspec, vector<long> &ind, int tol, vector<float> &dist,vector<int> &dpscore) {
     if(ind.empty())
     {
@@ -612,7 +613,7 @@ void ICMzFile::distOnSpec(uint16_t *queryspec, vector<long> &ind, int tol, vecto
     int blockSize = 32;
 
     vector<long> indexlist(ind.begin(), ind.end()); // todo: why I make a copy of the list ???
-//    vector<int> scores;
+
     calcDotProduct(useTopNPeak, tol, queryspec, blockSize, indexlist, dpscore);
 
     float querySquaredNorm = getSquaredNorm(queryspec);
@@ -623,6 +624,7 @@ void ICMzFile::distOnSpec(uint16_t *queryspec, vector<long> &ind, int tol, vecto
         dist[i] = dpscore[i];
 
         if (candSquaredNorm > EPSILON and querySquaredNorm > EPSILON) {
+            // dp normalized as cosine score.
             dist[i] /= sqrt(candSquaredNorm * querySquaredNorm);
         }
         dist[i] = sqrt(2.0) * sqrt(1.0 - dist[i] < EPSILON ? 0 : 1.0 - dist[i]);
@@ -653,10 +655,10 @@ shared_ptr<ICMzFile> createScorer(bool use_gpu, string mzXMLListFileName) {
 
 shared_ptr<ICMzFile> ICMzFactory::getMzFileObject() {
     assert(m_csa!=nullptr);
-    cout << "pointer of csa " << m_csa << endl;
-    int num = m_csa->getPeakNum(0L);
-    float norm = m_csa->getSquaredNorm(0L);
-    cout << "initialized m_csa: num =" << num << "\t norm="<< norm << endl;
+//    cout << "pointer of csa " << m_csa << endl;
+//    int num = m_csa->getPeakNum(0L);
+//    float norm = m_csa->getSquaredNorm(0L);
+//    cout << "initialized m_csa: num =" << num << "\t norm="<< norm << endl;
     return m_csa;
 }
 
