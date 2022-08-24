@@ -398,7 +398,8 @@ void ICMzFile::get_vector_form(uint16_t * x, int tol, vector<int> &vecform) cons
 	}
 }
 
-// this calculation is not smart
+// for peaks not matched yet, calculate the dot product between matched peaks.
+// PEAKNUM_PER_SPEC and length of used and mzTopN are loosely connected.
 long ICMzFile::calculate_dot_product_with_vecfrom(long queryX, vector<int> &vecformY, int mzTopN, bool debug,
                                                   long debug_index) {
         long s = 0;

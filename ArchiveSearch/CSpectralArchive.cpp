@@ -933,6 +933,14 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
         }
         CTimeSummary::getInstance()->pauseTimer("tnnValidation-db-query");
         getkTrueNearestNeighbor(query, topKTrueNN, topKTrueNNScore, isLowMassAcc, topK, minDpScoreInt);
+
+        CTimeSummary::getInstance()->startTimer("tnnValidation-db-insert");
+        for(int i = 0; i < query.size(); i ++){
+            m_AnnotationDB->insertTnnInfo(query.getQueryIndex(i), topK, mindp, indexNum, this->size(), agtsummary.m_nprobe, timeNow, topKTrueNN[i], topKTrueNNScore[i] );
+        }
+        CTimeSummary::getInstance()->pauseTimer("tnnValidation-db-insert");
+
+
         if (topKTrueNN.size() == results.size()) {// WHY!!!
             if(verbose) cout << "[OK] same size for top k true neighbors, and top k approx neighbors " << endl;
         }
@@ -1003,8 +1011,8 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                         .set_height(800)
 //                    .set_minmax(0, 1)
 //                    .set_yminmax(-20, 0)
-                    .set_width(800)
-                    .set_filename(to_string(m_mzXMLListFileName, "_", queryIndex, "scatter_ann_dist_tnn_dp.png" ));
+                        .set_width(800)
+                        .set_filename(to_string(m_mzXMLListFileName, "_", queryIndex, "scatter_ann_dist_tnn_dp.png" ));
 //                    .set_terminaltype("dumb");
 
                 CVisual::gnuplot_curve_topng(x,y," points pt 7 ",info);
