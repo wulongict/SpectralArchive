@@ -541,9 +541,13 @@ void CSpectralArchive::syncIndicesWithSpecFileTable() {
 // Note: query id can be -1
 // When first query id is -1, we search with the spectrum in query pointer!
 void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe,
-                                   vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK) {
+                                   vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK, bool recalltrueneighbor) {
     setnProbe(nprobe);
-    if(agtsummary.m_recallOfTrueNeighbor){
+    agtsummary.setRecallTNN(recalltrueneighbor);
+//    agtsummary.m_recallOfTrueNeighbor = recalltrueneighbor;
+
+
+    if(agtsummary.getRecallTNN()){
         if(minTNNDP>=0.0 and minTNNDP<=1.0){
             agtsummary.setRecallTNNMinDP(minTNNDP);
         }
@@ -779,74 +783,77 @@ struct IdxScore {
 };
 
 void
-CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTrueNN,vector<vector<double>> &topKTrueNNScore, bool isLowMassAcc, int topK,
+CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx, vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
                                           int dp_UInt) {
-    // get True Nearest Neighbors from the spectral archive. 
+    // get True Nearest Neighbors from the spectral archive.
+    int MAX_SCORE = 42925;
     if (m_csa->getSpecNum() == 0) {
         cout << "[Error] mz file is empty: " << endl;
     }
-    topKTrueNN.assign(query.getSpecNum(), vector<long>());
-    topKTrueNNScore.assign(query.getSpecNum(), vector<double>());
-    Progress ps(query.getSpecNum(), "accurate dotproduct to all");
+
     for (int i = 0; i < query.getSpecNum(); i++) {
-        ps.increase();
-        if(query.getMzSpec(i).getPeakNum()<agtsummary.m_minPeakNumInSpec) continue;
-        vector<long> allidx(m_csa->getSpecNum(), 0);
-        vector<int> allscores(m_csa->getSpecNum(), 0);
-        iota(allidx.begin(), allidx.end(), 0);
-        if (allidx.empty()) {
-            cout << "Empty index list " << endl;
-        }
-        m_csa->scorePartiallyWithVecForm(50, m_tol, 32, true, allidx, query.getSpecBy(i), allscores);
-        // copy only positive numbers:
-        vector<IdxScore> res;
-        res.reserve(1000);
-        for (long k = 0; k < allidx.size(); k++) {
-            if (allscores[k] > dp_UInt) {
-                res.emplace_back(allidx[k], allscores[k]);
+//        cout << topKTnnIdx.size() << endl;
+//        cout << topKTnnIdx[i].size() << endl;
+        if(topKTnnIdx[i].empty()) {
+            if(query.getMzSpec(i).getPeakNum()<agtsummary.m_minPeakNumInSpec) continue;
+            vector<long> idx(m_csa->getSpecNum(), 0);
+            vector<int> score(m_csa->getSpecNum(), 0);
+            iota(idx.begin(), idx.end(), 0);
+            if (idx.empty()) {
+                cout << "Empty index list " << endl;
             }
-        }
-        cout << endl << "number of candidates with dp score larger than " << dp_UInt << ": " << res.size() << endl;
-        string tmp = to_string("candidates dp > ", " ", dp_UInt, res.size(), "\n");
-        agtsummary.writeToLogFile(tmp);
-        stable_sort(res.begin(), res.end(), [](const IdxScore &x, const IdxScore &y) { return x.Score > y.Score; });
-        if (res.size() > topK) res.erase(res.begin() + topK, res.end());
-//        res.resize(topK);
-//        long idx = *std::min_element(allidx.begin(), allidx.end(),
-//                                     [&](const long &x, const long &y) { return allscores[x] > allscores[y]; });
-        cout << endl << "QueryID\tRank\tIdx\tScore\tDP" << endl;
-        tmp = "QueryID\tRank\tIdx\tScore\tDP\n";
-        agtsummary.writeToLogFile(tmp);
-        for (int k = 0; k < res.size(); k++) {
-            topKTrueNN[i].push_back(res[k].idx);
-            topKTrueNNScore[i].push_back(res[k].Score);
-            double dp = res[k].Score * 1.0 / 42925;
-            tmp = to_string("", "\t", query.getQueryIndex(i), k, res[k].idx, res[k].Score, dp, "\n");
+            bool normalized_dp = true;
+            CTimeSummary::getInstance()->startTimer("tnnValidation-dp-against-entire-archive");
+            m_csa->scorePartiallyWithVecForm(50, m_tol, 32, normalized_dp, idx, query.getSpecBy(i), score);
+            CTimeSummary::getInstance()->pauseTimer("tnnValidation-dp-against-entire-archive");
+            // copy only positive numbers:
+            vector<IdxScore> res;
+            res.reserve(1000);
+
+            // filter score first.
+            for (long k = 0; k < idx.size(); k++) {
+                if (score[k] > dp_UInt) {
+                    res.emplace_back(idx[k], score[k]);
+                }
+            }
+            cout << endl << "number of candidates with dp score (normalized: " << normalized_dp<<") larger than " << dp_UInt << ": " << res.size() << endl;
+            string tmp = to_string("candidates dp > ", " ", dp_UInt, res.size(), "\n");
             agtsummary.writeToLogFile(tmp);
-            cout << query.getQueryIndex(i) << "\t" << k << "\t" << res[k].idx << "\t" << res[k].Score << "\t" << dp << endl;
+            CTimeSummary::getInstance()->startTimer("tnnValidation-sorting-score-gt-mindp");
+            stable_sort(res.begin(), res.end(), [](const IdxScore &x, const IdxScore &y) { return x.Score > y.Score; });
+            CTimeSummary::getInstance()->pauseTimer("tnnValidation-sorting-score-gt-mindp");
+            if (res.size() > topK) res.erase(res.begin() + topK, res.end());
+
+            for (int k = 0; k < res.size(); k++) {
+                topKTnnIdx[i].push_back(res[k].idx);
+                topKTnnScore[i].push_back(res[k].Score);
+            }
+
+
+        }else{
+            cout << "skipping calculation" << endl;
         }
 
-        //m_csa->calcDotProduct(50, m_tol, query.getSpecBy(i), 32, allidx, allscores);
-//        vector<float> distscore(m_csa->getSpecNum(), 1.4);
-//
-//        for (long j = 0; j < m_csa->getSpecNum(); j++) {
-//            float q = m_csa->getSquaredNorm(j);
-//            float p = m_csa->getSquaredNorm(query.getSpecBy(i));
-//            if (q > EPSILON and p > EPSILON) {
-//                distscore[j] = sqrt(2.0) * sqrt(1.0 - allscores[j] / sqrt(p * q));
-//            } else {
-//                cout << "norm of q and p are too small " << endl;
-//            }
-//        }
-//        long idx = *std::min_element(allidx.begin(), allidx.end(),
-//                                     [&](const long &x, const long &y) { return distscore[x] < distscore[y]; });
-//        topIdx[i] = idx;
-
+        // some output
+        cout << endl << "QueryID\tRank\tIdx\tScore\tDP" << endl;
+        string tmp = "QueryID\tRank\tIdx\tScore\tDP\n";
+        agtsummary.writeToLogFile(tmp);
+        cout << topKTnnIdx.size() << "\t" << topKTnnIdx.at(i).size() << endl;
+        for (int k = 0; k < topKTnnIdx[i].size(); k++) {
+            // this normalization is OK just forward and backward
+            double dp = topKTnnScore[i][k] * 1.0 / MAX_SCORE;
+            tmp = to_string("", "\t", query.getQueryIndex(i), k, topKTnnIdx[i][k], topKTnnScore[i][k], dp, "\n");
+            agtsummary.writeToLogFile(tmp);
+            cout << tmp ;
+        }
     }
 
 
 }
 
+// Return top-1 neighbor.
+// Becareful, this function may not work properly, when the mz file is larger than 500,000 spectra.
+// to be deleted.
 void CSpectralArchive::getAccurateTopNeighbor(ICQuery &query, vector<long> &topIdx, bool isLowMassAcc) {
     topIdx.assign(query.getSpecNum(), 0);
     Progress ps(query.getSpecNum(), "accurate dotproduct to all");
@@ -902,16 +909,29 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 //    cout << querySize << "\t" << results.size() << endl;
 
     CTimeSummary::getInstance()->startTimer("tnnValidation");
-    if (agtsummary.m_recallOfTrueNeighbor) {
+    if (agtsummary.getRecallTNN()) {
         string tmp = to_string("nprobe","\t",agtsummary.m_nprobe,"\n");
         agtsummary.writeToLogFile(tmp);
         vector<vector<long>> topKTrueNN;
+        topKTrueNN.assign(query.getSpecNum(), vector<long>());
+
         vector<vector<double>> topKTrueNNScore;
+        topKTrueNNScore.assign(query.getSpecNum(), vector<double>());
         const int MAX_SCORE = 42925;
         double mindp = agtsummary.m_recallTNNminDP;
-        int minDpScoreInt = mindp * MAX_SCORE;
+        int minDpScoreInt = mindp * MAX_SCORE; // this seems bad.
         int topK = agtsummary.m_recallTNNtopK;
         bool isLowMassAcc = false;
+        // now try to insert the results.
+        CTimeSummary::getInstance()->startTimer("tnnValidation-db-query");
+        string timeNow = getTimeStemp();
+        for(int i =0; i < query.size(); i ++){
+            vector<long> tnnidx;
+            vector<double> tnndp;
+            bool found = m_AnnotationDB->getTNN(query.getQueryIndex(i), topK, mindp, indexNum, this->size(), agtsummary.m_nprobe, topKTrueNN[i], topKTrueNNScore[i]);
+
+        }
+        CTimeSummary::getInstance()->pauseTimer("tnnValidation-db-query");
         getkTrueNearestNeighbor(query, topKTrueNN, topKTrueNNScore, isLowMassAcc, topK, minDpScoreInt);
         if (topKTrueNN.size() == results.size()) {// WHY!!!
             if(verbose) cout << "[OK] same size for top k true neighbors, and top k approx neighbors " << endl;
@@ -953,8 +973,20 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                 }
 
                 if(isfound){
-                    x.push_back(collectScores[idx]);
-                    y.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
+                    x.push_back(collectScores[idx]); // approximate score.
+
+                    float querynorm = m_csa->getSquaredNorm(queryIndex);
+                    float neighbornorm = m_csa->getSquaredNorm(collectIdx[idx]);
+                    float normalized_dp = 0;
+                    if(querynorm>1e-8 and neighbornorm>1e-8){
+                        // previously ,we use MAX_SCORE to normalize
+                        // y.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
+                        normalized_dp = topKTrueNNScore[j][k]/sqrt(querynorm * neighbornorm);
+                        if (normalized_dp>1.0){
+                            normalized_dp = 1.0;
+                        }
+                    }
+                    y.push_back(normalized_dp);
                     tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "true",collectIdx[idx] , collectScores[idx],topKTrueNNScore[j][k],  numberOfTNNsFound*1.0/(k+1), "\n");
                 }else{
                     tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "false", idx, "nan", topKTrueNNScore[j][k], numberOfTNNsFound*1.0/(k+1), "\n");
@@ -962,18 +994,22 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 
                 agtsummary.increase(isfound, queryIndex);
             }
-
-            CVisual::gnuplotWrapper info;
-            info.set_xlabel("ANN distance")
-                    .set_ylabel("TNN dot-product")
-                    .set_height(800)
+            bool plot_ann_tnn_scatterplot=false;
+            if(plot_ann_tnn_scatterplot){
+                // will not plot the figure. Aug 23.
+                CVisual::gnuplotWrapper info;
+                info.set_xlabel("ANN distance")
+                        .set_ylabel("TNN dot-product")
+                        .set_height(800)
 //                    .set_minmax(0, 1)
 //                    .set_yminmax(-20, 0)
                     .set_width(800)
                     .set_filename(to_string(m_mzXMLListFileName, "_", queryIndex, "scatter_ann_dist_tnn_dp.png" ));
 //                    .set_terminaltype("dumb");
 
-            CVisual::gnuplot_curve_topng(x,y," points pt 7 ",info);
+                CVisual::gnuplot_curve_topng(x,y," points pt 7 ",info);
+            }
+
 
             cout << tmp;
             agtsummary.writeToLogFile(tmp);
@@ -985,9 +1021,13 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
             "indexNum", m_indices->getNumOfindexInUse(),"mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
             agtsummary.writeToLogFile(tmp);
             cout << tmp << flush;
-            tmp="#---------------------";
+            tmp="#---------------------\n";
             for(int k=0; k < x.size(); k ++){
-                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp",  x[k], y[k], "\n");
+                if(y[k]>1.0){
+                    cout << "Error: " << k << "\t" << y[k] << endl;
+                }
+                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp",  x[k], y[k],"nprobe", agtsummary.m_nprobe,
+                                "indexNum", m_indices->getNumOfindexInUse(),"mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
             }
             agtsummary.writeToLogFile(tmp);
 

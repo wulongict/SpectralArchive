@@ -173,6 +173,10 @@ public:
 
     void addNewGtFile(string gtfile);
 
+    void insertTnnInfo(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe, string date, vector<long> &tnnidx, vector<double> &tnndp);
+
+    bool getTNN(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe, vector<long> &tnnidx, vector<double> &tnndp);
+
     void add(specfileinfo &sfinfo);
 
     void updateSpecRemarks(long spec_id, string &remarks);

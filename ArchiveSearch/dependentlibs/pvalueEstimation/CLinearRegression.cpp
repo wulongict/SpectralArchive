@@ -13,6 +13,7 @@ CLinearRegression::CLinearRegression() : m_R_square{0} {
 }
 
 // Eigen module is using multiple threads
+// This function should be improved. ...
 void CLinearRegression::solve(bool verbose) {
     if (verbose)cout << m_A.size() << "----" << endl;
     if (verbose and m_A.size() > 0) { cout << m_A[0].size() << "0---size---" << endl; }

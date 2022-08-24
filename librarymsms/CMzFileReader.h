@@ -175,6 +175,10 @@ public:
     float getSquaredNorm(uint16_t *p) override;
     float getSquaredNorm(long queryindex) override;
     uint16_t *getSpecBy(long queryindex) override;
+
+    // Returns a vector of dot product values: scores.
+    // The dot product is calculated between query spectrum(queryspec),
+    // and a list of entries in the mzfile, indicated by a list of index (indexlist)
     void calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int blockSize, vector<long> &indexlist, vector<int> &scores) override;
     void dpscore(double tolerance, vector<vector<long>> &allRetIdx, int threadnum, vector<vector<float>>& accDist, ICQuery &query ,vector<vector<int>> &dpscores) override;
 

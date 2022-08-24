@@ -261,7 +261,9 @@ string CMzFileReader::getMzFilename() {
 
 
 
-// to calculate the score for all
+// Create expanded vector of query spectrum,
+// calculate dot product between query spectrum and list of nodes.
+// parameter tol is used for expansion of the vector, and topN Peak is used for dot product.
 void CMzFileReader::calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int blockSize,
                                    vector<long> &indexlist, vector<int> &scores) {
 

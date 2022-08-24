@@ -333,7 +333,8 @@ std::unordered_set<ClusterNode *> Clusters::findNeighboringNodes(ClusterNode *no
         vector<int> scores;
 
         // to check the tolerance tomorrow.
-        m_csa->scorePartiallyWithVecForm(50, 1, 32, true, indexlist, m_csa->getSpecBy(node->id), scores);
+        bool normalize_dp = true;
+        m_csa->scorePartiallyWithVecForm(50, 1, 32, normalize_dp, indexlist, m_csa->getSpecBy(node->id), scores);
         int num_neighbors = 3072;
         double elpased_scoring = st.secondsElapsed();
         partial_sort(indexlist.begin(), indexlist.begin() + num_neighbors, indexlist.end(),

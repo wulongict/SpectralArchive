@@ -191,6 +191,23 @@ CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
                                       "ALTERPEPTIDE          varchar);"
                                       "CREATE INDEX GROUNDTRUTH_PEPTIDE ON GROUNDTRUTH (PEPTIDE);";
 
+
+    m_tablename2header["TNN"] = {"ID", "QUERY_ID", "TOPK", "MINDP", "INDEXNUM", "ARCHIVESIZE", "NPROBE", "DATE", "TNN_IDX", "TNN_DP"};
+    m_createTableSql["TNN"] = "CREATE TABLE TNN("
+                                      "ID                 INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                                      "QUERY_ID                INT,"
+                                      "TOPK             INT,"
+                                      "MINDP               FLOAT,"
+                                      "INDEXNUM                 INT,"
+                                      "ARCHIVESIZE                  INT,"
+                                      "NPROBE                 INT,"
+                                      "DATE                 CHAR(100),"
+                                      "TNN_IDX               varchar, "
+                                      "TNN_DP                varchar);"
+                                      "CREATE INDEX TNN_QUERY_ID ON TNN (QUERY_ID);";
+
+
+
     m_tablename2header["SPECFILES"] = {"FILE_ID","FILENAME","START","END"};
     m_createTableSql["SPECFILES"] = "CREATE TABLE SPECFILES("
                                     "FILE_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -954,6 +971,110 @@ void CAnnotationDB::createDatabase(bool rebuild, string dbfilename, bool verbose
     setDB(dbfilename);
     createTables(rebuild, verbose);
 
+}
+/*
+ *
+    m_tablename2header["TNN"] = {"ID", "QUERY_ID", "TOPK", "MINDP", "INDEXNUM", "ARCHIVESIZE", "NPROBE", "DATE", "TNN_IDX", "TNN_DP"};
+    m_createTableSql["TNN"] = "CREATE TABLE TNN("
+                                      "ID                 INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                                      "QUERY_ID                INT,"
+                                      "TOPK             INT,"
+                                      "MINDP               FLOAT,"
+                                      "INDEXNUM                 INT,"
+                                      "ARCHIVESIZE                  INT,"
+                                      "NPROBE                 INT,"
+                                      "DATE                 CHAR(100),"
+                                      "TNN_IDX               varchar, "
+                                      "TNN_DP                varchar);"
+                                      "CREATE INDEX TNN_QUERY_ID ON TNN (QUERY_ID);";*/
+void CAnnotationDB::insertTnnInfo(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe, string date, vector<long> &tnnidx, vector<double> &tnndp) {
+    ostringstream oss;
+    oss << queryindex << "," << topk << "," << mindp << ",'" << indexnum
+        << "'," << archivesize << "," << nprobe << ",'" << date << "',";
+    oss << "'";
+    for (int i=0; i < tnnidx.size(); i ++){
+        oss << tnnidx[i];
+        if(i!=tnnidx.size()-1) oss << " ";
+    }
+    oss << "','";
+    for (int i=0; i < tnndp.size(); i ++){
+        oss << tnndp[i];
+        if(i!=tnnidx.size()-1) oss << " ";
+    }
+    oss << "'";
+
+
+//    << nterm_mass
+//        << ",'" << modificationstr << "'," << precursormass << "," << charge << "," << retentiontimeinsec
+//        << "," << pProb << "," << iProb << "," << isDecoy << "," << significance << ",'" << protein
+//        << "','" << m_collision_energy << "'," << rfscore;
+
+    string sql = "INSERT INTO TNN (QUERY_ID, TOPK, MINDP, INDEXNUM, ARCHIVESIZE, NPROBE, DATE, TNN_IDX, TNN_DP) "
+                 "VALUES (" + oss.str() + "); ";
+    m_dbmanager->execAsTransaction(sql, true);
+//    return sql;
+}
+
+bool CAnnotationDB::getTNN(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe,
+                           vector<long> &tnnidx, vector<double> &tnndp) {
+    CDBEntry dbentry;
+    ostringstream  oss;
+    oss << "select * from TNN where QUERY_ID = " << queryindex << " and TOPK =  " << topk << " and MINDP <=" << mindp << " and INDEXNUM =" << indexnum << " and ARCHIVESIZE = " << archivesize << " and nprobe = " << nprobe << ";" ;
+    string sql = oss.str();
+//    cout << sql << endl;
+    m_dbmanager->getRow(dbentry, sql, false);
+    if (dbentry.empty()) {
+//        cout << "No results found in db " << endl;
+        return false;
+    }
+    else{
+        string tnnidxstr = dbentry.get("TNN_IDX",0);
+        string tnndpstr = dbentry.get("TNN_DP", 0);
+//        cout << "tnndix " << tnnidxstr << endl;
+//        cout << "tnndpstr " << tnndpstr << endl;
+        istringstream  iss(tnnidxstr);
+        while(iss){
+            int tnnid;
+
+            iss >> tnnid;
+//            cout << tnnid << endl;
+            tnnidx.push_back(tnnid);
+        }
+
+        istringstream  iss2(tnndpstr);
+        while(iss2){
+            double dp;
+            iss2 >> dp;
+//            cout << dp << endl;
+            tnndp.push_back(dp);
+        }
+
+        // now cut the dp threshold.
+        double MAX_SCORE=42925;
+        for(int i = 0; i < tnndp.size(); i ++){
+            if(tnndp[i]/MAX_SCORE>=mindp){
+
+                continue;
+            }else{
+//                cout << "removing neighboring node i=" << i << endl;
+                tnndp.erase(tnndp.begin() + i, tnndp.end());
+                tnnidx.erase(tnnidx.begin() + i, tnnidx.end());
+                break;
+            }
+        }
+//        cout << "size of tnndp and tnnidx " << tnndp.size() << " " << tnnidx.size() << endl;
+//        cout << "tnnidx ";
+//        for(auto each: tnnidx){
+//            cout << each<<  " ";
+//        }
+//        cout << endl;
+//        cout << "tnndp ";
+//        for(auto each: tnndp){
+//            cout << each<<  " ";
+//        }
+//        cout << endl;
+    }
+    return true;
 }
 
 

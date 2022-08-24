@@ -79,9 +79,13 @@ double intTol2double(int tol);
 
 struct SAnnGTSummary
 {
+private:
+    bool m_recallOfTrueNeighbor;
+public:
+
     long totalTNNnum;
     long correctTNNnum;
-    bool m_recallOfTrueNeighbor;
+
     int m_recallTNNtopK;
     int m_minPeakNumInSpec;
     double m_recallTNNminDP;
@@ -116,12 +120,11 @@ struct SAnnGTSummary
         setRecallTNNMinDP(recallTNNminDP);
         setRecallTNNminPeakNumInQuery(minPeakNumInSpec);
 
-        if(m_recallOfTrueNeighbor and not m_fout.is_open()){
-            // only do this when it is not opened.
-            m_fout.open(logFileName.c_str(), ios::out|ios::app);
-        }
+
 
     }
+
+    bool getRecallTNN(){return m_recallOfTrueNeighbor;}
 
     void setRecallTNN(bool recallTNN)
     {
@@ -129,6 +132,16 @@ struct SAnnGTSummary
         {
             m_recallOfTrueNeighbor = recallTNN;
             resetAccumulativeCounts();
+        }
+
+        if(m_recallOfTrueNeighbor and not m_fout.is_open()){
+            std::cout << "[info] opening log file " << logFileName << std::endl;
+            // only do this when it is not opened.
+            m_fout.open(logFileName.c_str(), ios::out|ios::app);
+        }
+        if(not m_recallOfTrueNeighbor and m_fout.is_open()){
+            std::cout << "[info] closing log file " << logFileName << std::endl;
+            m_fout.close();
         }
     }
     void setRecallTNNTopK(int topK)
@@ -232,7 +245,7 @@ public:
 
     void searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe, 
     vector<uint16_t> &query,
-                     bool visualize, double minTNNDP, int indexNum, int TNNtopK);
+                     bool visualize, double minTNNDP, int indexNum, int TNNtopK, bool recalltrueneighbor);
     void addRemark(long query_index, string &remarks);
     void getRemark(long query_index, string &remarks);
     void searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile,
@@ -278,7 +291,7 @@ private:
     void exportResponse(int query_index, vector<CAnnSpectra*> &annSpecList, string &jsonstring, vector<int> *ptrDPs, SLinearRegressionModel *ptrLRModel);
     void filterWithMinPeakNum(bool verbose, vector<long> &retIdx) ;
     void getAccurateTopNeighbor(ICQuery &query, vector<long> &topIdx, bool isLowMassAcc);
-    void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTrueNN,vector<vector<double>> &topKTrueNNScore, bool isLowMassAcc, int topK,
+    void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx, vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
                                  int dp_UInt);
     int getDim();
     void getScorerFactoryPtr();
