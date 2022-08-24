@@ -215,6 +215,8 @@ std::string FormatWithCommas(T value){
     return ss.str();
 }
 
+string getTimeStemp();
+
 void get_FDR_CorrectNum(vector<double> & tProbs, vector<double> & dProbs, vector<tuple<double, double>> & FDR_CorrectNum);
 void trim_space_only(std::string &str);
 

@@ -54,6 +54,8 @@ public:
     CUDAScore(string mzfile);
     ~CUDAScore();
 
+    // Retruns dot product scores between queryspec and a list of spectra in the current object.
+    // There is a upper limit of total number of scores returned, m_max_query_index_size=500000.
 	void calcDotProduct(int TopNPeak, int tol, uint16_t * queryspec,
                         int blockSize, vector<long> &indexlist, vector<int>&scores) override;
     long getSpecNum() override;

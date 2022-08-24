@@ -405,14 +405,20 @@ long ICMzFile::calculate_dot_product_with_vecfrom(long queryX, vector<int> &vecf
     try {
         const int PEAKNUM_PER_SPEC = getPeakNumPerSpec();
         uint16_t *x = getSpecBy(queryX);
-
+        // we will use index 1-50 to get value, so we need 51 values. as C++ array index is 0-based
         uint16_t used[51]={0};
         for (int i = 0; i < mzTopN; i++) {
-            if(x[i] == 0) {
+            if(x[i] == 0) { // last peak, no more peaks.
                 break;
             }
-            if (vecformY[x[i]] == 0 or used[vecformY[x[i]]] == 1) continue;
+            if (vecformY[x[i]] == 0 or used[vecformY[x[i]]] == 1) {
+                // peaks dost not matched or already matched with another peak.
+                continue;
+            }
+            // new unmatched peak get matched, set the flag on intensity value.
             used[vecformY[x[i]]] = 1;
+
+            // get the multiplication of two intensities.
             s += (PEAKNUM_PER_SPEC - i) * vecformY[x[i]];
             if(debug and queryX == debug_index)  {
                 cout <<"peak i = " << i << ": " <<  (PEAKNUM_PER_SPEC - i) << " x " <<  vecformY[x[i]] << "-->" <<s << endl;
@@ -560,6 +566,7 @@ void ICMzFile::getsortindex(vector<int> &idx, const double *intensity) const {
 
 }
 
+// choose normalize the dot product is better.
 void ICMzFile::scorePartiallyWithVecForm(int mzTopN, int tol, int blockSize, bool normalize, vector<long> &indexlist,
                                          uint16_t *queryspec, vector<int> &scores) {
     if(indexlist.empty())
@@ -568,6 +575,7 @@ void ICMzFile::scorePartiallyWithVecForm(int mzTopN, int tol, int blockSize, boo
     }
     calcDotProduct(mzTopN, tol, queryspec, blockSize, indexlist, scores);
 
+    // here is normalized the score into the range of 42925.
     if(normalize)  {
         double querynorm = getSquaredNorm(queryspec);
         const int MAX_SCORE = 42925;

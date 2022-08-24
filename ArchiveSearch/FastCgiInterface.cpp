@@ -199,12 +199,13 @@ struct contentParser {
     double minTNNDP;
     int indexNum;
     int TNNtopK;
+    int recalltrueneighbor;
 
     contentParser() {
         visualization = 0; // NO
         calcEdge = 0; // NO
-
-        nprobe = 256;
+        recalltrueneighbor = 0;
+        nprobe = 8;
         topN = 10;
         queryindex = -1;  // NO
         remarks = "NONE";
@@ -305,6 +306,7 @@ struct contentParser {
         bool i = update_defaultFloat_through_string(content, minTNNDP, "MINTNNDP");
         bool j = update_int_through_string(content, TNNtopK, "TNNTOPK");
         bool k = update_int_through_string(content, indexNum, "TNNINDEXNUM");
+        bool l = update_int_through_string(content, recalltrueneighbor, "RECALLTRUENEIGHBOR");
         
 
 //        return a or b or c or d or f or g;
@@ -344,7 +346,7 @@ void CFastCGIServer::searchQueryId(string &content) {
             spdlog::get("A")->info("start searching: queryindex={}, topn={} edge={}", ps.queryindex, ps.topN,
                                    ps.calcEdge);
             m_archive.searchQuery(ps.queryindex, message, ps.topN, ps.calcEdge, ps.nprobe, ps.mzspec,
-                                  ps.visualization == 1,ps.minTNNDP,ps.indexNum,ps.TNNtopK);
+                                  ps.visualization == 1,ps.minTNNDP,ps.indexNum,ps.TNNtopK, ps.recalltrueneighbor==1);
             response(message, "text/html");
             m_summary->update(st.stop());
             cout << "\n    Server Id    " << m_id << endl;
@@ -522,7 +524,7 @@ void CFastCGIServer::identification(string &content) {
 
     string jsonstring;
     vector<uint16_t> query;
-    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query, false,-1,-1,-1);
+    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query, false,-1,-1,-1, false);
 }
 
 void CFastCGIServer::searchPeptideSequence(string &content) {

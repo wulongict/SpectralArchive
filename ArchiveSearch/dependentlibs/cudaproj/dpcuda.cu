@@ -453,7 +453,8 @@ void CUDAScore::scoreAllVecForm(int mzTopN, int tol, long queryindex, int blockS
     }
 }
 
-
+// calculate dot product on GPU, then copy the score back to RAM.
+// Care should be taken for the upper limit of number of scores returned, m_max_query_index_size=500000.
 void CUDAScore::calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int blockSize,
                                vector<long> &indexlist, vector<int> & scores){
 
@@ -462,6 +463,8 @@ void CUDAScore::calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int b
 }
 #include <mutex>
 std::mutex dp_lock_gpu;
+
+// calculate a list of scores.
 void CUDAScore::QueryfastOnIndexWithUINT16(int TopNPeak, int tol, uint16_t *queryspec, int blockSize,
                                            vector<long> &indexlist) {
     std::lock_guard<std::mutex> guard(dp_lock_gpu);
@@ -710,8 +713,17 @@ void CUDAScore::dpscore(double tolerance, vector<vector<long>> &allRetIdx, int t
     cudaFree(index_pairs);
 }
 
+// Copy dot product scores from m_s to vector scores
+// there is a limit on the number of scores can be calculated, m_max_query_index_size.
+// currently, the default value of m_max_query_index_size is 500,000.
+// Care should be taken to call this function.
 void CUDAScore::copyScore(vector<long> &indexlist, vector<int> &scores) {
-    int scoreLen = indexlist.size() > m_max_query_index_size? m_max_query_index_size: indexlist.size();
+    int scoreLen = indexlist.size();
+    if(scoreLen > m_max_query_index_size){
+        cout << "Attention: score length resized to " << m_max_query_index_size << endl;
+        scoreLen = m_max_query_index_size;
+    }
+//    int scoreLen = indexlist.size() > m_max_query_index_size? m_max_query_index_size: indexlist.size();
     scores.assign(scoreLen,0);
     for (int i = 0; i < scores.size(); i ++)    {
         scores[i] = getscore()[i];

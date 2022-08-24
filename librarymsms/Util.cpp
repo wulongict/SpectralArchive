@@ -952,6 +952,19 @@ bool find_value(vector<long> &a, long val, int &idx) {
     return found;
 }
 
+string getTimeStemp() {
+    auto timeNow = std::chrono::system_clock::now();
+//    // Some computation here
+//    auto end = std::chrono::system_clock::now();
+
+//    std::chrono::duration<double> elapsed_seconds = end-start;
+    std::time_t t = std::chrono::system_clock::to_time_t(timeNow);
+    return string(std::ctime(&t));
+//    std::cout << "finished computation at " << std::ctime(&t)
+//              << "elapsed time: " << elapsed_seconds.count() << "s"
+//              << std::endl;
+}
+
 
 CPath::CPath(string fullpath) {
     m_fullpath = std::move(fullpath);

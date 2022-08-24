@@ -63,7 +63,11 @@ public:
     virtual long getSpecNum()=0;
     virtual uint16_t * getSpecBy(long queryindex)=0;
     virtual int getPeakNumPerSpec() const = 0;
-    // this is the function to get the top hit
+
+    // calculating dot product between queryspec and spectra listed in indexlist
+    // implementd in subclasses.
+    // The GPU version has an upper limit on the size of indexlist, 500,000
+    // The CPU version has no limit.
     virtual void calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, int blockSize,
                                 vector<long> &indexlist, vector<int> &scores) = 0;
     virtual void dpscore(double tolerance, vector<vector<long>> &allRetIdx, int threadnum, vector<vector<float>> &accDist,
@@ -77,13 +81,16 @@ public:
 	void get_vector_form(uint16_t * x, int tol, vector<int> &vecform) const;
     CMzSpec getMzSpec(long queryindex);
 
-    long calculate_dot_product_with_vecfrom(long queryX, vector<int> &vecformY, int mzTopN, bool debug,
-                                            long debug_index);
 
     float *buildNormalizedQueries(int dim, const vector<long> &candidates, bool useFlankingBins, int numQuery);
 
     void getQueryVecByMZArrayIndex(int queryindex, vector<float> & v, bool useFlankingBins=false) ;
+
+    // Several different implementation of dot product calcualtion.
     long calculate_dot_product(long queryX, long queryY, int tol, int mzTopN, vector<vector<int>> &prescore);
+
+    long calculate_dot_product_with_vecfrom(long queryX, vector<int> &vecformY, int mzTopN, bool debug,
+                                            long debug_index);
     long calculate_dot_product_with_hist(long queryX, long queryY, int tol, int mzTopN, vector<vector<int>> &prescore, vector<double> &diff);
     long calculate_dot_product_with_hist(int tol, int mzTopN, vector<vector<int>> &prescore, vector<double> &diff,
                                          uint16_t *x, uint16_t *y, bool print_matched_pks) const;
