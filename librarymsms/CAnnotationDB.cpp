@@ -1019,7 +1019,7 @@ bool CAnnotationDB::getTNN(long queryindex, int topk, double mindp, int indexnum
                            vector<long> &tnnidx, vector<double> &tnndp) {
     CDBEntry dbentry;
     ostringstream  oss;
-    oss << "select * from TNN where QUERY_ID = " << queryindex << " and TOPK =  " << topk << " and MINDP <=" << mindp << " and INDEXNUM =" << indexnum << " and ARCHIVESIZE = " << archivesize << " and nprobe = " << nprobe << ";" ;
+    oss << "select * from TNN where QUERY_ID = " << queryindex << " and TOPK >=  " << topk << " and MINDP <=" << mindp << " and INDEXNUM =" << indexnum << " and ARCHIVESIZE = " << archivesize << " and nprobe = " << nprobe << ";" ;
     string sql = oss.str();
 //    cout << sql << endl;
     m_dbmanager->getRow(dbentry, sql, false);
@@ -1030,14 +1030,11 @@ bool CAnnotationDB::getTNN(long queryindex, int topk, double mindp, int indexnum
     else{
         string tnnidxstr = dbentry.get("TNN_IDX",0);
         string tnndpstr = dbentry.get("TNN_DP", 0);
-//        cout << "tnndix " << tnnidxstr << endl;
-//        cout << "tnndpstr " << tnndpstr << endl;
+
         istringstream  iss(tnnidxstr);
         while(iss){
             int tnnid;
-
             iss >> tnnid;
-//            cout << tnnid << endl;
             tnnidx.push_back(tnnid);
         }
 
@@ -1045,34 +1042,23 @@ bool CAnnotationDB::getTNN(long queryindex, int topk, double mindp, int indexnum
         while(iss2){
             double dp;
             iss2 >> dp;
-//            cout << dp << endl;
             tnndp.push_back(dp);
         }
 
         // now cut the dp threshold.
         double MAX_SCORE=42925;
         for(int i = 0; i < tnndp.size(); i ++){
-            if(tnndp[i]/MAX_SCORE>=mindp){
+            if(tnndp[i]/MAX_SCORE>=mindp and i<topk){
 
                 continue;
             }else{
-//                cout << "removing neighboring node i=" << i << endl;
+
                 tnndp.erase(tnndp.begin() + i, tnndp.end());
                 tnnidx.erase(tnnidx.begin() + i, tnnidx.end());
                 break;
             }
         }
-//        cout << "size of tnndp and tnnidx " << tnndp.size() << " " << tnnidx.size() << endl;
-//        cout << "tnnidx ";
-//        for(auto each: tnnidx){
-//            cout << each<<  " ";
-//        }
-//        cout << endl;
-//        cout << "tnndp ";
-//        for(auto each: tnndp){
-//            cout << each<<  " ";
-//        }
-//        cout << endl;
+
     }
     return true;
 }
