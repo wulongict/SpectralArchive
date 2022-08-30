@@ -1005,7 +1005,7 @@ void CAnnotationDB::insertTnnInfo(long queryindex, int topk, double mindp, int i
 
 
 //    << nterm_mass
-//        << ",'" << modificationstr << "'," << precursormass << "," << charge << "," << retentiontimeinsec
+//        << ",'" << modificationstr << "'," << precursorMz << "," << charge << "," << retentiontimeinsec
 //        << "," << pProb << "," << iProb << "," << isDecoy << "," << significance << ",'" << protein
 //        << "','" << m_collision_energy << "'," << rfscore;
 

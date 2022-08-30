@@ -1212,7 +1212,7 @@ void CSpectralArchive::visualization_of_score_distribution(long query_index, vec
     m_AnnotationDB->retrieveGtinfo(query_index, gtinfo);
 
     string outputbasename = to_string("", "_", query_index, "peaknum", peaknum, "rnd", tworound, "topn", topN,
-                                      "mu_sigma_", em.getNames(), "p", gtinfo.precursormass, "chg", gtinfo.charge);
+                                      "mu_sigma_", em.getNames(), "p", gtinfo.precursorMz, "chg", gtinfo.charge);
 
     double minval = 0, maxval = 1.4142;
     CVisual::gnuplotWrapper info;

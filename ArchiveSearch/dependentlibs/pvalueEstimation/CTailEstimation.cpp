@@ -47,6 +47,61 @@ void prepare_linear_regression(vector<double> &rx, vector<double> &logry, double
     A.resize(count);
 }
 
+//
+//       S_Y S_{XX}-S_X S_{XY}
+// b   = ---------------------------------
+//       n  S_{XX} -  S_X S_X
+//
+//        n S_{XY} - S_Y S_X
+// k   =   ---------------------------
+//        n  S_{XX} -  S_X S_X
+
+// 1D linear regression problem.
+// y = kx +b
+bool simple_1D_linear_regression(std::vector<double> x, std::vector<double> y, double &k, double &b, double &r2){
+    cout << "running " << __FUNCTION__  << endl;
+    bool ret = false;
+    int n = x.size();
+    double sx = 0, sy=0, sxx=0, sxy=0;
+    for(int i = 0; i < x.size(); i ++){
+        sx += x[i];
+        sy += y[i];
+        sxy += x[i]*y[i];
+        sxx += x[i] * x[i];
+    }
+
+    double denominator = n * sxx - sx * sx;
+    double EPSILON = 1e-8;
+    if(fabs(denominator)<EPSILON){
+        ret = false;
+    }else{
+        b = (sy * sxx - sx * sxy) / denominator;
+        k = (n * sxy - sy * sx)/ denominator;
+        // calculate r2
+        double y_bar = sy / n;
+        double SSR = 0, SST = 0;
+        for(int i = 0; i < x.size(); i ++){
+            double t = y[i]-(k * x[i] + b), tt = y[i]-y_bar;
+            SSR += t*t;
+            SST += tt * tt;
+        }
+//        std::cout << SSR << "\t" << SST << std::endl;
+        r2 = 1- SSR/SST; // is it possible that SST = 0?
+        ret = true;
+    }
+
+    return ret;
+
+}
+
+
+// the output of linear regression
+struct CLinRegOut{
+    double k;
+    double b;
+    double r2;
+};
+
 // diff of the two function
 // linear system
 // Ax=b
@@ -61,6 +116,15 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
         vector<vector<double>> A(x.size(), vector<double>{0});
         prepare_linear_regression(x, y, min_y, max_y, b, A);
         sampleSize = b.size();
+        CLinRegOut lro;
+        {
+
+            vector<double> x;
+            for(int i = 0; i < A.size(); i ++){
+                x.push_back(A[i][0]);
+            }
+            simple_1D_linear_regression(x,b,lro.k,lro.b,lro.r2);
+        }
 
         if (sampleSize < 50 ) {
 //            cout << "Warining: Too few sample: " << sampleSize << endl;
@@ -70,6 +134,22 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
         lr.solve(verbose);
         coefs = lr.getCoefficients();
         r2 = lr.getRsquare();
+
+
+        if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-3 or fabs(r2-lro.r2)>1e-3  ){
+            cout << "[Error] inconsistence lr resutls " << endl;
+            cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
+                 << endl;
+            cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
+        }else{
+            cout << fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) << "\t"  << fabs(r2-lro.r2) << endl;
+
+            cout << "[Good] good lr resutls " << endl;
+            cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
+                 << endl;
+            cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
+
+        }
 
         if(r2>=MIN_R_SQUARE_ALLOWED){
             ret=true;

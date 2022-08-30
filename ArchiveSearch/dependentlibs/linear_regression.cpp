@@ -43,7 +43,7 @@ bool simple_1D_linear_regression(std::vector<double> x, std::vector<double> y, d
             SSR += t*t;
             SST += tt * tt;
         }
-        std::cout << SSR << "\t" << SST << std::endl;
+//        std::cout << SSR << "\t" << SST << std::endl;
         r2 = 1- SSR/SST; // is it possible that SST = 0?
         ret = true;
     }

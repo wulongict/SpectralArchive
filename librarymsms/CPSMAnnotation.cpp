@@ -19,7 +19,7 @@ void SPsmAnnotation::initMembers() {
     cterm_mass = 0;
     nterm_mass = 0;
     modificationstr = "UNMODIFIED";
-    precursormass = 0;
+    precursorMz = 0;
     charge = 0;  // 10
 
     ms2_scan = 0;
@@ -57,7 +57,7 @@ void SPsmAnnotation::initWithRow(CDBEntry &results) {
 
     modificationstr = results.get("MODIFICATION",0);
     // gtrow.toString(CSqlGtTableRow::MODIFICATION);
-    precursormass = results.getFloat("PRECURSOR",0);
+    precursorMz = results.getFloat("PRECURSOR", 0);
     // gtrow.toDouble(CSqlGtTableRow::PRECURSOR);
     charge = (int)results.getInt("CHARGE",0);
     // gtrow.toInt(CSqlGtTableRow::CHARGE);
@@ -132,7 +132,7 @@ void SPsmAnnotation::set(int scan, double precursor, int chg, double rt, int fil
                          int ms2counts) {
     // only update for valid values.
     if(scan >=0)     ms2_scan = scan;
-    if(precursor>0) precursormass = precursor;
+    if(precursor>0) precursorMz = precursor;
     if(chg > 0) charge = chg;
     if(rt >0) retentiontimeinsec = rt;
 
@@ -146,7 +146,7 @@ string SPsmAnnotation::createInsertSql() const {
     ostringstream oss;
     oss << idx << "," << fileid << "," << ms2idx << ",'" << peptideseq
         << "'," << score << "," << ms2_scan << "," << cterm_mass << "," << nterm_mass
-        << ",'" << modificationstr << "'," << precursormass << "," << charge << "," << retentiontimeinsec
+        << ",'" << modificationstr << "'," << precursorMz << "," << charge << "," << retentiontimeinsec
         << "," << pProb << "," << iProb << "," << isDecoy << "," << significance << ",'" << protein
         << "','" << m_collision_energy << "'," << rfscore;
 
@@ -190,7 +190,7 @@ string SPsmAnnotation::createChargeUpdateSql() const {
 void SPsmAnnotation::toOstringStreamNoId(ostringstream &oss) const{
     oss << R"("peptide": ")" << peptideseq
         << R"(","filename": ")" << mzxml_filename
-        << R"(", "precursor": )" << precursormass
+        << R"(", "precursor": )" << precursorMz
         << R"(, "charge": )" << charge
         << R"(, "scan": )" << ms2_scan
         << R"(, "cterm": ")" << cterm_mass
@@ -208,17 +208,17 @@ void SPsmAnnotation::toOstringStreamNoId(ostringstream &oss) const{
 
 ostream &operator<<(ostream &out, const SPsmAnnotation &gt) {
     out << gt.idx << ","
-        << gt.ms2idx << ","
-        << gt.fileid << ","
-        << gt.isDecoy << ","
-        << gt.significance << ","
-        <<gt.protein << ","
-        <<gt.peptideseq << ","
-        <<gt.score << ","
-        <<gt.cterm_mass << ","
-        <<gt.nterm_mass << ","
-        <<gt.modificationstr << ","
-        <<gt.precursormass << ","
+            << gt.ms2idx << ","
+            << gt.fileid << ","
+            << gt.isDecoy << ","
+            << gt.significance << ","
+            << gt.protein << ","
+            << gt.peptideseq << ","
+            << gt.score << ","
+            << gt.cterm_mass << ","
+            << gt.nterm_mass << ","
+            << gt.modificationstr << ","
+            << gt.precursorMz << ","
         <<gt.charge << ","
         <<gt.ms2_scan << ","
         <<gt.mzxml_filename << ","
@@ -234,14 +234,19 @@ void SPsmAnnotation::setCollisionEnergy(string collisionEnergy) {
     m_collision_energy = collisionEnergy;
 }
 
+// estimate peptide mass based on average AA mass, ~ 111 Da.
+//          e.g. 10 amino acid will be 1110 Da.
+// the precursor mass is actually precursor m/z
+//  estimated mass / precursor mz  ~  charge.
+// todo: change name of variable. precursor mass.
 bool SPsmAnnotation::fixChargeStates() {
 
     bool ret = false;
     if(charge == 0 and peptideseq!="UNKNOWN"){
         int lenPep= peptideseq.length();
-        double avarageAAmass=111;
+        double avarageAAmass = 111;
         double estimatedMass = avarageAAmass * lenPep;
-        int estimatedCharge = round(estimatedMass/ precursormass);
+        int estimatedCharge = round(estimatedMass / precursorMz);
 
         charge = estimatedCharge;
         ret = true;

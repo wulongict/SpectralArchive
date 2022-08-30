@@ -26,7 +26,7 @@ struct SPsmAnnotation {
     double cterm_mass;// = 0;
     double nterm_mass;// = 0;
     string modificationstr;// = "UNMODIFIED";
-    double precursormass;// = -1;
+    double precursorMz;// = -1;
     int charge;// = -1;
     int ms2_scan;
     string mzxml_filename;
@@ -36,7 +36,7 @@ struct SPsmAnnotation {
     double rfscore;//=0
     double precursorNeutralMass() const    {
         double pmass = 1.007276;
-        return precursormass * charge - charge *pmass;
+        return precursorMz * charge - charge * pmass;
     }
     string m_collision_energy; // collision energy
     int peaknum;
@@ -52,6 +52,7 @@ struct SPsmAnnotation {
     void set(int scan, double precursor, int chg, double rt, int fileId, long total_idx, string specfile, int ms2counts);
     void setCollisionEnergy(string collisionEnergy);
 
+    // estimate charge state from mz and mass.
     bool fixChargeStates();
 
     void initWithRow(CDBEntry &results);
@@ -63,7 +64,7 @@ struct SPsmAnnotation {
     void outputToFile(ofstream &fout) const    {
         fout << idx << "\t" << mzxml_filename << "\t" << fileid << "\t" << ms2idx << "\t" << peptideseq
              << "\t" << score << "\t" << ms2_scan << "\t" << cterm_mass << "\t" << nterm_mass
-             << "\t" << modificationstr << "\t" << precursormass << "\t" << charge << "\t" << retentiontimeinsec
+             << "\t" << modificationstr << "\t" << precursorMz << "\t" << charge << "\t" << retentiontimeinsec
              << "\t" << pProb << "\t" << iProb << "\t" << isDecoy << "\t" << significance << "\t" << protein << endl;
     }
 

@@ -263,7 +263,7 @@ bool CometPepXMLParser::updateGtInfo(SPsmAnnotation &gtinfo) {
     if(getPSMInfobyScan(gtinfo.ms2_scan,psminfo))    {
         if(psminfo.charge!=0){
             gtinfo.charge = psminfo.charge;
-            gtinfo.precursormass = psminfo.precursorNeutMass / psminfo.charge + proton_mass;
+            gtinfo.precursorMz = psminfo.precursorNeutMass / psminfo.charge + proton_mass;
         }
 
         if (psminfo.searchhits.size()>0)        {
@@ -1118,7 +1118,7 @@ bool PeptideProphetParser::updateGtInfoOnSpectrumName(string spectrumName, SPsmA
     bool ret = false;
     PSMInfo psminfo;
     if(getPSMInfobySpectrumName(spectrumName,psminfo))    {
-        gtinfo.precursormass = psminfo.precursorNeutMass;  // replacing gtinfo.precursor mass to psminfo precursor mass...
+        gtinfo.precursorMz = psminfo.precursorNeutMass;  // replacing gtinfo.precursor mass to psminfo precursor mass...
         gtinfo.charge = psminfo.charge;
         gtinfo.significance = isPSMSignificant(psminfo) ? 1 : 0;
         if(psminfo.searchhits.size()>0)   {
@@ -1147,7 +1147,7 @@ bool PeptideProphetParser::updateGtInfoOnSpectrumName(string spectrumName, SPsmA
         gtinfo.score = -1;
         gtinfo.nterm_mass = -1;// todo: should be zero
         gtinfo.cterm_mass = -1; // should be 0 todo:
-        gtinfo.precursormass = -1;
+        gtinfo.precursorMz = -1;
         gtinfo.charge = 0;
         gtinfo.pProb = 0;
         gtinfo.iProb = 0;
