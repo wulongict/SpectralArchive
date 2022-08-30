@@ -67,6 +67,7 @@ void stableUniqueVector_deprecated(vector<long> &x, bool verbose) {
 // getting unique ids.
 // getting the size of ANN incrementally, for different nindices.
 // Why this should be stable?
+// now this takes 20.12% of the time. to be further improve.
 void stableUniqueVectorSet(vector<long> &x, bool verbose, const int sizeOfAnnByEachIndex, std::vector<long> &selected_idx) {
     set<long> s = {-1};
     vector<int> sizeOfIdx; //
