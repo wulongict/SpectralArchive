@@ -55,7 +55,12 @@ void prepare_linear_regression(vector<double> &rx, vector<double> &logry, double
 //        n S_{XY} - S_Y S_X
 // k   =   ---------------------------
 //        n  S_{XX} -  S_X S_X
-
+//
+// S_Y = \sum y_i
+// S_X = \sum x_i
+// S_XY = \sum x_i * y_i
+// S_XX = \sum x_i * x_i
+//
 // 1D linear regression problem.
 // y = kx +b
 bool simple_1D_linear_regression(std::vector<double> x, std::vector<double> y, double &k, double &b, double &r2){
@@ -105,6 +110,7 @@ struct CLinRegOut{
 // diff of the two function
 // linear system
 // Ax=b
+// no longer using Eigen.
 bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<double> &coefs, double &r2,
                                  bool verbose, double &min_y, double &max_y, int &sampleSize) {
     bool ret = false;
@@ -136,10 +142,7 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
         coefs[0]=lro.k;
         coefs[1]=lro.b;
         r2 = lro.r2;
-//        CLinearRegression lr(A, b);
-//        lr.solve(verbose);
-//        coefs = lr.getCoefficients();
-//        r2 = lr.getRsquare();
+
 
 
         if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-6 or fabs(r2-lro.r2)>1e-6  ){
@@ -148,12 +151,7 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
                  << endl;
             cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
         }else{
-//            cout << fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) << "\t"  << fabs(r2-lro.r2) << endl;
-//
-//            cout << "[Good] good lr resutls " << endl;
-//            cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
-//                 << endl;
-//            cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
+
 
         }
 
@@ -203,10 +201,7 @@ bool linear_regression_on_logCDF(vector<vector<double>> &rx_logry, vector<double
         coefs[1]=lro.b;
         r2 = lro.r2;
 
-//        CLinearRegression lr(A, b);
-//        lr.solve(true);
-//        coefs = lr.getCoefficients();
-//        r2 = lr.getRsquare();
+
         cout << setprecision(5) << "Model: logCDF = " << coefs[0] << "x+" << coefs[1] << "\tR^2=" << r2 << endl;
         minCDF += 0.1;
     }
