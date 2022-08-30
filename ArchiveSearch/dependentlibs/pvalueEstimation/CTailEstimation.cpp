@@ -6,7 +6,7 @@
 #include <ostream>
 #include <iostream>
 #include "CTailEstimation.h"
-#include "CLinearRegression.h"
+
 #include "Visual.h"
 #include "../../../librarymsms/Util.h"
 #include "../../../External/gnuplot-iostream/gnuplot-iostream.h"
@@ -116,6 +116,13 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
         vector<vector<double>> A(x.size(), vector<double>{0});
         prepare_linear_regression(x, y, min_y, max_y, b, A);
         sampleSize = b.size();
+
+
+        if (sampleSize < 50 ) {
+//            cout << "Warining: Too few sample: " << sampleSize << endl;
+            break;
+        }
+
         CLinRegOut lro;
         {
 
@@ -125,15 +132,14 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
             }
             simple_1D_linear_regression(x,b,lro.k,lro.b,lro.r2);
         }
-
-        if (sampleSize < 50 ) {
-//            cout << "Warining: Too few sample: " << sampleSize << endl;
-            break;
-        }
-        CLinearRegression lr(A, b);
-        lr.solve(verbose);
-        coefs = lr.getCoefficients();
-        r2 = lr.getRsquare();
+        coefs.assign(2,0);
+        coefs[0]=lro.k;
+        coefs[1]=lro.b;
+        r2 = lro.r2;
+//        CLinearRegression lr(A, b);
+//        lr.solve(verbose);
+//        coefs = lr.getCoefficients();
+//        r2 = lr.getRsquare();
 
 
         if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-6 or fabs(r2-lro.r2)>1e-6  ){
@@ -181,10 +187,26 @@ bool linear_regression_on_logCDF(vector<vector<double>> &rx_logry, vector<double
             success = false;
             break;
         }
-        CLinearRegression lr(A, b);
-        lr.solve(true);
-        coefs = lr.getCoefficients();
-        r2 = lr.getRsquare();
+
+        CLinRegOut lro;
+        {
+
+            vector<double> x;
+            for(int i = 0; i < A.size(); i ++){
+                x.push_back(A[i][0]);
+            }
+            simple_1D_linear_regression(x,b,lro.k,lro.b,lro.r2);
+        }
+
+        coefs.assign(2,0);
+        coefs[0]=lro.k;
+        coefs[1]=lro.b;
+        r2 = lro.r2;
+
+//        CLinearRegression lr(A, b);
+//        lr.solve(true);
+//        coefs = lr.getCoefficients();
+//        r2 = lr.getRsquare();
         cout << setprecision(5) << "Model: logCDF = " << coefs[0] << "x+" << coefs[1] << "\tR^2=" << r2 << endl;
         minCDF += 0.1;
     }

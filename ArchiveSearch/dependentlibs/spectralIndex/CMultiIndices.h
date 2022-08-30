@@ -139,6 +139,7 @@ public:
                      DataFile &splib, bool use_gpu, int indexChoice, int batchsize, string outputpath, int ret_num,
                      long spec_start, long spec_end);
 
+    // to be optimized.
     void collectANNs(int indexChoice, int ret_num, const vector<vector<long>> &results,  const vector<vector<double>> &results_dist,int idx,
                      vector<long> &int_ind,  vector<double> &dist, bool verbose) const;
 

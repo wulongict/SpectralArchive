@@ -586,6 +586,7 @@ public:
 
 };
 
+// 40% fo time spend here. tried reserve space, but not working. related to the map...
 void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vector<long>> &results, const vector<vector<double>> &results_dist, int idx,
                                 vector<long> &int_ind, vector<double> &dist, bool verbose) const {
     if (indexChoice == -1) {
@@ -601,12 +602,15 @@ void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vecto
         // now keep the corresponding distances.
         map<long, double> idx2dist;
 
+        // this key value pair is used to collect the scores. There should be some better method.
         for(int i = 0; i < tmp.size(); i ++){
             if(idx2dist.count(tmp[i])==0){ // new key. add
                 idx2dist[tmp[i]] = dist[i];
             }
         }
         vector<double> tmp_dist;
+        tmp_dist.reserve(int_ind.size());
+
         for(int i = 0; i < int_ind.size(); i++){
             tmp_dist.push_back(idx2dist[int_ind[i]]);
         }
@@ -614,6 +618,8 @@ void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vecto
 
     } else {
         int j = indexChoice;
+//        int_ind.reserve(1024);
+//        dist.reserve(1024);
         int_ind.insert(int_ind.end(), results[j].begin() + idx * ret_num,
                        results[j].begin() + (idx + 1) * ret_num);
         dist.insert(dist.end(), results[j].begin() + idx * ret_num, results[j].begin() + (idx + 1) * ret_num);

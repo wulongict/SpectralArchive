@@ -17,27 +17,7 @@ namespace gnuplotio
 
 
 bool linear_regression_on_logCDF(vector<vector<double>> &rx_logry, vector<double> &coefs, double &r2);
-//bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<double> &coefs, double &r2, bool verbose);
 
-//class ICHistdata {
-//public:
-//    virtual int size() = 0;
-//    bool empty(){return 0==size();}
-//    virtual double at(int i) = 0;
-//    virtual double accumulate(int shift)=0;
-//};
-//
-//class CHistInt: public ICHistdata{
-//    vector<int> &m_counts;
-//    vector<double> m_left_boundary;
-//public:
-//    CHistInt(vector<int> &allscores): m_counts(allscores){}
-//    CHistInt(vector<int> &allscores, vector<double> left_boundary);
-//    int size() override {return m_counts.size();}
-//    double at(int i) override{return m_counts.at(i);}
-//    double accumulate(int shift) override;
-//
-//};
 
 struct SLinearRegressionModel{
     vector<double> coefs;
