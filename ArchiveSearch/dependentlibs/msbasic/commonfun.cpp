@@ -63,7 +63,11 @@ void stableUniqueVector_deprecated(vector<long> &x, bool verbose) {
     }
 }
 
-void stableUniqueVectorSet(vector<long> &x, bool verbose, const int sizeOfAnnByEachIndex) {
+// this function is doing two different things.
+// getting unique ids.
+// getting the size of ANN incrementally, for different nindices.
+// Why this should be stable?
+void stableUniqueVectorSet(vector<long> &x, bool verbose, const int sizeOfAnnByEachIndex, std::vector<long> &selected_idx) {
     set<long> s = {-1};
     vector<int> sizeOfIdx; //
     vector<long> y;
@@ -73,12 +77,13 @@ void stableUniqueVectorSet(vector<long> &x, bool verbose, const int sizeOfAnnByE
         if (s.find(x[k]) == s.end()) {
             y.push_back(x[k]);
             s.insert(x[k]);
+            selected_idx.push_back(k);
         }
         if ( (k+1) % sizeOfAnnByEachIndex == 0 ) {
             sizeOfIdx.push_back(y.size());
         }
     }
-//    sizeOfIdx.push_back(y.size());
+
     x.swap(y);
 
     if (verbose) {

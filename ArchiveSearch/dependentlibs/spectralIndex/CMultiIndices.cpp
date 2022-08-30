@@ -586,7 +586,7 @@ public:
 
 };
 
-// 40% fo time spend here. tried reserve space, but not working. related to the map...
+// 12% now, much better. fo time spend here. tried reserve space, but not working. related to the map...
 void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vector<long>> &results, const vector<vector<double>> &results_dist, int idx,
                                 vector<long> &int_ind, vector<double> &dist, bool verbose) const {
     if (indexChoice == -1) {
@@ -598,23 +598,15 @@ void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vecto
         }
 //        stableUniqueVector_deprecated(int_ind, true);
         vector<long> tmp(int_ind.begin(), int_ind.end()); // keep a record of the ids.
-        stableUniqueVectorSet(int_ind,verbose,ret_num);
-        // now keep the corresponding distances.
-        map<long, double> idx2dist;
-
-        // this key value pair is used to collect the scores. There should be some better method.
-        for(int i = 0; i < tmp.size(); i ++){
-            if(idx2dist.count(tmp[i])==0){ // new key. add
-                idx2dist[tmp[i]] = dist[i];
-            }
+        vector<long> selected_idx;
+        stableUniqueVectorSet(int_ind,verbose,ret_num, selected_idx);
+        vector<double> tmp_tmpdist;
+        tmp_tmpdist.reserve(dist.size());
+        for(int i = 0; i < selected_idx.size(); i ++){
+            tmp_tmpdist.push_back(dist[selected_idx[i]]);
         }
-        vector<double> tmp_dist;
-        tmp_dist.reserve(int_ind.size());
+        tmp_tmpdist.swap(dist);
 
-        for(int i = 0; i < int_ind.size(); i++){
-            tmp_dist.push_back(idx2dist[int_ind[i]]);
-        }
-        tmp_dist.swap(dist);
 
     } else {
         int j = indexChoice;

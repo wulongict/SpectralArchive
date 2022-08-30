@@ -12,6 +12,6 @@
 void displayParam(boost::program_options::variables_map &vm);
 void uniqueVector(std::vector<long> &x);
 void stableUniqueVector_deprecated(std::vector<long> &x, bool verbose);
-void stableUniqueVectorSet(std::vector<long> &x, bool verbose,const int sizeOfAnnByEachIndex);
+void stableUniqueVectorSet(std::vector<long> &x, bool verbose,const int sizeOfAnnByEachIndex, std::vector<long> &selected_idx);
 std::string argToStr(int argc, char * argv[]);
 #endif //MYTOOL_COMMONFUN_H
