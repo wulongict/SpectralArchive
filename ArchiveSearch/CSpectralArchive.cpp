@@ -317,15 +317,18 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
             perror("remove of .scan file fails"); 
             throw runtime_error("\nERROR: Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
         }
+
+        // run this only when new data file added.
+        m_indices->write();  // as there is only one file, we could write here.
+
+
     }
     
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
-    m_indices->write();  // as there is only one file, we could write here.
 
-    // mz file loaded.
+// mz file loaded.
     m_csa->refresh_mz_object_from_disk();
-
     cout << "[Info] size of archive: " <<this->size() << endl;
     
 }

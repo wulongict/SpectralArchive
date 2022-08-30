@@ -16,7 +16,9 @@ MultipleIndicesImpl::MultipleIndicesImpl() : m_useCpu(true) {
 }
 
 // create multiple indices, set the filename
-// assign seeds 0 to N-1 for N indices, to make random algorithm reproducible. 
+// assign seeds from string "indexshufleseeds" to N indices, to make random algorithm reproducible.
+// the indexshuffleseeds can be "default", which means using 0, to N-1 as seeds.
+// the indexshuffleseeds can be "customized:1;2;3;4;5;6" which means assign 1 2 3 4 5 6 as seeds for N indices.
 // Attention: in different version of gcc, the shuffle function changes. 
 //            This might cause problem. So use the proper shuffle function.
 // This function will create no indexes, but make the parameters ready.
@@ -210,6 +212,7 @@ void MultipleIndicesImpl::readIndex(int i, string filename) {
 }
 
 void MultipleIndicesImpl::write() {
+    cout << "Attention: writing to index in use may result in inconsistence between the indice in use and not in use" << endl;
     for (int i = 0; i < getNum(); i++) {
         writeIndex(i);
     }

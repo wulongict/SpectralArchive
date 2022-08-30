@@ -29,4 +29,6 @@ add_subdirectory(spectralIndex)
 add_subdirectory(pvalueEstimation)
 add_subdirectory(msbasic)
 
+add_executable(simple_linear_regression linear_regression.cpp)
+
 
