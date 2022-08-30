@@ -59,7 +59,7 @@ void prepare_linear_regression(vector<double> &rx, vector<double> &logry, double
 // 1D linear regression problem.
 // y = kx +b
 bool simple_1D_linear_regression(std::vector<double> x, std::vector<double> y, double &k, double &b, double &r2){
-    cout << "running " << __FUNCTION__  << endl;
+
     bool ret = false;
     int n = x.size();
     double sx = 0, sy=0, sxx=0, sxy=0;
@@ -136,18 +136,18 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
         r2 = lr.getRsquare();
 
 
-        if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-3 or fabs(r2-lro.r2)>1e-3  ){
+        if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-6 or fabs(r2-lro.r2)>1e-6  ){
             cout << "[Error] inconsistence lr resutls " << endl;
             cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
                  << endl;
             cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
         }else{
-            cout << fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) << "\t"  << fabs(r2-lro.r2) << endl;
-
-            cout << "[Good] good lr resutls " << endl;
-            cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
-                 << endl;
-            cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
+//            cout << fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) << "\t"  << fabs(r2-lro.r2) << endl;
+//
+//            cout << "[Good] good lr resutls " << endl;
+//            cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
+//                 << endl;
+//            cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
 
         }
 
