@@ -679,23 +679,33 @@ void TestMatrix() {
 
 
 
-SimpleTimer::SimpleTimer() {
+SimpleTimer::SimpleTimer(bool verbose) {
     m_start = std::chrono::steady_clock::now();//clock();
     m_end = m_start;
     m_used = m_end - m_start;
     m_taskname = "";
-    cout << "[Timer] " << flush;
-    cout << "Timer is started..." << endl;
+    m_verbose = verbose;
+//    cout << m_verbose << " timer verbosity: " << endl;
+    if(m_verbose) {
+        cout << "[Timer] " << flush;
+        cout << "Timer is started..." << endl;
+    }
 }
 
-SimpleTimer::SimpleTimer(string taskname) {
+SimpleTimer::SimpleTimer(string taskname, bool verbose) {
     m_start = std::chrono::steady_clock::now();
     m_end = m_start;
     m_used = m_end - m_start;
     m_taskname = taskname;
-    cout << "[Timer] " << flush;
-    cout << m_taskname << " Timer is started..." << endl;
+    m_verbose = verbose;
+//    cout << m_verbose << " timer verbosity: " << taskname << "\t" << m_taskname << endl;
+    if(m_verbose){
+        cout << "[Timer] " << flush;
+        cout << m_taskname << " Timer is started..." << endl;
+    }
+
 }
+SimpleTimer::SimpleTimer(char *x, bool verbose): SimpleTimer(string(x), verbose) {}
 
 SimpleTimer::~SimpleTimer() {
     stop();
@@ -709,10 +719,13 @@ double SimpleTimer::secondsElapsed() {
 double SimpleTimer::stop() {
     m_end = std::chrono::steady_clock::now();
     m_used = m_end - m_start;
-    cout << "[Timer] " << flush;
-    std::cout <<  m_taskname << " Time used: "
-              << std::fixed << setprecision(4)
-              << m_used.count() << "s." << endl;
+    if(m_verbose){
+        cout << "[Timer] " << flush;
+        std::cout <<  m_taskname << " Time used: "
+                  << std::fixed << setprecision(4)
+                  << m_used.count() << "s." << endl;
+    }
+
     return m_used.count();
 }
 
@@ -726,10 +739,15 @@ double SimpleTimer::restart(const string& taskname) {
         m_taskname = taskname;
     }
 
-    cout << "[Timer] " << flush;
-    cout << m_taskname << " Timer is started..." << endl;
+    if(m_verbose){
+        cout << "[Timer] " << flush;
+        cout << m_taskname << " Timer is started..." << endl;
+    }
+
+
     return x;
 }
+
 
 
 

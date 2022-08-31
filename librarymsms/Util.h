@@ -622,7 +622,7 @@ namespace statistic {
     }
 
     template<typename T>
-    T BHfdrThreshold(vector<T> &p_values, T fdrThreshold, bool useQvalue) {
+    T BHfdrThreshold(vector<T> &p_values, T fdrThreshold, bool useQvalue, bool verbose) {
         if(p_values.empty()) return 0;
         T threshold = 0, pvalueThresholdQvalue=0;
         sort(p_values.begin(), p_values.end());
@@ -631,25 +631,34 @@ namespace statistic {
             FDR[i] = p_values[i] * p_values.size() / (i + 1);
         }
         // get threshold
-
+        int num_ssm_identified_with_fdr = 0;
         for (int j = 0; j < FDR.size(); j++) {
             if (FDR[j] < fdrThreshold) {
                 threshold = p_values[j];
             } else {
+                num_ssm_identified_with_fdr = j;
                 break;
             }
         }
         // FDR will not be empty!! use size()-1
+        int num_ssm_identified_with_qvalue = 0;
         for (int j = FDR.size()-1; j >=0 ; j--) {
             if (FDR[j] <= fdrThreshold) {
                 pvalueThresholdQvalue = p_values[j];
+                num_ssm_identified_with_qvalue = j ;
+
                 break;
             } else {
                 continue;
             }
         }
-        cout << "[FDR] threshold of FDR  < 1% is : " << std::scientific << threshold << endl;
-        cout << "[FDR] threshold of qvalue < 1% is : "<< std::scientific << pvalueThresholdQvalue << endl;
+        if(verbose){
+            cout << "[FDR] threshold of FDR  < 1% is : " << std::scientific << threshold
+                 << " identified ssm " << num_ssm_identified_with_fdr << " total " << p_values.size()<< endl;
+            cout << "[FDR] threshold of qvalue < 1% is : "<< std::scientific << pvalueThresholdQvalue
+                 << "identified ssm " << num_ssm_identified_with_qvalue << " total " << p_values.size()<< endl;
+        }
+
         return useQvalue? pvalueThresholdQvalue: threshold;
     }
 
@@ -683,10 +692,14 @@ private:
 //    double m_used;
     std::chrono::duration<double> m_used;
     string m_taskname;
+    bool m_verbose;
 public:
-    SimpleTimer();
 
-    explicit SimpleTimer(string taskname);
+
+    // avoid implicit conversion from const char * to bool.
+    explicit SimpleTimer(char * x, bool verbose=true);
+    explicit  SimpleTimer(bool verbose=true);
+    explicit SimpleTimer(string taskname, bool verbose=true);
 
     double stop();
     double restart(const string& taskname="");

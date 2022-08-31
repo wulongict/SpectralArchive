@@ -533,7 +533,7 @@ void CMultiIndices::getAnnsForQueries(int numQuery, int ret_num, float *vquery, 
                                       bool verbose) {
     if(verbose)cout << "Number of ANNs in each index: " ;
 //    cout <<
-    SimpleTimer st;
+    SimpleTimer st(false);
     string tmp = to_string("ANNTime\t","\t","useCPU", m_impl.usingCPU(), "archiveSize",this->total(),"queryNum", numQuery, "indexNum", m_impl.getNum(), "nprobe", m_impl.getNprobe());
     for (int i = 0; i < m_impl.getNum(); i++) {
         double now = st.secondsElapsed();

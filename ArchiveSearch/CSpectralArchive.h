@@ -66,12 +66,13 @@ class CMzFileSearchResults {
 public:
     CMzFileSearchResults(CAnnotationDB &annodb, int topHitsNum);
     void retrieveAnnotation(vector<CAnnSpectra *> &annOfQueries);
-    void exportTsv(string outfilename);
+    void exportTsv(string outfilename, bool tophitonly, bool plotHistogram);
     void validation(string searchfile, CMzFileReader &mzfile);
 private:
     void toTsv(const string &outfile, bool withheader, bool wrapLines);
     void createPvalueList(vector<double> &p_values, bool topHitOnly);
-    void calcFDRThresholdPvalue(const string &outfile, bool topHitOnly);
+    void calcFDRThresholdPvalue(const string &outfile, bool fdr_use_tophit_pvalues_only,
+                                bool plot_histogram);
     bool isSignificantID(const SArchiveMatch &arcMatch, const MzSpecInfo &scaninfo) const;
 };
 
@@ -248,10 +249,11 @@ public:
                      bool visualize, double minTNNDP, int indexNum, int TNNtopK, bool recalltrueneighbor);
     void addRemark(long query_index, string &remarks);
     void getRemark(long query_index, string &remarks);
-    void searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile,
-                             int topHitsNum, int numOfpValues, bool recalltrueneighbor, int batchSize,
-                             int bgspec_seed, int recallTNNtopK, double recallTNNminDP,
-                             bool skipBackgroundScoreCalc, bool useFlankingBins);
+    void searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile, int topHitsNum,
+                             int numOfpValues, bool recalltrueneighbor, int batchSize, int bgspec_seed,
+                             int recallTNNtopK,
+                             double recallTNNminDP, bool skipBackgroundScoreCalc, bool useFlankingBins, bool onlytophit,
+                             bool plot_histogram);
     string searchPeptide(string peptide);
     string searchFileName(string filename, string startscan, string endscan);
     void setnProbe(int nprobe);

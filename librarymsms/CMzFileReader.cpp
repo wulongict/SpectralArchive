@@ -52,8 +52,12 @@ CMzFileReader::CMzFileReader(DataFile &df, bool overwrite, bool rmParentIon, Spe
 
 // dump scaninfo to disk.
 CMzFileReader::~CMzFileReader() {
-    cout << "Releasing space of all spectra from memory" << endl;
-    delete[] m_mzs;
+    if(m_mzs){
+        //    cout << "Releasing space of all spectra from memory" << endl;
+        delete[] m_mzs;
+        m_mzs = nullptr;
+    }
+
 }
 
 // create mz/scan with list of files. 

@@ -60,6 +60,7 @@ class CGtOutput {
         vector<int> peplenNum;//[PEP_LEN];
         int otherpeplen;
         int othercharge;
+        bool verbose;
 
 
         PSMSummary(string name):CHARGE_LEN(7), PEP_LEN(100),name(name) {
@@ -68,6 +69,7 @@ class CGtOutput {
             othercharge = 0;
             chargeNum.assign(CHARGE_LEN,0);
             peplenNum.assign(PEP_LEN,0);
+            verbose=false;
 
         }
         void printSummary(){
@@ -122,9 +124,12 @@ class CGtOutput {
 //            }
             cout << name << " =========Summary=======done==" << endl;
         }
+
         ~PSMSummary() {
-//            printSummary();
-            printSummary_tsv();
+            if (verbose) {
+                printSummary_tsv();
+
+            }
 
         }
 
@@ -142,7 +147,7 @@ class CGtOutput {
     int m_size;
 public:
     CGtOutput(string name, vector<long> &queryidx, CAnnotationDB *annodb, string outputfilename, ICMzFile *mzfile) {
-        cout << "generating summary of current index  " << queryidx.size() << endl;
+//        cout << "generating summary of current index  " << queryidx.size() << endl;
         m_size = queryidx.size();
         m_outfile = outputfilename;
         m_gtInDB.assign(m_size, SPsmAnnotation());
@@ -188,11 +193,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
         throw runtime_error("empty archive name. ");
     }
     m_verbose = verbose;
-    cout << "Start to create archive object" << endl;
-    cout << "three steps" << endl 
-    << "1. create sql database " << endl 
-    << "2. create mz file " << endl 
-    << "3. create index " << endl;
+
     m_AnnotationDB = make_shared<CAnnotationDB>(createfilenameBlackList);
     m_usegpu = usegpu;
     m_mzXMLListFileName = mzXMLList;
@@ -219,15 +220,14 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
 
-    cout << "[info] 1/3 Connecting to SQL Database " << endl;
+    cout << "[info] 1/3 Connecting to SQLite Database " << endl;
     m_AnnotationDB->createDatabase(rebuildsqldb, m_mzXMLListFileName + ".sqlite3db", m_verbose);
 
-    cout << "[info] 2/3 Initialize parameters of peak list file " << endl;
+    cout << "[info] 2/3 Initialize MZ file " << endl;
     m_csa = CMzFileReader::makeShared(m_mzXMLListFileName, false, true, m_removeprecursor, intTol2double(m_tol),
                                        m_minPeakNum, verbose);
 
     cout << "[info] 3/3 Initialize index" << endl;
-    // pass seeds in.
     createIndices(myOwnIndex, make_shared<CPQParam>(option), indexstrings, indexshuffleseeds);
 
 
@@ -248,9 +248,9 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     // --------------------Now add some data files.
     this->update("","","",m_mzXMLListFileName);
 
-    cout << "Index created" << endl;
+//    cout << "Index created" << endl;
     m_AnnotationDB->populateGtfilesTable(m_pepxmlFileName);  // GTFILES not used!
-    if (m_usegpu)m_indices->toGpu(); // should we delay this? todo:
+    if (m_usegpu)m_indices->toGpu();
     // to start the service.
     getScorerFactoryPtr();
     int threadnum=1;
@@ -327,7 +327,7 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
     addSearchResult(new_search_result);
     addListOfSearchResults(new_search_result_list);
 
-// mz file loaded.
+
     m_csa->refresh_mz_object_from_disk();
     cout << "[Info] size of archive: " <<this->size() << endl;
     
@@ -899,17 +899,15 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
     }
 
     int ret_num = 1024;
-
-
     int indexChoice = -1;
     vector<vector<long>> results;  // only idx
     vector<vector<double>> results_dist;  // distance.
     int querySize = query.size();
-//    cout << "changing index num to " << indexNum << endl;
+
     CTimeSummary::getInstance()->startTimer("queryANN");
     m_indices->getAnns(query, ret_num, results,results_dist, indexNum);
     CTimeSummary::getInstance()->pauseTimer("queryANN");
-//    cout << querySize << "\t" << results.size() << endl;
+
 
     CTimeSummary::getInstance()->startTimer("tnnValidation");
     if (agtsummary.getRecallTNN()) {
@@ -1050,18 +1048,18 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
     CTimeSummary::getInstance()->startTimer("collectIdx");
     vector<vector<long>> allRetIdx(querySize, vector<long>());
     vector<double> tmp;
-//    verbose =true;
+
     for (int i = 0; i < querySize; i++) {
         m_indices->collectANNs(indexChoice, ret_num, results, results_dist, i, allRetIdx[i], tmp, verbose);
         filterWithMinPeakNum(verbose, allRetIdx[i]);
         m_AnnotationDB->filterwithblacklist(verbose, allRetIdx[i]);
     }
     CTimeSummary::getInstance()->pauseTimer("collectIdx");
-//    search.restart("dp score");
+
     CTimeSummary::getInstance()->startTimer("keepTopN");
     vector<vector<float>> accDist(querySize, vector<float>());
     vector<vector<int>> dpscores(querySize,vector<int>());
-    int threadnum = getProperThreads() / 5 * 2 + 1; // 66% percent, but now zero by add 1!
+    int threadnum = getProperThreads() / 3 * 2 + 1; // 66% percent, but now zero by add 1!
     // calculate the accurate score from dot product scores. with multiple threads.
     m_pScorer->dpscore(tolerance, allRetIdx, threadnum, accDist, query,dpscores);
     archiveRes.init(query, verbose, allRetIdx, accDist,dpscores);
@@ -1071,13 +1069,10 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 // Find n neighbors via index
 // calculate real distances.
 // keep top N neighbors
-#include "CTimerSummary.h"
 void
 CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum) {
     agtsummary.m_num_queries_searched += query.size();
-//    CTimeSummary::getInstance()->startTimer("queryANN");
     searchICQuery(query, tolerance, verbose, archiveRes,indexNum);
-//    CTimeSummary::getInstance()->pauseTimer("queryANN");
     CTimeSummary::getInstance()->startTimer("keepTopN");
     archiveRes.keepTopN(topN, verbose);
     CTimeSummary::getInstance()->pauseTimer("keepTopN");
@@ -1266,9 +1261,12 @@ void CSpectralArchive::do_pairwise_distance(int calcEdge, long query_index, vect
 }
 
 void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile,
-                                           int topHitsNum, int numOfpValues, bool recalltrueneighbor, int batchSize,
-                                           int bgspec_seed, int recallTNNtopK, double recallTNNminDP,
-                                           bool skipBackgroundScoreCalc, bool useFlankingBins) {
+                                           int topHitsNum,
+                                           int numOfpValues, bool recalltrueneighbor, int batchSize, int bgspec_seed,
+                                           int recallTNNtopK,
+                                           double recallTNNminDP, bool skipBackgroundScoreCalc, bool useFlankingBins,
+                                           bool onlytophit,
+                                           bool plot_histogram) {
     // agtsummary.setRecallTNN(recalltrueneighbor, recallTNNtopK, recallTNNminDP, recallTNNminPeakNumInSpec);
     agtsummary.setvalidationfile(validationfile);
     string JsonFile = querySpectra.getMzFilename() + to_string("_","_",first,last) +"_out.json";
@@ -1277,7 +1275,7 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
     SimpleTimer st("Search Mz file");
     if (last < 0 or last > querySpectra.getSpecNum()) {
         last = querySpectra.getSpecNum();
-        spdlog::get("A")->info("Warning: resetting range [first, last] -> [{}, {}], because of the total number of querySpectra is {}", first, last, last);
+        spdlog::get("A")->info("Searching for range [{}, {}], total spectra number:  {}", first, last, last);
     }
 
     if (first < 0 or first > querySpectra.getSpecNum() or first >= last) {
@@ -1359,7 +1357,7 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
     spdlog::get("A")->info("Exporting result into tsv file");
     CTimeSummary::getInstance()->startTimer("save_tsv_output");
     string outfile = to_string(querySpectra.getListFile(), "_", first, last, ".psmtsv");
-    mzSR.exportTsv(outfile);
+    mzSR.exportTsv(outfile, onlytophit, plot_histogram);
     CTimeSummary::getInstance()->pauseTimer("save_tsv_output");
 
     if (not validationfile.empty() and File::isExist(validationfile)) {
@@ -2068,25 +2066,33 @@ void CMzFileSearchResults::retrieveAnnotation(vector<CAnnSpectra *> &annOfQuerie
 
 }
 
-void CMzFileSearchResults::calcFDRThresholdPvalue(const string &outfile, bool fdr_use_tophit_pvalues_only) {
+void CMzFileSearchResults::calcFDRThresholdPvalue(const string &outfile, bool fdr_use_tophit_pvalues_only,
+                                                  bool plot_histogram) {
+    bool verbose = false;
     vector<double> p_values;
     createPvalueList(p_values, fdr_use_tophit_pvalues_only);
-    CVisual::gnuplot_histogram(p_values, 5, 0.0, 1.0);
-    CVisual::gnuplotWrapper info;
-    CVisual::SImageSize imsize;
-    info.set_filename(outfile + "pvalue.png")
-            .set_xlabel("pvalue")
-            .set_ylabel("frequency")
-            .set_minmax(0, 1)
-            .set_height(imsize.m_hpx)
-            .set_width(imsize.m_wpx);
+    // the following line plot to the bash.
+    if (plot_histogram){
+        CVisual::gnuplot_histogram(p_values, 5, 0.0, 1.0);
+        CVisual::gnuplotWrapper info;
+        CVisual::SImageSize imsize;
+        info.set_filename(outfile + "pvalue.png")
+                .set_xlabel("pvalue")
+                .set_ylabel("frequency")
+                .set_minmax(0, 1)
+                .set_height(imsize.m_hpx)
+                .set_width(imsize.m_wpx);
 
-    CVisual::gnuplot_histogram_topng(p_values, 20, 0, 1, info);
-    File::saveas(p_values, outfile + "_pvalue.txt", true);
+        CVisual::gnuplot_histogram_topng(p_values, 20, 0, 1, info);
+    }
+
+
+    File::saveas(p_values, outfile + "_pvalue.txt", verbose);
 
     bool use_qvalue = true;
-    m_pvalue_th = statistic::BHfdrThreshold(p_values, 0.01, use_qvalue);
-    spdlog::get("A")->info("pvalue threshold for FDR < 1% is : {}", m_pvalue_th);
+
+    m_pvalue_th = statistic::BHfdrThreshold(p_values, 0.01, use_qvalue, verbose);
+    if(verbose) spdlog::get("A")->info("pvalue threshold for FDR < 1% is : {:.4f}", m_pvalue_th);
 }
 
 void CMzFileSearchResults::createPvalueList(vector<double> &p_values, bool fdr_use_tophit_pvalues_only) {
@@ -2105,11 +2111,11 @@ void CMzFileSearchResults::createPvalueList(vector<double> &p_values, bool fdr_u
     }
 }
 
-void CMzFileSearchResults::exportTsv(string outfilename) {
+void CMzFileSearchResults::exportTsv(string outfilename, bool tophitonly, bool plotHistogram) {
     bool outputWithHeader = true;
     bool wrapLines = false;
-    bool fdr_use_tophit_pvalues_only = false;
-    calcFDRThresholdPvalue(outfilename, fdr_use_tophit_pvalues_only);
+    bool fdr_use_tophit_pvalues_only = tophitonly;
+    calcFDRThresholdPvalue(outfilename, fdr_use_tophit_pvalues_only, plotHistogram);
     toTsv(outfilename, outputWithHeader, wrapLines);
 }
 

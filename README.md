@@ -1,4 +1,4 @@
-# Building and searching spectral archive
+# Query for nearest neighbors against a spectral archive with Spectroscape
 
 ## Compile from source code
 

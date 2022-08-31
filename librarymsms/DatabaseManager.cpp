@@ -195,7 +195,7 @@ void CDataBaseManager::openDB(const string& databaseFileName) {
     }
     char *zErrMsg = 0;
     int rc;
-    cout << "[Info] Openting database " << databaseFileName << endl;
+    cout << "[Info] connecting to database " << databaseFileName << endl;
     rc = sqlite3_open(databaseFileName.c_str(), &m_db); // create database!
 
     if (rc) {
@@ -230,7 +230,7 @@ void CDataBaseManager::execAsTransaction(const string& sql, bool verbose) {
 
 CDataBaseManager::~CDataBaseManager() {
     if (m_db != nullptr) {
-        cout << "Closing database" << endl;
+//        cout << "Closing database" << endl;
         sqlite3_close(m_db); // close database
         m_db = nullptr;
     }

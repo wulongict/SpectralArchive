@@ -42,7 +42,7 @@ void CFaissIndexWrapper::display() {
     int number_of_lists = ((faiss::IndexIVFPQ*)m_index)->nlist;
     vector<long> size_of_list(number_of_lists,0);
 
-    cout << "size of the buckets" << endl;
+//    cout << "size of the buckets" << endl;
     double sum = 0;
     for(int i = 0; i < number_of_lists; i ++){
         long sizelist = ((faiss::IndexIVFPQ*)m_index)->get_list_size(i);
@@ -57,7 +57,7 @@ void CFaissIndexWrapper::display() {
             entropy -= p* log2(p); // use log2 entropy means bits of information.
         }
     }
-    cout <<  getfilename() << "\tEntropy\t" << entropy << "\tmaxEntropy\t" << -log2(1.0/number_of_lists)<< endl;
+//    cout <<  getfilename() << "\tEntropy\t" << entropy << "\tmaxEntropy\t" << -log2(1.0/number_of_lists)<< endl;
     string outputfile = getfilename() + "_nlist.txt";
     ofstream fout(outputfile.c_str(), ios::out);
     fout << "Entropy\t" << entropy << endl;
@@ -65,10 +65,10 @@ void CFaissIndexWrapper::display() {
         fout << i << "\t" << size_of_list[i] << endl;
     }
     fout.close();
-    cout << "nlist information saved as " << outputfile << endl;
+//    cout << "nlist information saved as " << outputfile << endl;
     int sacodesize = ((faiss::IndexIVFPQ*)m_index)->sa_code_size(); // 17
 //    ((faiss::IndexIVFPQ*)m_index)->range_search()
-    cout << "size of code in bytes per vector: " << sacodesize << endl;
+//    cout << "size of code in bytes per vector: " << sacodesize << endl;
 #if FAISS_VERSION_MAJOR == 1 and FAISS_VERSION_MINOR <6
     getPtr()->display();
 #endif

@@ -23,3 +23,4 @@ cmake --install .
 #cpack -G ZIP -V 
 make package -j `nproc`
 make package_source  -j `nproc`
+cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi 

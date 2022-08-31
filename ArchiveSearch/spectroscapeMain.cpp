@@ -87,11 +87,13 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "only evaulated the top hit; default: false ")
              ("skipBackgroundScoreCalc", po::value<bool>()->default_value(false),
                  "skip background score calculation on command line search mode")
+            ("plotHistogram", po::value<bool>()->default_value(false),
+             "plot histogram of calibrated ssm score")
             ("minPeakNum", po::value<int>()->default_value(6),
              " The value is used in visualization  ")
             ("tolerance", po::value<int>()->default_value(1),
              "1 for high-res MS2 and 15 for low-res MS2. default: 1 ")
-            ("tophit", po::value<bool>()->default_value(false),
+            ("tophit", po::value<bool>()->default_value(true),
              "only evaulated the top hit; default: false ")
              ("search_in_range_of_archive", po::value<bool>()->default_value(false),
              "search for spectrum in archive with range: first to last; default: false ")
@@ -175,8 +177,12 @@ void displayTitle() {
 
 // run the web appliaction: ./scripts/webinterface_8710.bash
 #include "CTimerSummary.h"
+#include "Util.h"
+
 int main(int argc, char *argv[]) {
+
     try {
+        SimpleTimer st(false);
         initlog("spectral_clustering.log", "A");
         spdlog::set_level(spdlog::level::debug);
         displayTitle();
@@ -198,6 +204,7 @@ int main(int argc, char *argv[]) {
 
         int numPvalueCalculator = vm.at("numPvalueCalculator").as<int>();
         bool saveBackgroundScore = vm.at("saveBackgroundScore").as<bool>();
+        bool plotHistogram = vm.at("plotHistogram").as<bool>();
         int bgspecseed = vm.at("bgspecseed").as<int>();
         int numprobe = vm.at("numprobe").as<int>();
         bool update_index = vm.at("update").as<bool>();
@@ -307,7 +314,7 @@ int main(int argc, char *argv[]) {
                     archive.searchMzFileInBatch(mzfile, first, last, searchfile, topn, numPvalueCalculator,
                                                 recallTrueNeighbor,
                                                 searchBatchSize, bgspecseed, recallTNNtopK, recallTNNMinDP,
-                                                skipBackgroundScoreCalc, useflankingbins);
+                                                skipBackgroundScoreCalc, useflankingbins, tophit, plotHistogram);
                 }
             }
         }
@@ -315,11 +322,13 @@ int main(int argc, char *argv[]) {
         CTimeSummary::getInstance()->print(oss, archive.getNumOfQueriesSearched());
 
         spdlog::get("A")->info("Time report:\n{}\n", oss.str());
-        spdlog::get("A")->info("Spectroscape task is finished. The spectra number in archive is {}.", archive.size());
+        double timeused = st.secondsElapsed();
+        spdlog::get("A")->info("Spectroscape task is finished. \nThe spectra number in archive is {}.\nTotal time elapsed: {:.4f} seconds", archive.size(), timeused);
+
         return 0;
     }
     catch (const exception &ex) {
-//        cout << "[Error] " << ex.what() << " program will exit!" << endl;
+
         spdlog::get("A")->info("program exit with error: {}", ex.what());
         return -1;
     }
