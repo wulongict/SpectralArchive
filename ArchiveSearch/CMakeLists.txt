@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(ArchiveSearch)
+project(Spectroscape)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11 -fpermissive -fopenmp  -fPIC -Wreturn-type  -Werror=return-type ")
 
@@ -51,22 +51,22 @@ add_dependencies(specarchive_static boost)
 #target_link_libraries(similarity specarchive)
 
 #The fast cgi interface
-add_executable(fastcgi_similarity.fcgi  similarity_gpu_fcgi.cpp )
-target_link_libraries(fastcgi_similarity.fcgi    
+add_executable(spectroscape spectroscapeMain.cpp dependentlibs/msbasic/commonfun.cpp dependentlibs/msbasic/CDebugMode.cpp)
+target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
-msbasic_static faiss ${DPGPU}
+msbasic_small_static faiss ${DPGPU}
     ${Boost_LIBRARIES} )
-add_dependencies(fastcgi_similarity.fcgi boost ${DPGPU})
+add_dependencies(spectroscape boost ${DPGPU})
 
 #The commandline tool for library search
 #add_executable(LibraryRetrieval	LibSearchEngine.cpp	)
 #target_link_libraries(LibraryRetrieval specarchive)
 
-install(TARGETS fastcgi_similarity.fcgi DESTINATION bin OPTIONAL)
-install(TARGETS  msfileramp msbasic linear  DESTINATION lib OPTIONAL)
+install(TARGETS spectroscape DESTINATION bin OPTIONAL)
+install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
 set(CPACK_PACKAGE_VERSION_MAJOR 1)
 set(CPACK_PACKAGE_VERSION_MINOR 0)
-set(CPACK_PACKAGE_VERSION_PATCH 1)
+set(CPACK_PACKAGE_VERSION_PATCH 2)
 set(CPACK_PACKAGE_NAME archiveSearch)
 set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR}/package)
 set(CPACK_THREADS 0)
