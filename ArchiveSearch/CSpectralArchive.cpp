@@ -1224,7 +1224,7 @@ void CSpectralArchive::visualization_of_score_distribution(long query_index, vec
     calcPvalue(query_index, 1, outputbasename, normalize);
 }
 
-//// todo: NEVER write size()-1
+
 // Calculate edge/distance from source to targets
 // input: a list of n ids
 // output: pair-wise connections; a object with n(n-1)/2 (that is, n-choose-2) edges.

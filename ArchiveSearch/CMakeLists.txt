@@ -7,14 +7,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
-#message("the path of cmake binary: " ${CMAKE_BINARY_DIR})
-
 link_directories(${CMAKE_BINARY_DIR}/Release)
 
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
 # code can be moved to other places: might rely libraries in dependentlibs
-#add_subdirectory(independent_code)
 add_subdirectory(dependentlibs)
 include_directories(External)
 
@@ -44,11 +41,6 @@ add_library(specarchive_static STATIC ${SOURCE_FILES} )
 target_link_libraries(specarchive_static libfcgi.a libfcgi++.a  ${DPGPU} msms   pthread)
 add_dependencies(specarchive_static boost)
 
-
-
-#The socket based method
-#add_executable(similarity  spectral_similarity_gpu.cpp  CSocketServer.cpp)
-#target_link_libraries(similarity specarchive)
 
 #The fast cgi interface
 add_executable(spectroscape spectroscapeMain.cpp dependentlibs/msbasic/commonfun.cpp dependentlibs/msbasic/CDebugMode.cpp)
