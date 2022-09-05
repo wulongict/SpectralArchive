@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11  -fpermissive -fopenmp -W
 
 set(MSTOOLKIT ../../External/comet_source_2016012/MSToolkit)
 
-add_library(msfileramp SHARED randomSpecParser.cpp MzRTMap.cpp Clustering.cpp)
+add_library(msfileramp SHARED randomSpecParser.cpp MzRTMap.cpp )
 target_include_directories(msfileramp PRIVATE ${MSTOOLKIT}/include )
 target_link_libraries(msfileramp mstoolkit msbasic_small)
 target_compile_definitions(msfileramp PUBLIC STANDALONE_LINUX)
@@ -15,7 +15,7 @@ target_compile_options(msfileramp PRIVATE -DLIB_BUILD -O2 -Wall  -Wextra  -Wno-c
 set_target_properties(msfileramp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 
-add_library(msfileramp_static STATIC randomSpecParser.cpp MzRTMap.cpp Clustering.cpp)
+add_library(msfileramp_static STATIC randomSpecParser.cpp MzRTMap.cpp )
 target_include_directories(msfileramp_static PRIVATE ${MSTOOLKIT}/include )
 target_link_libraries(msfileramp_static mstoolkit   pthread)
 target_compile_definitions(msfileramp_static PUBLIC STANDALONE_LINUX)

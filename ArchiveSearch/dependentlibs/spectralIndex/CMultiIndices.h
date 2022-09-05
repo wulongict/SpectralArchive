@@ -105,6 +105,7 @@ class CMultiIndices {
 	int m_topPeakNum;
 	int m_dim;
 	const long TRAINING_SPEC_NUM;
+    int m_nprobe_default;
 public:
 	bool m_debug;
 

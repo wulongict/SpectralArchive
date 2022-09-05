@@ -303,6 +303,7 @@ CMultiIndices::CMultiIndices(string indexstring, string indexshuffleseeds,string
                              double tolerance, bool useMyOwn, shared_ptr<CPQParam> cpqParam, const int topPeakNum,
                              bool removePrecursor, bool useFlankingBins, int dim): TRAINING_SPEC_NUM(100000) {
 
+    m_nprobe_default = 8;
     m_topPeakNum = topPeakNum;
     option = cpqParam;
     m_tolerance = tolerance;
@@ -641,11 +642,12 @@ void CMultiIndices::write() {
 void CMultiIndices::setNprobe(int nprobe, bool verbose) {
     if (nprobe >= 1 and nprobe <= 256) {
         if(verbose)cout << "set nprobe of multi-indices as " << nprobe << endl;
-        m_impl.setNprobe(nprobe);
     } else {
-        if(verbose)cout << "nprobe is out of range!" << endl;
-        spdlog::get("A")->error("fail to set nprobe as {}", nprobe);
+        if(verbose)cout << "nprobe is out of range! nprobe will be changed to default value " << m_nprobe_default << endl;
+        nprobe = m_nprobe_default;
+//        spdlog::get("A")->error("fail to set nprobe as {}", nprobe);
     }
+    m_impl.setNprobe(nprobe);
 }
 
 void CMultiIndices::printIndicesStr() {
