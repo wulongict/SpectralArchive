@@ -29,6 +29,8 @@
 #include "dependentlibs/randomSpecParser.h" // getPeakList
 #include "dependentlibs/MzRTMap.h"
 #include "CTimerSummary.h"
+#include "PeakList.h"
+
 using namespace std;
 
 bool add_new_data_file_to_mzXMLList(string mzXMLList, string newdatafile) {
@@ -544,7 +546,141 @@ void CSpectralArchive::syncIndicesWithSpecFileTable() {
 // Note: query id can be -1
 // When first query id is -1, we search with the spectrum in query pointer!
 void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe,
-                                   vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK, bool recalltrueneighbor) {
+                                   vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK,
+                                   bool recalltrueneighbor, string rawspec) {
+    if(not rawspec.empty()){
+        // consider use raw spec.
+        // raw spectra format:
+        // #raw#1000:20_300:40_224:34
+        // #raw#mz1:intensity1_mz2:intensity2
+        if(not query.empty()){
+            cerr << "query should be empty when raw spec is provides. " << endl;
+        }
+        string prefix = "#raw#";
+        rawspec = rawspec.substr(prefix.size());
+        vector<string> peaksvec;
+        split_string(rawspec, peaksvec, '_');
+        cout << "Number of peaks recieved from browser" << peaksvec.size() << endl;
+
+        /*
+         * 		    CSpectrum *onespec = new CSpectrum();
+        onespec->setRTinSeconds(i.m_RT_in_seconds);
+        onespec->setMSLevel(i.m_ms_level);
+        onespec->setParentMz(i.m_precursormz);
+        onespec->setParentCharge(i.m_precursorcharge);
+        onespec->setScanNum(i.spectrum_scan);
+        onespec->setSpectrumName(i.spectrum_name);
+        vector<double> mzs = i.pkl->getM_mzList();
+        vector<double> intens = i.pkl->getM_intensityList();
+        for (int j = 0; j < mzs.size(); j++) {
+            onespec->addOnePeak(mzs[j], intens[j]);
+        }
+         * */
+        CSpectrum * onespec = new CSpectrum();
+        onespec->setMSLevel(2);
+        for(int i = 0; i < peaksvec.size(); i ++){
+            vector<string> mz_inten;
+            split_string(peaksvec[i], mz_inten, ':');
+            // now we can consider to create the mz format from peak list.
+            onespec->addOnePeak(stringTo<double>(mz_inten[0]), stringTo<double>(mz_inten[1]));
+        }
+        // Peak ready.
+        vector<double> mz, intensity;
+        bool removeLowIntensePeaks = true;
+        bool rmIsotopicPeaks = true;
+//        double mzTol = 2 * tolerance * 2000.0 / 65535;
+        onespec->getAllPeaks(mz, intensity, removeLowIntensePeaks, true, rmIsotopicPeaks, 2*2000.0/65535);
+        int PeakNum=50;
+        PeakList pl;
+        pl.setM_intensityList(intensity);
+        pl.setM_mzList(mz);
+
+        pl.KeepTopN(PeakNum);
+        pl.rankingAsIntensity(PeakNum);
+
+        // padding the peaks.
+        vector<double> mzs, intens;
+        mzs = pl.getM_mzList();
+        intens = pl.getM_intensityList();
+        int _peaknum = mzs.size();
+        if (mzs.size() < PeakNum and _peaknum > m_minPeakNum) {
+            mzs.resize(PeakNum, 0);
+            intens.resize(PeakNum, 0);
+        } else if(_peaknum <= m_minPeakNum)   {
+            // put dummy peak there. so every spectra is on the hyper sphere now
+            mzs.assign(PeakNum, 0);
+            intens.assign(PeakNum,0);
+            _peaknum = 1;
+            mzs[0] = 0.5;
+            intens[0] = 1000;
+        }
+
+        const double *mzptr = mzs.data();
+        const double *intensityptr = intens.data();
+        query.assign(PeakNum, 0);
+        m_csa->getCompactForm(mzptr, intensityptr, query);
+        cout << "query ready -------" << endl;
+        for(int i = 0; i < query.size(); i++){
+            cout << i+1 << "-th peak mz " << query[i] << " " << query[i]*2000.0/UINT16_MAX  << "\t" << PeakNum-i<< endl;
+        }
+
+
+            /*
+             *
+             *
+             * //ps.increase();
+		CSpectrum *spec = df.getSpectrum(spec_id_k);
+
+		if(nullptr!=sf and sf->skip(spec)){
+			continue;
+		}
+
+		if (spec == nullptr) {
+			cout << "empty spec : " << spec << endl;
+			continue;
+		}
+		if (spec->getMSLevel() != 2) {
+			continue;
+		}
+		vector<double> mz, intensity;
+		bool removeLowIntensePeaks = true;
+		bool rmIsotopicPeaks = true;
+        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, rmParentIon, rmIsotopicPeaks, m_localMaxHalfWidth);
+
+		if (mz.empty()) {
+			//cout << "Bad mz" << endl;
+		}
+
+		PeakList pl;
+		pl.setM_intensityList(intensity);
+		pl.setM_mzList(mz);
+
+		pl.KeepTopN(PeakNum);
+		pl.rankingAsIntensity(PeakNum);
+
+		vector<double> mzs, intens;
+		mzs = pl.getM_mzList();
+		intens = pl.getM_intensityList();
+		int _peaknum = mzs.size();
+		if (mzs.size() < PeakNum and _peaknum > m_minPeakNum) {
+			mzs.resize(PeakNum, 0);
+			intens.resize(PeakNum, 0);
+		} else if(_peaknum <= m_minPeakNum)   {
+		    // put dummy peak there. so every spectra is on the hyper sphere now
+		    mzs.assign(PeakNum, 0);
+		    intens.assign(PeakNum,0);
+            _peaknum = 1;
+            mzs[0] = 0.5;
+            intens[0] = 1000;
+        }
+		const double *mzptr = mzs.data();
+		const double *intensityptr = intens.data();
+		getCompactForm(mzptr, intensityptr, batchMS[ms2count]);
+             *
+             * */
+
+
+    }
     setnProbe(nprobe);
     agtsummary.setRecallTNN(recalltrueneighbor);
 //    agtsummary.m_recallOfTrueNeighbor = recalltrueneighbor;

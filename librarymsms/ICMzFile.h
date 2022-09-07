@@ -110,9 +110,9 @@ public:
     virtual shared_ptr<ICHistdata> distributionPartialGeneral(int tol, bool normalize, vector<long> &indexlist, uint16_t *queryspec);
 	virtual vector<int> distributionPartial(int tol, bool normalize, vector<long> &indexlist, uint16_t *queryspec);
     virtual vector<int> distributionAll(int tol, long queryindex, bool normalize);
-
-protected:
     void getCompactForm(const double *mz, const double *intensity, vector<uint16_t> &newspec) const;
+protected:
+
     void getsortindex(vector<int> &idx, const double *intensity) const;
 };
 

@@ -194,6 +194,7 @@ struct contentParser {
     long queryindex;
     int topN;
     vector<uint16_t> mzspec;
+    string rawspec;
     int visualization;
     string remarks;
     double minTNNDP;
@@ -272,6 +273,10 @@ struct contentParser {
             return false;
         } else {
             string info = x.substr(pos + 5); // key.length() = 4 SPEC +1 = 5
+            if(info.find("#raw#")!=string::npos){
+                rawspec=info;
+                return true;
+            }
             int pos = info.find_first_not_of("0123456789,");
             string values = info.substr(0, pos);
             vector<string> tokens;
@@ -346,7 +351,8 @@ void CFastCGIServer::searchQueryId(string &content) {
             spdlog::get("A")->info("start searching: queryindex={}, topn={} edge={}", ps.queryindex, ps.topN,
                                    ps.calcEdge);
             m_archive.searchQuery(ps.queryindex, message, ps.topN, ps.calcEdge, ps.nprobe, ps.mzspec,
-                                  ps.visualization == 1,ps.minTNNDP,ps.indexNum,ps.TNNtopK, ps.recalltrueneighbor==1);
+                                  ps.visualization == 1, ps.minTNNDP, ps.indexNum, ps.TNNtopK,
+                                  ps.recalltrueneighbor == 1, ps.rawspec);
             response(message, "text/html");
             m_summary->update(st.stop());
             cout << "\n    Server Id    " << m_id << endl;
@@ -524,7 +530,8 @@ void CFastCGIServer::identification(string &content) {
 
     string jsonstring;
     vector<uint16_t> query;
-    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query, false,-1,-1,-1, false);
+    m_archive.searchQuery(queryidx, jsonstring, 30, 1, 20, query,
+                          false, -1, -1, -1, false, "");
 }
 
 void CFastCGIServer::searchPeptideSequence(string &content) {

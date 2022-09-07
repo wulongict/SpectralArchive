@@ -244,9 +244,9 @@ public:
 
     void updateListOfSpectra(string spectraList);
 
-    void searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe, 
-    vector<uint16_t> &query,
-                     bool visualize, double minTNNDP, int indexNum, int TNNtopK, bool recalltrueneighbor);
+    void searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe,
+                     vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK,
+                     bool recalltrueneighbor, string rawspec);
     void addRemark(long query_index, string &remarks);
     void getRemark(long query_index, string &remarks);
     void searchMzFileInBatch(CMzFileReader &querySpectra, long first, long last, string validationfile, int topHitsNum,
