@@ -73,6 +73,7 @@ public:
     void searchQueryId(string &content);
     void addToRemark(string &content);
     void getRemark(string &uristr);
+    void getSummary();
     void getPageWithId(string &uristr, string& html_template_str);
     void getPeakListWithId(string &uristr);
     void identification(string &content);

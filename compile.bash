@@ -16,7 +16,7 @@ cmake -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_F
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..
 cmake  --build ../cmake-build-release   --target  boost  -- -j 30 
-cmake  --build ../cmake-build-release   --target  fastcgi_similarity.fcgi  -- -j 30
+cmake  --build ../cmake-build-release     -- -j 30
 # ctest 
 cmake --install .  
 #--prefix /tools/archive 

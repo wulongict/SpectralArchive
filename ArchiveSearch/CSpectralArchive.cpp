@@ -563,6 +563,7 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         cout << "Number of peaks recieved from browser" << peaksvec.size() << endl;
 
         /*
+         *
          * 		    CSpectrum *onespec = new CSpectrum();
         onespec->setRTinSeconds(i.m_RT_in_seconds);
         onespec->setMSLevel(i.m_ms_level);

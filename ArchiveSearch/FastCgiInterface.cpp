@@ -124,12 +124,14 @@ void CFastCGIServer::startFastCGIServer() {
                 string html_template_str = readlinesfromfile(htmlfile);
                 this->getPageWithId(uristr, html_template_str);
             } else if (uristr.find("/identification") != string::npos) {
-                // it is time to use this
                 this->identification(content);
             } else if (uristr.find("/remark/") != string::npos) {
                 this->getRemark(uristr);
                 // add get remark code
-            } else if (uristr.find("/spectrum?id") != string::npos) {
+            } else if (uristr.find("/summary") != string::npos) {
+                this->getSummary();
+                // add get remark code
+            }else if (uristr.find("/spectrum?id") != string::npos) {
                 this->getPeakListWithId(uristr);
             }
         } else {
@@ -366,11 +368,9 @@ void CFastCGIServer::searchQueryId(string &content) {
 // this is good implementation compared to another one. in socketserver
 void CFastCGIServer::getPageWithId(string &uristr, string &html_template_str) {
     vector<string> param;
-//    cout << __FUNCTION__ << " " << uristr << endl;
 
     split_string(uristr, param, '/');
-//    cout << "-params " << endl;
-//    for (auto each: param) cout << each << endl;
+
     if (param.size() > 2) {
         int queryindex = atoi(param[2].c_str());
         if(queryindex<0){
@@ -388,14 +388,23 @@ void CFastCGIServer::getPageWithId(string &uristr, string &html_template_str) {
         response(tmpstr, "text/html");
     }
 }
+// Attention, in json, the key should be wrapped double quote, not single quote.
+// https://stackoverflow.com/questions/8013582/json-parse-expected-property-name-or
+// A lesson learned on Sep 07 2022
+void CFastCGIServer::getSummary() {
+    long sizeOfArchive = m_archive.size();
+    ostringstream  oss;
+    oss << "{\"total\": " << sizeOfArchive << "}";
+    string tmpstr=oss.str();
+    cout << "responding : " << tmpstr << endl;
+    response(tmpstr, "text/json");
+}
+
 
 void CFastCGIServer::getRemark(string &uristr) {
     vector<string> param;
-    //    cout << __FUNCTION__ << " " << uristr << endl;
-
     split_string(uristr, param, '/');
-    //    cout << "-params " << endl;
-    //    for (auto each: param) cout << each << endl;
+
     if (param.size() > 2) {
         int queryindex = atoi(param[2].c_str());
         if(queryindex<0){
@@ -409,13 +418,12 @@ void CFastCGIServer::getRemark(string &uristr) {
     }
 }
 
-//#include "randomSpecParser.h"
 void CFastCGIServer::getPeakListWithId(string &uristr) {
 
     vector<string> param;
     split_string(uristr, param, '=');
     string newuristr=uristr.substr(uristr.find_first_of("?")+1);
-//    int queryindex = atoi(param[1].c_str());
+
     CKeyValuesParser kvp(newuristr,"=","&");
     string chrome = kvp.getvalue("chrom");
     string updateSVG = kvp.getvalue("updateSVG");
@@ -514,7 +522,7 @@ void CFastCGIServer::getPeakListWithId(string &uristr) {
     response(message, "text/json");
 }
 
-
+// not finished yet
 void CFastCGIServer::identification(string &content) {
     int found = content.find_last_not_of("\r\n\t ");
     if (found != string::npos) {
@@ -568,3 +576,5 @@ string CFastCGIServer::getEnv(string key, FCGX_Request &request) {
     if (envstr == nullptr) return key + ": N/A";
     return string(envstr);
 }
+
+
