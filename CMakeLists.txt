@@ -39,12 +39,10 @@ option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" ON)
 option(ENABLE_TESTS "Enable tests" ON)
 
 if (${ENABLE_TESTS})
-#	message("enable testing ...")
-	# run enable_testing on root directory
 	enable_testing()
 endif()
 
-#message("--- START ENABLE GPU IS " ${ENABLE_GPU} " COMPILER IS : " ${CMAKE_CUDA_COMPILER})
+
 if(ENABLE_GPU)
 	CHECK_LANGUAGE(CUDA)
 	if(CMAKE_CUDA_COMPILER)
