@@ -42,8 +42,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
 
              // option to launch the archive.
             ("inputsource", po::value<string>()->default_value("cmd"),
-             "the source of query: 1. cmd; 2. socket; 3. stdin. The cmd will only search once! "
-             "while the socket and stdin will open a while loop and keep accepting input;")
+             "the source of query: 1. socket; 2. msocket; 3. cmd. The cmd will only search the given datafile, "
+             "while the socket and msocket will keep accepting queries from client side")
             ("numprobe", po::value<int>()->default_value(256),
              "number of buckets to look into, the web API allows user to change this value in each query. default: 256 ")
             ("use_gpu,g", po::bool_switch()->default_value(false),
@@ -343,6 +343,7 @@ int main(int argc, char *argv[]) {
 
             }
             else {
+                // all the other cases goes here,
                 if (search_range){
                     archive.searchNeighborsWithin(minDpOfNeighborRecordedInSqlDB, first, last);
                 }
