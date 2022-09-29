@@ -31,21 +31,23 @@ set(SOURCE_FILES
         )
 add_library(msms_lib_objects OBJECT ${SOURCE_FILES})
 
-include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include)
+include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
 #when using static library of sqlite3, it fail to compile.
 find_library(sqlite3  sqlite3)
 
 add_library(msms SHARED $<TARGET_OBJECTS:msms_lib_objects> )
-target_include_directories(msms INTERFACE ../External/spdlog-1.x/include)
-target_link_libraries(msms z sqlite3 )
+target_include_directories(msms INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
+# target_link_libraries(msms z sqlite3 )
 set_target_properties(msms PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(msms INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 
 add_library(msms_static STATIC $<TARGET_OBJECTS:msms_lib_objects> )
-target_include_directories(msms_static INTERFACE ../External/spdlog-1.x/include)
-target_link_libraries(msms_static   libz.a libsqlite3.a spdlog dl)
+target_include_directories(msms_static INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
+target_link_libraries(msms_static  
+ # libz.a libsqlite3.a 
+ spdlog dl)
 set_target_properties(msms_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(msms_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -81,19 +83,21 @@ set(SOURCE_FILES
         CPSMAnnotation.cpp
         )
 
-include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include)
+include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include)
 #when using static library of sqlite3, it fail to compile.
 find_library(sqlite3  sqlite3)
 
 add_library(msmsX SHARED ${SOURCE_FILES})
-target_include_directories(msmsX INTERFACE ../External/spdlog-1.x/include)
-target_link_libraries(msmsX z sqlite3 )
+target_include_directories(msmsX INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include)
+# target_link_libraries(msmsX z sqlite3 )
 set_target_properties(msmsX PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(msmsX INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(msmsX_static STATIC ${SOURCE_FILES})
-target_include_directories(msmsX_static INTERFACE ../External/spdlog-1.x/include)
-target_link_libraries(msmsX_static   libz.a libsqlite3.a spdlog dl)
+target_include_directories(msmsX_static INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include)
+target_link_libraries(msmsX_static  
+ # libz.a libsqlite3.a 
+ spdlog dl)
 set_target_properties(msmsX_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(msmsX_static INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

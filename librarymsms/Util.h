@@ -18,6 +18,7 @@
 #include <cmath>
 #include <map>
 #include <numeric>
+#include <memory>
 #include <vector>
 #include <iterator>
 

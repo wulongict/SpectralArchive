@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 project(Myspectrast)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -fpermissive ")
-set(CMAKE_CXX_LINK_FLAGS "-lz")
+# set(CMAKE_CXX_LINK_FLAGS "-lz")
 
 ## we need gsl of 1.16 version not higher!!
 ## will fix later, but now let's check the version of GSL first
@@ -21,6 +21,8 @@ set(CMAKE_CXX_LINK_FLAGS "-lz")
 #else()
 #    message(STATUS "SpectraST: GSL NOT found! Will not compile SpectraST")
 #endif()
+
+include_directories(../comet_source_2016012/MSToolkit/include)
 
 set(RAMPSOURCEFILES
         SpectraST_base64.cpp
@@ -204,29 +206,30 @@ set(LIBHTMLSOURCEFILES
 
 #set( PROJECT_LINK_LIBS libmsms.so )
 
-if(COMPILE_SPECTRAST)
+#if(COMPILE_SPECTRAST)
 #    MESSAGE(STATUS "targets: spectrast, plogspectrast Lib2HTML and spectrastlib")
-    add_executable(spectrast ${SOURCEFILES} SpectraSTMain.cpp)
-    target_link_libraries(spectrast  z pthread)
-    target_compile_options(spectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
 
-    add_executable(plotspectrast ${PLOTSPECTRASTFILES} plotspectrast.cpp)
-    target_link_libraries(plotspectrast  z pthread)
-    target_compile_options(plotspectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
+#    add_executable(spectrast ${SOURCEFILES} SpectraSTMain.cpp)
+#    target_link_libraries(spectrast  z pthread)
+#    target_compile_options(spectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
 
-    add_executable(plotspectrast.cgi ${PLOTSPECTRASTFILES} plotspectrast.cpp)
-    target_link_libraries(plotspectrast.cgi z pthread)
-    target_compile_options(plotspectrast.cgi PRIVATE -D__LGPL__  -DRUN_AS_CGI  -DSTANDALONE_LINUX)
+#    add_executable(plotspectrast ${PLOTSPECTRASTFILES} plotspectrast.cpp)
+#    target_link_libraries(plotspectrast  z pthread)
+#    target_compile_options(plotspectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
+
+#    add_executable(plotspectrast.cgi ${PLOTSPECTRASTFILES} plotspectrast.cpp)
+#    target_link_libraries(plotspectrast.cgi z pthread)
+#    target_compile_options(plotspectrast.cgi PRIVATE -D__LGPL__  -DRUN_AS_CGI  -DSTANDALONE_LINUX)
 
 
-    add_executable(Lib2HTML ${LIBHTMLSOURCEFILES} Lib2HTML.cpp)
-    target_link_libraries(Lib2HTML  z pthread)
-    target_compile_options(Lib2HTML  PRIVATE -D__LGPL__  -DSTANDALONE_LINUX)
+#    add_executable(Lib2HTML ${LIBHTMLSOURCEFILES} Lib2HTML.cpp)
+#    target_link_libraries(Lib2HTML  z pthread)
+#    target_compile_options(Lib2HTML  PRIVATE -D__LGPL__  -DSTANDALONE_LINUX)
 
 
     add_library(spectrastlib SHARED ${SOURCEFILES} SpectraSTMain.cpp)
 #    target_link_libraries(spectrastlib gsl gslcblas z pthread)
-    target_link_libraries(spectrastlib  z pthread) # do not use GSL
+    target_link_libraries(spectrastlib  mstoolkit pthread) # do not use GSL
     set_target_properties(spectrastlib PROPERTIES POSITION_INDEPENDENT_CODE ON)
     target_compile_options(spectrastlib PRIVATE -D__LGPL__ -DLIB_BUILD -DSTANDALONE_LINUX)
 
@@ -238,11 +241,11 @@ if(COMPILE_SPECTRAST)
 
     add_library(spectrastlib_static STATIC ${SOURCEFILES} SpectraSTMain.cpp)
 #    target_link_libraries(spectrastlib_static libgsl.a libgslcblas.a libz.a pthread dl)
-    target_link_libraries(spectrastlib_static libz.a pthread dl)  # do not use GSL
+    target_link_libraries(spectrastlib_static mstoolkit pthread dl)  # do not use GSL
 #    target_link_options(spectrastlib_static PRIVATE -static)
     target_compile_options(spectrastlib_static PUBLIC -D__LGPL__ -DLIB_BUILD -DSTANDALONE_LINUX)
 
-endif ()
+#endif ()
 
 
 

@@ -3,10 +3,12 @@ include( ExternalProject )
 
 set( boost_URL "https://udomain.dl.sourceforge.net/project/boost/boost/1.65.1/boost_1_65_1.tar.gz" )
 set( boost_SHA1 "c066ac5c2f42fa2b870362c3c931ef73ffc6f24f" )
-find_package(Python3 COMPONENTS Interpreter Development)
+set (boost_INSTALL ${CMAKE_INSTALL_PREFIX})
+# find_package(Python3 COMPONENTS Interpreter Development)
 #message( "--- the root of boost is  ${BOOST_ROOT} The python root is ${Python3_INCLUDE_DIRS} the install dir is : ${install_dir}/include")
 
-message("------>>>>   the boost library will be installed to : ${boost_INSTALL} boost root is :  ${BOOST_ROOT}<<<<<<<<---------------")
+message("------>>>>   the boost library will be installed to : ${boost_INSTALL} boost root is :  ${BOOST_ROOT} CMAKE_INSTALL_PREFIX is ${CMAKE_INSTALL_PREFIX} <<<<<<<<---------------")
+
 
 
 ExternalProject_Add( boost

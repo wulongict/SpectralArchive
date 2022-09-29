@@ -4,8 +4,9 @@
 
 #include <algorithm>
 #include <cmath>
+#ifndef __LGPL__
 #include <gsl/gsl_sf_gamma.h>
-
+#endif 
 
 /*
 

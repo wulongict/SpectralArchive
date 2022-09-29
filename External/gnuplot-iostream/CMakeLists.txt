@@ -6,7 +6,7 @@ endif()
 
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -fpermissive -fopenmp ")
-set(CMAKE_CXX_LINK_FLAGS "-lz")
+#set(CMAKE_CXX_LINK_FLAGS "-lz")
 
 
 #link_directories(${CMAKE_BINARY_DIR}/Release)

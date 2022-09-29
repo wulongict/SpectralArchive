@@ -47,7 +47,7 @@ add_executable(spectroscape spectroscapeMain.cpp dependentlibs/msbasic/commonfun
 target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
 msbasic_small_static faiss ${DPGPU}
-    ${Boost_LIBRARIES} )
+    ${Boost_LIBRARIES} mstoolkit)
 add_dependencies(spectroscape boost ${DPGPU})
 
 #The commandline tool for library search

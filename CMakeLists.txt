@@ -58,11 +58,12 @@ endif()
 
 
 add_subdirectory(External/comet_source_2016012)
-add_subdirectory(External/gtest-1.7.0)
+# add_subdirectory(External/gtest-1.7.0)
 add_subdirectory(External/liblinear-2.11)
 add_subdirectory(External/spdlog-1.x)
 add_subdirectory(External/SpectraST)
 add_subdirectory(librarymsms)
+add_subdirectory(faiss-1.7.1)
 add_subdirectory(ArchiveSearch)
 
 include_directories(External)
