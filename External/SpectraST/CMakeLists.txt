@@ -4,23 +4,23 @@ project(Myspectrast)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -fpermissive ")
 set(CMAKE_CXX_LINK_FLAGS "-lz")
 
-# we need gsl of 1.16 version not higher!!
-# will fix later, but now let's check the version of GSL first
-
-include(FindGSL)
-message(STATUS "GSL VERSION ${GSL_VERSION}")
-set(GSL_VER_REQ 1.16)
-if(GSL_FOUND )
-    message(STATUS "GSL VERSION ${GSL_VERSION}")
-    if(${GSL_VERSION} STREQUAL ${GSL_VER_REQ})
-        set(COMPILE_SPECTRAST YES)
-#        message(STATUS SpectraST: found GSL ${GSL_INCLUDE_DIRS} ${GSL_LIBRARIES} )
-    else()
-        message(FATAL_ERROR "SpectraST: GSL version should be ${GSL_VER_REQ}, while we found version ${GSL_VERSION}")
-    endif()
-else()
-    message(STATUS "SpectraST: GSL NOT found! Will not compile SpectraST")
-endif()
+## we need gsl of 1.16 version not higher!!
+## will fix later, but now let's check the version of GSL first
+#
+#include(FindGSL)
+#message(STATUS "GSL VERSION ${GSL_VERSION}")
+#set(GSL_VER_REQ 1.16)
+#if(GSL_FOUND )
+#    message(STATUS "GSL VERSION ${GSL_VERSION}")
+#    if(${GSL_VERSION} STREQUAL ${GSL_VER_REQ})
+#        set(COMPILE_SPECTRAST YES)
+##        message(STATUS SpectraST: found GSL ${GSL_INCLUDE_DIRS} ${GSL_LIBRARIES} )
+#    else()
+#        message(FATAL_ERROR "SpectraST: GSL version should be ${GSL_VER_REQ}, while we found version ${GSL_VERSION}")
+#    endif()
+#else()
+#    message(STATUS "SpectraST: GSL NOT found! Will not compile SpectraST")
+#endif()
 
 set(RAMPSOURCEFILES
         SpectraST_base64.cpp
