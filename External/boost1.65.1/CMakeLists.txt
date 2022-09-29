@@ -6,7 +6,7 @@ set( boost_SHA1 "c066ac5c2f42fa2b870362c3c931ef73ffc6f24f" )
 find_package(Python3 COMPONENTS Interpreter Development)
 #message( "--- the root of boost is  ${BOOST_ROOT} The python root is ${Python3_INCLUDE_DIRS} the install dir is : ${install_dir}/include")
 
-message("------>>>>   the boost library will be installed to : ${boost_INSTALL} <<<<<<<<---------------")
+message("------>>>>   the boost library will be installed to : ${boost_INSTALL} ${BOOST_ROOT}<<<<<<<<---------------")
 
 
 ExternalProject_Add( boost
