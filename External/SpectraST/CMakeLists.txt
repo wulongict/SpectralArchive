@@ -207,27 +207,28 @@ set(LIBHTMLSOURCEFILES
 if(COMPILE_SPECTRAST)
 #    MESSAGE(STATUS "targets: spectrast, plogspectrast Lib2HTML and spectrastlib")
     add_executable(spectrast ${SOURCEFILES} SpectraSTMain.cpp)
-    target_link_libraries(spectrast gsl gslcblas z pthread)
-    target_compile_options(spectrast PRIVATE  -DSTANDALONE_LINUX)
+    target_link_libraries(spectrast  z pthread)
+    target_compile_options(spectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
 
     add_executable(plotspectrast ${PLOTSPECTRASTFILES} plotspectrast.cpp)
-    target_link_libraries(plotspectrast gsl gslcblas z pthread)
-    target_compile_options(plotspectrast PRIVATE  -DSTANDALONE_LINUX)
+    target_link_libraries(plotspectrast  z pthread)
+    target_compile_options(plotspectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
 
     add_executable(plotspectrast.cgi ${PLOTSPECTRASTFILES} plotspectrast.cpp)
-    target_link_libraries(plotspectrast.cgi gsl gslcblas z pthread)
-    target_compile_options(plotspectrast.cgi PRIVATE  -DRUN_AS_CGI  -DSTANDALONE_LINUX)
+    target_link_libraries(plotspectrast.cgi z pthread)
+    target_compile_options(plotspectrast.cgi PRIVATE -D__LGPL__  -DRUN_AS_CGI  -DSTANDALONE_LINUX)
 
 
     add_executable(Lib2HTML ${LIBHTMLSOURCEFILES} Lib2HTML.cpp)
-    target_link_libraries(Lib2HTML gsl gslcblas z pthread)
-    target_compile_options(Lib2HTML  PRIVATE  -DSTANDALONE_LINUX)
+    target_link_libraries(Lib2HTML  z pthread)
+    target_compile_options(Lib2HTML  PRIVATE -D__LGPL__  -DSTANDALONE_LINUX)
 
 
     add_library(spectrastlib SHARED ${SOURCEFILES} SpectraSTMain.cpp)
-    target_link_libraries(spectrastlib gsl gslcblas z pthread)
+#    target_link_libraries(spectrastlib gsl gslcblas z pthread)
+    target_link_libraries(spectrastlib  z pthread) # do not use GSL
     set_target_properties(spectrastlib PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    target_compile_options(spectrastlib PRIVATE -DLIB_BUILD -DSTANDALONE_LINUX)
+    target_compile_options(spectrastlib PRIVATE -D__LGPL__ -DLIB_BUILD -DSTANDALONE_LINUX)
 
 
 #    target_link_options(spectrastlib PRIVATE -static)
@@ -236,9 +237,10 @@ if(COMPILE_SPECTRAST)
     # install(TARGETS spectrastlib DESTINATION lib)
 
     add_library(spectrastlib_static STATIC ${SOURCEFILES} SpectraSTMain.cpp)
-    target_link_libraries(spectrastlib_static libgsl.a libgslcblas.a libz.a pthread dl) 
+#    target_link_libraries(spectrastlib_static libgsl.a libgslcblas.a libz.a pthread dl)
+    target_link_libraries(spectrastlib_static libz.a pthread dl)  # do not use GSL
 #    target_link_options(spectrastlib_static PRIVATE -static)
-    target_compile_options(spectrastlib_static PUBLIC -DLIB_BUILD -DSTANDALONE_LINUX)
+    target_compile_options(spectrastlib_static PUBLIC -D__LGPL__ -DLIB_BUILD -DSTANDALONE_LINUX)
 
 endif ()
 

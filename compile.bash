@@ -11,7 +11,8 @@ conda deactivate
 # echo which python `which python`
 # add -pg option to CXX_FLAGS, LINKER_FLAGS AND SHARED_LINKER_FLAGS.
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
-cmake -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg -DCMAKE_INSTALL_PREFIX=${releasePath}/build ..
+# -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg
+cmake  -DCMAKE_INSTALL_PREFIX=${releasePath}/build ..
 #/usr/local/spectralarchive ..
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..

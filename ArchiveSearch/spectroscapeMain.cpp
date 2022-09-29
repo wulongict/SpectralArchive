@@ -185,19 +185,19 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     p.add("inputfile", -1);
     po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
 
-    po::store(po::command_line_parser(argc, argv).options(visible).run(), visiable_vm);
+    // po::store(po::command_line_parser(argc, argv).options(visible).run(), visiable_vm);
 
     if (vm.count("config")) {
         std::ifstream ifs{vm["config"].as<string>().c_str()};
         if (ifs) {
             // po::store will not overwrite existing options.
             po::store(parse_config_file(ifs, config_file_options), vm);
-            po::store(parse_config_file(ifs, config_file_options), visiable_vm);
+            // po::store(parse_config_file(ifs, config_file_options), visiable_vm);
         }
     }
 
     po::notify(vm);
-    po::notify(visiable_vm);
+    // po::notify(visiable_vm);
 //    cout  <<  vm.at("inputsource").as<string>() << endl;
     if (vm.at("help").as<bool>() or argc == 1) {
         cout << "Spectroscape is a open source tool for building an searchable spectral archive. It can be used in both command line and also as a fastcgi service together with a web interface."
@@ -207,7 +207,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
         cout << "Help info finish" << endl;
         exit(0);
     }
-    displayParam(visiable_vm);
+    displayParam(vm);
     return vm;
 }
 

@@ -1019,7 +1019,12 @@ bool CAnnotationDB::getTNN(long queryindex, int topk, double mindp, int indexnum
                            vector<long> &tnnidx, vector<double> &tnndp) {
     CDBEntry dbentry;
     ostringstream  oss;
-    oss << "select * from TNN where QUERY_ID = " << queryindex << " and TOPK >=  " << topk << " and MINDP <=" << mindp << " and INDEXNUM =" << indexnum << " and ARCHIVESIZE = " << archivesize << " and nprobe = " << nprobe << ";" ;
+    oss << "select * from TNN where QUERY_ID = " << queryindex
+    // the following parameters does not change the TNN
+//    << " and INDEXNUM =" << indexnum << " and nprobe = " << nprobe
+
+    << " and ARCHIVESIZE = " << archivesize
+    << " and TOPK >=  " << topk << " and MINDP <=" << mindp  <<";" ;
     string sql = oss.str();
 //    cout << sql << endl;
     m_dbmanager->getRow(dbentry, sql, false);

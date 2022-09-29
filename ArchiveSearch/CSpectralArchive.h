@@ -140,6 +140,9 @@ public:
             // only do this when it is not opened.
             m_fout.open(logFileName.c_str(), ios::out|ios::app);
         }
+        else{
+            cout << "[info] log file opened " << m_fout.is_open() << " recall true NN " << m_recallOfTrueNeighbor << endl;
+        }
         if(not m_recallOfTrueNeighbor and m_fout.is_open()){
             std::cout << "[info] closing log file " << logFileName << std::endl;
             m_fout.close();
@@ -227,6 +230,7 @@ public:
 
     void setRecallTNN(bool recallTNN, int topK, double recallTNNminDP, int minPeakNumInSpec) 
     {
+        cout << "[info] recall true nearest neighbors: " << std::boolalpha <<  recallTNN<< endl;
         agtsummary.setRecallTNN(recallTNN, topK, recallTNNminDP,minPeakNumInSpec);
 
     }
