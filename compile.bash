@@ -6,8 +6,9 @@ mkdir cmake-build-release
 cd ${releasePath}/cmake-build-release/ 
 # rm CMakeCache.txt
 
-source ~/anaconda3/etc/profile.d/conda.sh
-conda deactivate 
+#source ~/anaconda3/etc/profile.d/conda.sh
+#conda deactivate
+
 # echo which python `which python`
 # add -pg option to CXX_FLAGS, LINKER_FLAGS AND SHARED_LINKER_FLAGS.
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
