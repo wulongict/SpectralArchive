@@ -32,7 +32,7 @@ project(cuda_dotproduct LANGUAGES NONE)
 # ----      sm_37 	sm_53	    sm_62
 # choose 60 61 62 is good for our GPU
 if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 60;61;62)
+    set(CMAKE_CUDA_ARCHITECTURES 60;61;62;70;72;86;75;87)
 endif()
 
 add_library(dpgpu SHARED dpcuda.cu)
@@ -41,17 +41,17 @@ set_property(TARGET dpgpu PROPERTY CUDA_STANDARD 11)
 set_target_properties(dpgpu PROPERTIES POSITION_INDEPENDENT_CODE ON)
 get_target_property(LIBB_INCLUDES dpgpu INCLUDE_DIRECTORIES)
 #message("target libdpgpu.so has following include directory: " ${LIBB_INCLUDES})
-target_link_libraries(dpgpu msms)
+target_link_libraries(dpgpu msms mstoolkit)
 
 
 add_library(dpgpu_static STATIC dpcuda.cu)
 set_property(TARGET dpgpu_static PROPERTY CUDA_STANDARD 11)
-target_link_libraries(dpgpu_static msms_static)
+target_link_libraries(dpgpu_static msms_static mstoolkit)
 
 
 add_executable(dpcudatest dpcuda_main.cu)
 set_property(TARGET dpcudatest PROPERTY CUDA_STANDARD 11)
-target_link_libraries(dpcudatest dpgpu msms_static)
+target_link_libraries(dpcudatest dpgpu msms_static mstoolkit)
 
 
 

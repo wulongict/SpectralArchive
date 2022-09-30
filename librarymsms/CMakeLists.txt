@@ -85,7 +85,7 @@ set(SOURCE_FILES
 
 include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include)
 #when using static library of sqlite3, it fail to compile.
-find_library(sqlite3  sqlite3)
+#find_library(sqlite3  sqlite3)
 
 add_library(msmsX SHARED ${SOURCE_FILES})
 target_include_directories(msmsX INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include)
