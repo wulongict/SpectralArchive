@@ -13,12 +13,13 @@ cd ${releasePath}/cmake-build-release/
 # add -pg option to CXX_FLAGS, LINKER_FLAGS AND SHARED_LINKER_FLAGS.
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
 # -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg
-cmake  -DCMAKE_INSTALL_PREFIX=${releasePath}/build ..
+#--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+cmake   -DCMAKE_INSTALL_PREFIX=${releasePath}/build ..
 #/usr/local/spectralarchive ..
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..
 cmake  --build ../cmake-build-release   --target  boost  -- -j 30
-cmake  --build ../cmake-build-release  --target spectroscape  -- -j 30
+cmake  --build ../cmake-build-release  --target spectroscape -- -j 30
 
 cmake --install .
 

@@ -41,10 +41,10 @@ add_dependencies(msbasic_small boost)
 
 add_library(msbasic_small_static STATIC $<TARGET_OBJECTS:msbasic_obj> )
 target_link_libraries(msbasic_small_static pthread
-                msms
-        spectrastlib_static
-        linear_static
+#                msms
+#        spectrastlib_static
+#        linear_static
         )
-add_dependencies(msbasic_small_static boost)
+#add_dependencies(msbasic_small_static boost)
 
 

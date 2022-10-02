@@ -226,7 +226,6 @@ void displayTitle() {
 
 
 int main(int argc, char *argv[]) {
-
     try {
         SimpleTimer st(false);
         initlog("spectral_clustering.log", "A");
