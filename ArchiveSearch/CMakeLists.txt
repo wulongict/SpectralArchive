@@ -25,7 +25,7 @@ set(SOURCE_FILES
         )
 
 
-if(CMAKE_CUDA_COMPILER)
+if(ENABLE_GPU)
 	add_subdirectory(dependentlibs/cudaproj)
 	add_compile_definitions(__CUDA__)
 	set(DPGPU dpgpu)

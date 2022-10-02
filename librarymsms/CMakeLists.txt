@@ -33,7 +33,7 @@ add_library(msms_lib_objects OBJECT ${SOURCE_FILES})
 
 include_directories(../External/rapidxml-1.13 ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
 #when using static library of sqlite3, it fail to compile.
-find_library(sqlite3  sqlite3)
+#find_library(sqlite3  sqlite3)
 
 add_library(msms SHARED $<TARGET_OBJECTS:msms_lib_objects> )
 target_include_directories(msms INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
