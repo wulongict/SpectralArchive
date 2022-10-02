@@ -45,7 +45,7 @@ target_include_directories(msms INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(msms_static STATIC $<TARGET_OBJECTS:msms_lib_objects> )
 target_include_directories(msms_static INTERFACE ../External/spdlog-1.x/include ../External/comet_source_2016012/MSToolkit/include )
-target_link_libraries(msms_static  
+target_link_libraries(msms_static  mstoolkit
  # libz.a libsqlite3.a 
  spdlog dl)
 set_target_properties(msms_static PROPERTIES POSITION_INDEPENDENT_CODE ON)

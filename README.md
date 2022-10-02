@@ -1,5 +1,14 @@
 # Query for nearest neighbors against a spectral archive with Spectroscape
 
+## Install from binaries
+Users could install spectroscape from compiled binary files. This following command has been teted on Ubuntu 22.04. The .deb file of version v1.0.5 can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb). More newer version will be released on [this page](https://github.com/wulongict/SpectralArchive/releases). 
+
+```bash 
+# the following wget command downloads the v1.0.5 version. Change the url to get a newer version.
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb
+sudo dpkg -i Spectroscape-1.0.5-Linux.deb
+```
+
 ## Compile from source code
 
 Using the following command to compile the code. 

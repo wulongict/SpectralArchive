@@ -46,7 +46,10 @@ add_dependencies(specarchive_static boost)
 add_executable(spectroscape spectroscapeMain.cpp dependentlibs/msbasic/commonfun.cpp dependentlibs/msbasic/CDebugMode.cpp)
 target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
-msbasic_small_static faiss ${DPGPU}
+ msms
+		spectrastlib
+		linear
+		faiss ${DPGPU}
     ${Boost_LIBRARIES} mstoolkit)
 add_dependencies(spectroscape boost ${DPGPU})
 
@@ -60,10 +63,11 @@ set(CPACK_PACKAGE_VERSION_MAJOR 1)
 set(CPACK_PACKAGE_VERSION_MINOR 0)
 set(CPACK_PACKAGE_VERSION_PATCH 5)
 set(CPACK_PACKAGE_NAME Spectroscape)
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER Long WU)
 set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR}/package)
 set(CPACK_THREADS 0)
 SET(CPACK_GENERATOR "ZIP")  #.ZIP
-SET(CPACK_GENERATOR "STGZ") #.sh
+SET(CPACK_GENERATOR "STGZ" "DEB") #.sh #deb
 SET(CPACK_SOURCE_GENERATOR "TBZ2")
 
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/boost1.65.1/src")

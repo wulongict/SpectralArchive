@@ -4,7 +4,7 @@ releasePath=$(pwd)
 echo $releasePath
 mkdir cmake-build-release
 cd ${releasePath}/cmake-build-release/ 
-# rm CMakeCache.txt
+ rm CMakeCache.txt
 
 #source ~/anaconda3/etc/profile.d/conda.sh
 #conda deactivate
@@ -17,12 +17,11 @@ cmake  -DCMAKE_INSTALL_PREFIX=${releasePath}/build ..
 #/usr/local/spectralarchive ..
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..
-cmake  --build ../cmake-build-release   --target  boost  -- -j 30 
-cmake  --build ../cmake-build-release     -- -j 30
-# ctest 
-cmake --install .  
-#--prefix /tools/archive 
-#cpack -G ZIP -V 
+cmake  --build ../cmake-build-release   --target  boost  -- -j 30
+cmake  --build ../cmake-build-release  --target spectroscape  -- -j 30
+
+cmake --install .
+
 make package -j `nproc`
 make package_source  -j `nproc`
-cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi 
+cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi
