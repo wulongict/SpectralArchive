@@ -35,7 +35,7 @@ include(CheckLanguage)
 
 set(DPGPU "")
 
-option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" ON)
+
 option(ENABLE_TESTS "Enable tests" ON)
 
 if (${ENABLE_TESTS})
@@ -43,18 +43,17 @@ if (${ENABLE_TESTS})
 endif()
 
 
-if(ENABLE_GPU)
-	CHECK_LANGUAGE(CUDA)
-	if(CMAKE_CUDA_COMPILER)
-		enable_language(CUDA)
+
+CHECK_LANGUAGE(CUDA)
+if(CMAKE_CUDA_COMPILER)
+	enable_language(CUDA)
+	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" ON)
 #		message("include directory when CUDA enabled: " ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-	else()
-		#message("CUDA not found. Using CPU" ${CMAKE_CUDA_COMPILER})
-	endif()
 else()
-	unset(CMAKE_CUDA_COMPILER)
-	message("ENABLE GPU IS OFF " ${ENABLE_GPU} ${CMAKE_CUDA_COMPILER})
+	#message("CUDA not found. Using CPU" ${CMAKE_CUDA_COMPILER})
+	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" OFF)
 endif()
+
 
 
 add_subdirectory(External/comet_source_2016012)
