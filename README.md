@@ -23,7 +23,7 @@ sudo apt install spawn-fcgi nginx
 ```
 
 
-### Compile spectral archive tool
+### Compile
 
 First you can run the following command to get the source code from GitHub. 
 
