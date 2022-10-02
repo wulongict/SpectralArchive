@@ -698,7 +698,7 @@ public:
 
 
     // avoid implicit conversion from const char * to bool.
-    explicit SimpleTimer(char * x, bool verbose=true);
+    explicit SimpleTimer(const char * x, bool verbose=true);
     explicit  SimpleTimer(bool verbose=true);
     explicit SimpleTimer(string taskname, bool verbose=true);
 

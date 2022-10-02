@@ -24,6 +24,13 @@ sudo apt install spawn-fcgi nginx
 
 
 ### Compile spectral archive tool
+
+First you can run the following command to get the source code from GitHub. 
+
+```bash
+ git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git
+```
+
 From the source code folder, run the following scripts. 
 ```bash
 # to have a clean start

@@ -35,13 +35,11 @@ include(CheckLanguage)
 
 set(DPGPU "")
 
-
 option(ENABLE_TESTS "Enable tests" ON)
 
 if (${ENABLE_TESTS})
 	enable_testing()
 endif()
-
 
 
 CHECK_LANGUAGE(CUDA)
@@ -53,8 +51,6 @@ else()
 	option(FAISS_ENABLE_GPU "Enable support for GPU indexes." OFF)
 	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" OFF)
 endif()
-
-
 
 
 add_subdirectory(External/comet_source_2016012)

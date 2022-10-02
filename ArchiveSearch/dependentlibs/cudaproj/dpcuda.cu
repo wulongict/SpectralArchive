@@ -7,7 +7,7 @@
 #include <list>
 
 #include "dpcuda.h"
-#include "host_defines.h"
+//#include "host_defines.h"
 #include "device_launch_parameters.h"
 #include "cuda_runtime_api.h"
 #include "cuda_profiler_api.h"

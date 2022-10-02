@@ -705,7 +705,7 @@ SimpleTimer::SimpleTimer(string taskname, bool verbose) {
     }
 
 }
-SimpleTimer::SimpleTimer(char *x, bool verbose): SimpleTimer(string(x), verbose) {}
+SimpleTimer::SimpleTimer(const char *x, bool verbose): SimpleTimer(string(x), verbose) {}
 
 SimpleTimer::~SimpleTimer() {
     stop();
