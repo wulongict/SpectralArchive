@@ -52,7 +52,7 @@ if(CMAKE_CUDA_COMPILER)
 else()
 	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" OFF)
 endif()
-message("FAISS_ENABLE_GPU: ${FAISS_ENABLE_GPU} IS SET!")
+message("FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
 
 
 
