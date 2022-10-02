@@ -6,21 +6,22 @@ Using the following command to compile the code.
 
 ### Prerequisites
 
+To compile the source code, you need to have cmake, gcc installed. 
 ```bash
-./install_prerequisites.bash
+sudo apt install cmake build-essential 
 ```
 
-Install cmake version >= 3.20. The default version of Ubuntu 20.04 is cmake 3.16. We can update it using the following script.
+The source code requires two extra libraries, fcgi and lapack. 
+
 ```bash
-./install_cmake_3.22.bash
+sudo apt install libfcgi-dev liblapack-dev
 ```
 
-Install faiss-1.7.1. This faiss library requires cmake version >=3.20.
+To make the web service work, two more tools should be installed, spawn-fcgi and nginx. 
 ```bash
-cd ./faiss-1.7.1
-./compile.bash
-cd ..
+sudo apt install spawn-fcgi nginx
 ```
+
 
 ### Compile spectral archive tool
 From the source code folder, run the following scripts. 

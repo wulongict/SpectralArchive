@@ -19,7 +19,11 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Valid values are "generic", "avx2".
 option(FAISS_OPT_LEVEL "" "generic")
-option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
+if(CMAKE_CUDA_COMPILER)
+  option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
+else()
+  option(FAISS_ENABLE_GPU "Enable support for GPU indexes." OFF)
+endif()
 option(FAISS_ENABLE_PYTHON "Build Python extension." OFF)
 option(FAISS_ENABLE_C_API "Build C API." OFF)
 set(BUILD_SHARED_LIBS ON)
