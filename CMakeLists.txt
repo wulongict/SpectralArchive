@@ -46,13 +46,16 @@ endif()
 
 CHECK_LANGUAGE(CUDA)
 if(CMAKE_CUDA_COMPILER)
+	message("1. FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
 	enable_language(CUDA)
 	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" ON)
 	option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
+	message("2. FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
 else()
+	message("FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
 	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" OFF)
 endif()
-message("FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
+message("3. FAISS_ENABLE_GPU: ${CMAKE_CUDA_COMPILER},  ${FAISS_ENABLE_GPU} IS SET!")
 
 
 
