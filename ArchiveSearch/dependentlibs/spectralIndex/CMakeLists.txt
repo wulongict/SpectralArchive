@@ -4,7 +4,7 @@ project(dependentlibs)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11  -fpermissive -fopenmp -Wreturn-type  -Werror=return-type ")
 
 #related to Eigen
-include_directories(../../../External/Eigen ../../../External/spdlog-1.x/include ../../../faiss-1.7.1  ../../../External/comet_source_2016012/MSToolkit/include )
+include_directories(../../../External/Eigen ../../../External/spdlog-1.x/include ../../../External/faiss-1.7.1  ../../../External/comet_source_2016012/MSToolkit/include )
 add_library(kmeans_eigen_static STATIC CKMeans.cpp)
 set_target_properties(kmeans_eigen_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
