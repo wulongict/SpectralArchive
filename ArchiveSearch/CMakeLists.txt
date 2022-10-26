@@ -55,7 +55,7 @@ add_dependencies(spectroscape boost ${DPGPU})
 #add_executable(LibraryRetrieval	LibSearchEngine.cpp	)
 #target_link_libraries(LibraryRetrieval specarchive)
 
-install(TARGETS spectroscape DESTINATION bin OPTIONAL)
+install(TARGETS spectroscape DESTINATION bin )
 install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
 set(CPACK_PACKAGE_VERSION_MAJOR 1)
 set(CPACK_PACKAGE_VERSION_MINOR 0)
