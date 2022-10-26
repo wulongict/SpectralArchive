@@ -41,7 +41,9 @@ void initlog(std::string logfile, std::string logname) {
     sinks.push_back(stdsink);
    if( spdlog::get(logname)==nullptr){
        auto combined_logger = std::make_shared<spdlog::logger>(logname, std::begin(sinks), std::end(sinks));
-    std::cout << "the combined logger is :" << combined_logger << std::endl;
+    if(combined_logger == nullptr){
+        std::cout << "Logger not exist! " << std::endl;
+    }
     spdlog::register_logger(combined_logger);
    }else{
        std::cout << "logger already exist" << std::endl;
