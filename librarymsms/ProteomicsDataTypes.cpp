@@ -568,7 +568,7 @@ double CSpectrum::maxIntensity(bool rmParentIon, double left, double right) {
     return maxinten;
 }
 
-// the peak with mz > 2000Th are deleted
+// There are many preprocessing steps.
 void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool removeLowIntensePeaks, bool rmParentIon,
                             bool rmIsotopicPeaks, double localMaxTolWidth) {
 

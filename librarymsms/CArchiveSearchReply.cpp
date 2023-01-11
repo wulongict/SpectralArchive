@@ -69,16 +69,14 @@ CAnnSpectra &CAnnSpectra::keepTopN(int n, bool verbose) {
     sort(m_anns.begin(), m_anns.end(), [](const SAnnSpectrum &x, const SAnnSpectrum &y) {
         return x.dist < y.dist;
     });
-    ;
-    // I wish to print true and approximate distance here, but it does not work because tha appdist here are all zero.
-//    for(auto each:  m_anns){
-//        cout << "ANN-dist-dp\t" << m_queryidx << "\t" << each.idx << "\t" << each.appdist << "\t" << each.dotprod << "\t" << each.dist << endl;
-//    }
+
     if (size() <= n) {
         if(verbose)cout << "size of query result: " << size() << " <= " << n << endl;
     } else {
         m_anns.resize(n);
     }
+    // save anns to some where.
+
     return *this;
 }
 
@@ -322,6 +320,7 @@ void CArxivSearchResult::copyto(vector<CAnnSpectra *> &vqrs, int offset) {
     copy(m_queryresults.begin(), m_queryresults.end(), vqrs.begin() + offset);
 }
 
+// move results to vqrs.
 void CArxivSearchResult::moveTo(vector<CAnnSpectra *> &vqrs, int offset) {
     copyto(vqrs, offset);
     for (int k = 0; k < size(); k++) {

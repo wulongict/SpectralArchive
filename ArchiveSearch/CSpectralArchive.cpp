@@ -548,12 +548,12 @@ void CSpectralArchive::syncIndicesWithSpecFileTable() {
 void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int topN, int calcEdge, int nprobe,
                                    vector<uint16_t> &query, bool visualize, double minTNNDP, int indexNum, int TNNtopK,
                                    bool recalltrueneighbor, string rawspec) {
-    if(not rawspec.empty()){
+    if (not rawspec.empty()) {
         // consider use raw spec.
         // raw spectra format:
         // #raw#1000:20_300:40_224:34
         // #raw#mz1:intensity1_mz2:intensity2
-        if(not query.empty()){
+        if (not query.empty()) {
             cerr << "query should be empty when raw spec is provides. " << endl;
         }
         string prefix = "#raw#";
@@ -577,9 +577,10 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
             onespec->addOnePeak(mzs[j], intens[j]);
         }
          * */
-        CSpectrum * onespec = new CSpectrum();
+        CSpectrum *onespec = new CSpectrum();
+        cout << "creating a spectrum for searching" << endl;
         onespec->setMSLevel(2);
-        for(int i = 0; i < peaksvec.size(); i ++){
+        for (int i = 0; i < peaksvec.size(); i++) {
             vector<string> mz_inten;
             split_string(peaksvec[i], mz_inten, ':');
             // now we can consider to create the mz format from peak list.
@@ -590,8 +591,8 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         bool removeLowIntensePeaks = true;
         bool rmIsotopicPeaks = true;
 //        double mzTol = 2 * tolerance * 2000.0 / 65535;
-        onespec->getAllPeaks(mz, intensity, removeLowIntensePeaks, true, rmIsotopicPeaks, 2*2000.0/65535);
-        int PeakNum=50;
+        onespec->getAllPeaks(mz, intensity, removeLowIntensePeaks, true, rmIsotopicPeaks, 2 * 2000.0 / 65535);
+        int PeakNum = 50;
         PeakList pl;
         pl.setM_intensityList(intensity);
         pl.setM_mzList(mz);
@@ -600,6 +601,65 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         pl.rankingAsIntensity(PeakNum);
 
         // padding the peaks.
+        vector<double> mzs, intens;
+        mzs = pl.getM_mzList();
+        intens = pl.getM_intensityList();
+        int _peaknum = mzs.size();
+        if (mzs.size() < PeakNum and _peaknum > m_minPeakNum) {
+            mzs.resize(PeakNum, 0);
+            intens.resize(PeakNum, 0);
+        } else if (_peaknum <= m_minPeakNum) {
+            // put dummy peak there. so every spectra is on the hyper sphere now
+            mzs.assign(PeakNum, 0);
+            intens.assign(PeakNum, 0);
+            _peaknum = 1;
+            mzs[0] = 0.5;
+            intens[0] = 1000;
+        }
+
+        const double *mzptr = mzs.data();
+        const double *intensityptr = intens.data();
+        query.assign(PeakNum, 0);
+        m_csa->getCompactForm(mzptr, intensityptr, query);
+        cout << "query ready -------" << endl;
+        for (int i = 0; i < query.size(); i++) {
+            cout << i + 1 << "-th peak mz " << query[i] << " " << query[i] * 2000.0 / UINT16_MAX << "\t" << PeakNum - i
+                 << endl;
+        }
+
+        /*
+         *
+         *
+         * //ps.increase();
+        CSpectrum *spec = df.getSpectrum(spec_id_k);
+
+        if(nullptr!=sf and sf->skip(spec)){
+            continue;
+        }
+
+        if (spec == nullptr) {
+            cout << "empty spec : " << spec << endl;
+            continue;
+        }
+        if (spec->getMSLevel() != 2) {
+            continue;
+        }
+        vector<double> mz, intensity;
+        bool removeLowIntensePeaks = true;
+        bool rmIsotopicPeaks = true;
+        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, rmParentIon, rmIsotopicPeaks, m_localMaxHalfWidth);
+
+        if (mz.empty()) {
+            //cout << "Bad mz" << endl;
+        }
+
+        PeakList pl;
+        pl.setM_intensityList(intensity);
+        pl.setM_mzList(mz);
+
+        pl.KeepTopN(PeakNum);
+        pl.rankingAsIntensity(PeakNum);
+
         vector<double> mzs, intens;
         mzs = pl.getM_mzList();
         intens = pl.getM_intensityList();
@@ -618,83 +678,23 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
 
         const double *mzptr = mzs.data();
         const double *intensityptr = intens.data();
-        query.assign(PeakNum, 0);
-        m_csa->getCompactForm(mzptr, intensityptr, query);
-        cout << "query ready -------" << endl;
-        for(int i = 0; i < query.size(); i++){
-            cout << i+1 << "-th peak mz " << query[i] << " " << query[i]*2000.0/UINT16_MAX  << "\t" << PeakNum-i<< endl;
-        }
-
-
-            /*
-             *
-             *
-             * //ps.increase();
-		CSpectrum *spec = df.getSpectrum(spec_id_k);
-
-		if(nullptr!=sf and sf->skip(spec)){
-			continue;
-		}
-
-		if (spec == nullptr) {
-			cout << "empty spec : " << spec << endl;
-			continue;
-		}
-		if (spec->getMSLevel() != 2) {
-			continue;
-		}
-		vector<double> mz, intensity;
-		bool removeLowIntensePeaks = true;
-		bool rmIsotopicPeaks = true;
-        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, rmParentIon, rmIsotopicPeaks, m_localMaxHalfWidth);
-
-		if (mz.empty()) {
-			//cout << "Bad mz" << endl;
-		}
-
-		PeakList pl;
-		pl.setM_intensityList(intensity);
-		pl.setM_mzList(mz);
-
-		pl.KeepTopN(PeakNum);
-		pl.rankingAsIntensity(PeakNum);
-
-		vector<double> mzs, intens;
-		mzs = pl.getM_mzList();
-		intens = pl.getM_intensityList();
-		int _peaknum = mzs.size();
-		if (mzs.size() < PeakNum and _peaknum > m_minPeakNum) {
-			mzs.resize(PeakNum, 0);
-			intens.resize(PeakNum, 0);
-		} else if(_peaknum <= m_minPeakNum)   {
-		    // put dummy peak there. so every spectra is on the hyper sphere now
-		    mzs.assign(PeakNum, 0);
-		    intens.assign(PeakNum,0);
-            _peaknum = 1;
-            mzs[0] = 0.5;
-            intens[0] = 1000;
-        }
-		const double *mzptr = mzs.data();
-		const double *intensityptr = intens.data();
-		getCompactForm(mzptr, intensityptr, batchMS[ms2count]);
-             *
-             * */
-
-
+        getCompactForm(mzptr, intensityptr, batchMS[ms2count]);
+            *
+            * */
     }
     setnProbe(nprobe);
     agtsummary.setRecallTNN(recalltrueneighbor);
 //    agtsummary.m_recallOfTrueNeighbor = recalltrueneighbor;
 
 
-    if(agtsummary.getRecallTNN()){
-        if(minTNNDP>=0.0 and minTNNDP<=1.0){
+    if (agtsummary.getRecallTNN()) {
+        if (minTNNDP >= 0.0 and minTNNDP <= 1.0) {
             agtsummary.setRecallTNNMinDP(minTNNDP);
         }
-        if(indexNum>=1 and indexNum<=m_indices->getNum()){
+        if (indexNum >= 1 and indexNum <= m_indices->getNum()) {
             agtsummary.setIndexNum(indexNum);
         }
-        if(TNNtopK>=1){
+        if (TNNtopK >= 1) {
             agtsummary.setRecallTNNTopK(TNNtopK);
         }
     }
@@ -704,7 +704,7 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
     vector<int> dpscores; // background score
     ICQuery *q = createICQuery(&query, &queryIds, m_useflankingbins, getDim(), *m_pScorer);
     bool verbose = false;
-    searchICQuery(topN, *q, m_tol, verbose, annResults,indexNum); // index FAISS, use topN=100 to filter
+    searchICQuery(topN, *q, m_tol, verbose, annResults, indexNum); // index FAISS, use topN=100 to filter
 
     st.restart("mass diff analysis");
     bool do_massDiff_analysis = false;
@@ -718,22 +718,22 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
     CTimeSummary::getInstance()->startTimer("pairwisedistance");
     do_pairwise_distance(calcEdge, query_index, annVec, annResults); // real distance between query and topN
     CTimeSummary::getInstance()->pauseTimer("pairwisedistance");
-    
-    if(m_savebackgroundscore){
-// save the pairwise scores of close neighbors.
-    string dpscore_neighbor_file = "dpscore_neighbor_query_" + to_string(query_index) + ".txt";
-     ofstream fout (dpscore_neighbor_file.c_str(), ios::out);
-    fout << "From\tTo\tDist\tDP" << endl;
-    for (auto each : annVec){
-        for(int i = 0; i < each->m_anns.size(); i ++)  {
-            fout << each->getQueryIdx()
-            << "\t" << each->m_anns[i].idx
-            << "\t" << each->m_anns[i].dist
-            << "\t" << each->m_anns[i].dotprod  << endl;
+
+    if (m_savebackgroundscore) {
+        // save the pairwise scores of close neighbors.
+        string dpscore_neighbor_file = "dpscore_neighbor_query_" + to_string(query_index) + ".txt";
+        ofstream fout(dpscore_neighbor_file.c_str(), ios::out);
+        fout << "From\tTo\tDist\tDP" << endl;
+        for (auto each: annVec) {
+            for (int i = 0; i < each->m_anns.size(); i++) {
+                fout << each->getQueryIdx()
+                     << "\t" << each->m_anns[i].idx
+                     << "\t" << each->m_anns[i].dist
+                     << "\t" << each->m_anns[i].dotprod << endl;
+            }
         }
-     }
     }
-   
+
 
     st.restart("pvlaue");
     bool do_pvalue_on_all = false;  // all: all the spectra in archive. NOT 10,000 background spectra
@@ -747,7 +747,6 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
     if (plotfigure)cout << "[Info] Figure will be generated " << endl;
     bool do_partial_score_calucation = true;
     if (do_partial_score_calucation) {
-        //cout << "[Info] calcualting p-values on 10,000 spectra " << endl;
         CTimeSummary::getInstance()->startTimer("pvalue10krandom");
         do_pvalue_onfraction(annVec, *q, query_index, plotfigure, &dpscores, &modelLR);
         CTimeSummary::getInstance()->pauseTimer("pvalue10krandom");
@@ -769,6 +768,13 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
     // SQL DB used to annotated
     exportResponse(query_index, annVec, jsonstring, &dpscores, &modelLR);
     cout << "jsonstring size: " << jsonstring.size() / 1024 << "KB" << endl;
+
+    for(int k = 0; k < annVec.size(); k ++){
+        if (annVec[k]) {
+            delete annVec[k];
+            annVec[k]= nullptr;
+        }
+    }
     delete q;
 }
 
@@ -1213,6 +1219,7 @@ CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool ve
     CTimeSummary::getInstance()->startTimer("keepTopN");
     archiveRes.keepTopN(topN, verbose);
     CTimeSummary::getInstance()->pauseTimer("keepTopN");
+    // save archiveRes to file.
 }
 
 void CSpectralArchive::filterWithMinPeakNum(bool verbose, vector<long> &retIdx) {
@@ -1253,6 +1260,7 @@ void CSpectralArchive::exportResponse(int query_index, vector<CAnnSpectra *> &an
         jsonstring = jsonstring.substr(0, jsonstring.length() - 3) + "," + ptrLRModel->toJsonString() + "\n}\n";
     }
 //    cout << "debug: json done" << endl;
+
 }
 
 void CSpectralArchive::do_pvalue_onall(long query_index, vector<CAnnSpectra *> &vqrSimple) {
@@ -1271,6 +1279,8 @@ void CSpectralArchive::do_pvalue_onall(long query_index, vector<CAnnSpectra *> &
     }
 }
 
+// release the ann spectra.
+// This function should be improved.
 void CSpectralArchive::do_pvalue_onfraction(vector<CAnnSpectra *> &vqrSimple, ICQuery &q, long query_index,
                                             bool plot_figure, vector<int> *ptrDPs, SLinearRegressionModel *ptrLR) {
     SimpleTimer st("p-value shuffle");
@@ -1279,6 +1289,7 @@ void CSpectralArchive::do_pvalue_onfraction(vector<CAnnSpectra *> &vqrSimple, IC
         cout << "Empty result " << endl;
         return;
     }
+    // memory transfered to object.
     CArxivSearchResult queryResults;
     for (auto each: vqrSimple) queryResults.push_back(each);
     vector<long> idxlist = {query_index};
@@ -1287,7 +1298,7 @@ void CSpectralArchive::do_pvalue_onfraction(vector<CAnnSpectra *> &vqrSimple, IC
     bool saveBackgroundScore = false; //
     m_pc->run(idxlist, q, queryResults, plot_figure, verbose_Pvalue_calculation, ptrDPs, ptrLR, nullptr, nullptr);
 
-    // release objects
+    // release objects, not release.
     for (int i = 0; i < queryResults.size(); i++) {
         queryResults.set(i, nullptr, false);
     }
@@ -1500,6 +1511,15 @@ void CSpectralArchive::searchMzFileInBatch(CMzFileReader &querySpectra, long fir
     if (not validationfile.empty() and File::isExist(validationfile)) {
         mzSR.validation(validationfile, querySpectra);
     }
+    // I did not release the memory.
+
+    // release vqrs.
+    for(int k = 0; k < vqrs.size(); k ++){
+        if (vqrs[k]) {
+            delete vqrs[k];
+            vqrs[k]= nullptr;
+        }
+    }
 }
 
 void CSpectralArchive::massdiff(ICQuery &q, CArxivSearchResult &annRes) {
@@ -1679,12 +1699,16 @@ void CSpectralArchive::getChromatograms(long queryindex, bool getChromatogram, b
     }
 }
 
+// search for neighbors in archive.
+// using start last , or not, (default)
 // add neighbor info to db.
-void CSpectralArchive::searchNeighborsWithin(double min_dp, long start, long end) {
-    cout << "Searching with range " << start << " " << end << endl;
-    int batchSize = 100;
+//
+void CSpectralArchive::searchNeighborsWithin(double min_dp, long start, long end, int searchBatchSize) {
+
+    int batchSize = searchBatchSize;
     if (end == -1 or end > size()) end = size();
     if(start < 0 or start>end) start = 0;
+    cout << "Searching with range " << start << " " << end << endl;
     long taskNum = end-start;
     Progress ps(taskNum, "Search for Neighbors");
 

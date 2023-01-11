@@ -44,8 +44,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             ("inputsource", po::value<string>()->default_value("cmd"),
              "the source of query: 1. socket; 2. msocket; 3. cmd. The cmd will only search the given datafile, "
              "while the socket and msocket will keep accepting queries from client side")
-            ("numprobe", po::value<int>()->default_value(256),
-             "number of buckets to look into, the web API allows user to change this value in each query. default: 256 ")
+            ("numprobe", po::value<int>()->default_value(8),
+             "number of buckets to look into, the web API allows user to change this value in each query. default: 8 ")
             ("use_gpu,g", po::bool_switch()->default_value(false),
              "use gpu or not")
 
@@ -108,6 +108,9 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              // search function implemented inside archive.
             ("search_in_range_of_archive", po::value<bool>()->default_value(false),
              "search for spectrum in archive with range: first to last; default: false ")
+            ("saveAnns", po::value<bool>()->default_value(false),
+             "save ANNs to SQL table. default: false ")
+
             ("minDpOfNeighborRecordedInSqlDB", po::value<double>()->default_value(0.5),
              "minimum dot product allowed for filter true nearest neighbors; default 0.5 ")
 
@@ -262,6 +265,7 @@ int main(int argc, char *argv[]) {
         bool newImp = vm.at("newimp").as<bool>();
         bool tophit = vm.at("tophit").as<bool>();
         bool search_range = vm.at("search_in_range_of_archive").as<bool>();
+        bool saveAnns = vm.at("saveAnns").as<bool>();
         long first = vm.at("first").as<long>();
         long last = vm.at("last").as<long>();
 
@@ -344,7 +348,7 @@ int main(int argc, char *argv[]) {
             else {
                 // all the other cases goes here,
                 if (search_range){
-                    archive.searchNeighborsWithin(minDpOfNeighborRecordedInSqlDB, first, last);
+                    archive.searchNeighborsWithin(minDpOfNeighborRecordedInSqlDB, first, last, searchBatchSize);
                 }
                 else if (datafile.empty()) {
 

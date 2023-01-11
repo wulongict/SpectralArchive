@@ -240,7 +240,7 @@ public:
 
     ~CSpectralArchive();
 
-    void searchNeighborsWithin(double min_dp, long start = 0, long end = -1);
+    void searchNeighborsWithin(double min_dp, long start = 0, long end = -1, int searchBatchSize=1000);
 
     string getPlatform();
     void update(string new_experimental_data, string new_search_result, string new_search_result_list,
