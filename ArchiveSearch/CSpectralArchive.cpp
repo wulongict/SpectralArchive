@@ -679,8 +679,8 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         const double *mzptr = mzs.data();
         const double *intensityptr = intens.data();
         getCompactForm(mzptr, intensityptr, batchMS[ms2count]);
-            *
-            * */
+             *
+             * */
     }
     setnProbe(nprobe);
     agtsummary.setRecallTNN(recalltrueneighbor);
