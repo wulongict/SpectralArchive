@@ -553,7 +553,7 @@ vector<double> CSpectrum::top2Intensity(bool rmParentIon, double left, double ri
 
 }
 
-
+// retrun peak with maximum intensity, skipping peaks related to precursor mz. 
 double CSpectrum::maxIntensity(bool rmParentIon, double left, double right) {
     double maxinten = 0;
     for(auto & i : m_PeakList)    {
@@ -1279,7 +1279,8 @@ SptxtParser::~SptxtParser() = default;
 /// todo: to be replaced by a new function
 vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, bool remove_precursor, long start_spec_id, long end_spec_id) {
     if (remove_precursor) {
-        cout << "[Info] peaks related to precursor will be removed: [mz - 17, mz + 3]" << endl;
+        // comment out for clean output.
+        // cout << "[Info] peaks related to precursor will be removed: [mz - 17, mz + 3]" << endl;
     }
     if(end_spec_id<start_spec_id )    {
         end_spec_id = getSpectrumNum();
