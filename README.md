@@ -1,13 +1,41 @@
 # Query for nearest neighbors against a spectral archive with Spectroscape
 
-## Install from binaries
+## Install with a deb file
 Users could install spectroscape from compiled binary files. This following command has been teted on Ubuntu 22.04. The .deb file of version v1.0.5 can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb). More newer version will be released on [this page](https://github.com/wulongict/SpectralArchive/releases). 
+
+To use the following deb package, users have to install libopenblas-dev first with the following command. 
+```bash
+sudo apt-get install libopenblas-dev
+```
+
+The CUDA enviroment is also required. If not, users could try use CPU-only version, which can be downloaded from $URL 
+# URL to be added, Jan 26. 2022
 
 ```bash 
 # the following wget command downloads the v1.0.5 version. Change the url to get a newer version.
 wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb
 sudo dpkg -i Spectroscape-1.0.5-Linux.deb
 ```
+
+User may encounter the following error: 
+```bash
+spectroscape: error while loading shared libraries: libopenblas.so.0: cannot open shared object file: No such file or directory
+```
+
+Try the following command to get the missing package.
+
+```bash
+sudo apt-get install libopenblas-dev
+```
+
+User may also encounter the following error:
+```bash
+spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
+```
+
+This means that there is no CUDA available on this computer, we can only use CPU. 
+
+# Jan 26, 2022, try to install  in binary, fail, try to fix it with two different binary package. 
 
 ## Compile from source code
 
