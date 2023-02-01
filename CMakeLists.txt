@@ -41,8 +41,10 @@ if (${ENABLE_TESTS})
 	enable_testing()
 endif()
 
+if (${WITH_GPU})
+        CHECK_LANGUAGE(CUDA)
+endif()
 
-CHECK_LANGUAGE(CUDA)
 if(CMAKE_CUDA_COMPILER)
 	enable_language(CUDA)
 	option(ENABLE_GPU "Enable GPU based indexes, if CUDA exist" ON)
