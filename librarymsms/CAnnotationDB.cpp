@@ -929,8 +929,9 @@ void CAnnotationDB::fixAllChargeState() {
 
 }
 
+// exact search, instead of searching for pattern.
 shared_ptr<CDBEntry> CAnnotationDB::searchPeptide(const string &peptide) {
-    string sql = "select * from GROUNDTRUTH where PEPTIDE like \"%" + toSqlSafe(peptide) + "%\" limit 100;";
+    string sql = "select * from GROUNDTRUTH where PEPTIDE = \"" + toSqlSafe(peptide) + "\" limit 10;";
     cout << "[Info] searching database with sql: " << sql << endl;
 
     shared_ptr<CDBEntry> dbentry = make_shared<CDBEntry>();
