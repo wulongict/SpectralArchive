@@ -72,9 +72,21 @@ From the source code folder, run the following scripts.
 ```bash
 # to have a clean start
 ./cleanMake.bash
-# compile spectral archive tool.
-./compile.bash
+
 ```
+
+Users can compile a GPU version or CPU version using option TRUE or FALSE. 
+
+```bash
+# compile spectral archive tool, compile GPU version with 
+./compile.bash TRUE
+```
+
+```bash
+# compile spectral archive tool, compile CPU version with 
+./compile.bash FALSE
+```
+
 
 ## Usage
 ### Build archive
