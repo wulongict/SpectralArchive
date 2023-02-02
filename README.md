@@ -8,8 +8,7 @@ To use the following deb package, users have to install libopenblas-dev first wi
 sudo apt-get install libopenblas-dev
 ```
 
-The CUDA enviroment is also required. If not, users could try use CPU-only version, which can be downloaded from $URL 
-# URL to be added, Jan 26. 2022
+The CUDA enviroment is also required. If not, users could try use CPU-only version, which can be downloaded from release v1.0.6
 
 ```bash 
 # the following wget command downloads the v1.0.5 version. Change the url to get a newer version.
