@@ -408,7 +408,7 @@ void CFastCGIServer::getRemark(string &uristr) {
     if (param.size() > 2) {
         int queryindex = atoi(param[2].c_str());
         if(queryindex<0){
-            // using magic number here
+            // using magic number here, if user does not provide a valid queryindex.
             queryindex = 16189;
         }
         string remarks;

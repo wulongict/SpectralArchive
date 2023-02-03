@@ -528,16 +528,30 @@ bool CSpectrum::isLocalMaximum(int i, double halfWidthTol) {
     return j == i;
 }
 
+// ignore TMT reporter ions. [125-136]
+// ignore immonium ions.
 vector<double> CSpectrum::top2Intensity(bool rmParentIon, double left, double right) {
     vector<double> top2Intensity{0,0};
 //    if(m_PeakList.size() == 0){
 //        top2Intensity[0] = m_PeakList[0]->m_inten;
 //    }
+    // ignore TMT range also.
+    bool ignoreTmtReporterIons = true;
+    // The reporter ions masses of TMT8plex and TMT10plex are 
+    // TMT8plex:    126.127725, 127.124760, 128.134436, 129.131471, 130.141147, 131.138182, 132.147858, 133.144893. 
+    // TMT10plex:   126.127725, 127.124760, 128.134436, 129.131471, 130.141147, 131.138182, 132.147858, 133.144893, 134.154569, 135.151604.
+    bool ignoreImmoniumIons = true;
     for(int i = 0; i < m_PeakList.size(); i ++){
         auto &pk = m_PeakList[i];
         if(rmParentIon and
            (m_parentMz+left<pk->m_mass and pk->m_mass < m_parentMz + right
            or m_parentMz*2+left<pk->m_mass and pk->m_mass < m_parentMz*2 + right))        {
+            continue;
+        }
+        else if(ignoreTmtReporterIons and pk->m_mass<136 and pk->m_mass>125){
+            continue;
+        }
+        else if(ignoreImmoniumIons and pk->m_mass<160){
             continue;
         }
         if(pk->m_inten > top2Intensity[0]){
@@ -554,14 +568,29 @@ vector<double> CSpectrum::top2Intensity(bool rmParentIon, double left, double ri
 }
 
 // retrun peak with maximum intensity, skipping peaks related to precursor mz. 
+// ignore TMT reporter ions. [125-136]
+// ignore immoniumIons
 double CSpectrum::maxIntensity(bool rmParentIon, double left, double right) {
+    // ignore TMT range also.
+    bool ignoreTmtReporterIons = true;
+    // The reporter ions masses of TMT8plex and TMT10plex are 
+    // TMT8plex:    126.127725, 127.124760, 128.134436, 129.131471, 130.141147, 131.138182, 132.147858, 133.144893. 
+    // TMT10plex:   126.127725, 127.124760, 128.134436, 129.131471, 130.141147, 131.138182, 132.147858, 133.144893, 134.154569, 135.151604.
     double maxinten = 0;
+    bool ignoreImmoniumIons = true;
     for(auto & i : m_PeakList)    {
         if(rmParentIon and
         (m_parentMz+left<i->m_mass and i->m_mass < m_parentMz + right
         or m_parentMz*2+left<i->m_mass and i->m_mass < m_parentMz*2 + right))        {
             continue;
-        } else if(maxinten< i->m_inten) {
+        } 
+        else if(ignoreTmtReporterIons and i->m_mass<136 and i->m_mass>125){
+            continue;
+        }
+        else if(ignoreImmoniumIons and i->m_mass<160){
+            continue;
+        }
+        else if(maxinten< i->m_inten) {
             maxinten = i->m_inten;
         }
     }
@@ -569,6 +598,9 @@ double CSpectrum::maxIntensity(bool rmParentIon, double left, double right) {
 }
 
 // There are many preprocessing steps.
+// removing precursor related peaks. removing TMT reporter ions
+// removing low intensity peaks. 
+// removing isotopic peaks.  
 void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool removeLowIntensePeaks, bool rmParentIon,
                             bool rmIsotopicPeaks, double localMaxTolWidth) {
 
@@ -577,6 +609,7 @@ void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool 
     intensity.assign(peaknum, 0);
     int k = 0;
     double left = -17, right = 3;
+    // slightly changed the logic here to use the intensity of second most intense peak. 
     double inten_threshold = 0.02 * maxIntensity(rmParentIon, left, right);
     vector<double> top2Inten = top2Intensity(rmParentIon, left, right);
 //    cout << "threshold from " << 0.02 * top2Inten[0] << " to " << 0.02*top2Inten[1] << endl;
@@ -589,6 +622,8 @@ void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool 
     const double MAX_PEAK_MZ = 2000.0;
     vector<string> whyRemoved(peaknum,"PASS");
     bool verbose = false;
+    bool ignoreTmtReporterIons = true;
+    bool ignoreImmoniumIons = true;
     for(int i = 0; i < peaknum; i ++)    {
         if(removeLowIntensePeaks and m_PeakList[i]->m_inten < inten_threshold)    {
             if(verbose) whyRemoved[i] = to_string("less than threshold: "," ", inten_threshold);
@@ -601,6 +636,14 @@ void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool 
         else if (rmParentIon and m_parentMz*2-proton_mass+left<m_PeakList[i]->m_mass and m_PeakList[i]->m_mass < m_parentMz*2-proton_mass + right) {
             // assuming it is a charge state 2 precursor, remove the corresponding ion.
             if(verbose) whyRemoved[i] = "is near precursor mz*2";
+            continue;
+        }
+        else if(ignoreTmtReporterIons and m_PeakList[i]->m_mass>125 and m_PeakList[i]->m_mass<136){
+            if(verbose) whyRemoved[i] = "TMT reporter ions";
+            continue;
+        }
+        else if(ignoreImmoniumIons and m_PeakList[i]->m_mass<160){
+            if(verbose) whyRemoved[i] = "Potential immonium ions";
             continue;
         }
         else if(rmIsotopicPeaks and isIsotopicPeak[i] > 0.9){
