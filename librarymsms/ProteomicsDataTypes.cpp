@@ -638,11 +638,11 @@ void CSpectrum::getAllPeaks(vector<double> &mz, vector<double> &intensity, bool 
             if(verbose) whyRemoved[i] = "is near precursor mz*2";
             continue;
         }
-        else if(ignoreTmtReporterIons and m_PeakList[i]->m_mass>125 and m_PeakList[i]->m_mass<136){
+        else if(ignoreTmtReporterIons and m_PeakList[i]->m_mass > 125 and m_PeakList[i]->m_mass < 136){
             if(verbose) whyRemoved[i] = "TMT reporter ions";
             continue;
         }
-        else if(ignoreImmoniumIons and m_PeakList[i]->m_mass<160){
+        else if(ignoreImmoniumIons and m_PeakList[i]->m_mass < 160){
             if(verbose) whyRemoved[i] = "Potential immonium ions";
             continue;
         }

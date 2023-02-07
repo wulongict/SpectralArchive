@@ -1114,8 +1114,9 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
                 continue;
             }
             batchSql->append(update_sql);
-        }cout << "[Info] Annotating PSMs in " << rawfilename ;
-        cout << ", annotation updated: " << sfinfo.end - sfinfo.start - nan_counts << " / " << sfinfo.end - sfinfo.start << " ~ "
+        }
+        cout << "[Info] " << rawfilename ;
+        cout << ", PSM annotation updated: " << sfinfo.end - sfinfo.start - nan_counts << " / " << sfinfo.end - sfinfo.start << " ~ "
              << setprecision(4) << 100 - nan_counts * 100.0 / (sfinfo.end - sfinfo.start) << "%" << endl;
     }
 
