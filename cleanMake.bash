@@ -1,7 +1,17 @@
-releasePath=$(pwd)
-echo $releasePath
-cd ${releasePath}/cmake-build-release/
-cmake --build ../cmake-build-release  --target clean
+# clean cpu version
+currentPath=$(pwd)
+echo $currentPath
+releasePath=cmake-build-release-cpu
+cd ${currentPath}/$releasePath/
+cmake --build ../$releasePath  --target clean
 # rm CMakeCache.txt
 rm -rf ../build 
-rm -rf ../cmake-build-release/*
+rm -rf ../$releasePath/*
+
+# clean gpu version
+releasePath=cmake-build-release-gpu
+cd ${currentPath}/$releasePath/
+cmake --build ../$releasePath  --target clean
+# rm CMakeCache.txt
+rm -rf ../build 
+rm -rf ../$releasePath/*
