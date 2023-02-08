@@ -76,3 +76,5 @@ include_directories(External/spdlog-1.x/include)
 set(CMAKE_CXX_FLAGS " -Wreturn-type ${CMAKE_CXX_FLAGS} -std=c++11  ")
 
 
+enable_testing()
+add_test(NAME mytest COMMAND msmstest )

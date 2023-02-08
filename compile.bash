@@ -45,6 +45,9 @@ cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=${currentPath}/build ..
 cmake  --build ../${releasePath}   --target  boost  -- -j 30
 cmake  --build ../${releasePath}  --target spectroscape -- -j 30
 
+# run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
+ctest 
+
 cmake --install .
 
 make package -j `nproc`
