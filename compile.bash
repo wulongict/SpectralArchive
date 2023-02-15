@@ -45,7 +45,7 @@ cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=${currentPath}/build ..
 
 
 cmake  --build ../${releasePath}   --target  boost  -- -j `nproc`
-cmake  --build ../${releasePath}  --target spectroscape -- -j `nproc`
+cmake  --build ../${releasePath}  --target spectroscape msmstest -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
 ctest 
