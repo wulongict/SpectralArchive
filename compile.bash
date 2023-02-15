@@ -38,7 +38,7 @@ cd ${currentPath}/${releasePath}/
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
 # -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg
 #--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=${currentPath}/build ..
+cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=/usr/local/spectroscape  ..
 #/usr/local/spectralarchive ..
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..
