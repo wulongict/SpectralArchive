@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+
+
 if (( $# < 1 )); then
     echo "compile CPU version"
     with_GPU=FALSE
@@ -48,7 +50,7 @@ cmake  --build ../${releasePath}  --target spectroscape -- -j 30
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
 ctest 
 
-cmake --install .
+cmake --install . --prefix ${currentPath}/build 
 
 make package -j `nproc`
 make package_source  -j `nproc`
