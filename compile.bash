@@ -38,20 +38,24 @@ cd ${currentPath}/${releasePath}/
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
 # -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg
 #--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=/usr/local/spectroscape  ..
+cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=${currentPath}/build ..
 #/usr/local/spectralarchive ..
 # cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
 # cmake ..
 
 
-cmake  --build ../${releasePath}   --target  boost  -- -j 30
-cmake  --build ../${releasePath}  --target spectroscape -- -j 30
+cmake  --build ../${releasePath}   --target  boost  -- -j `nproc`
+cmake  --build ../${releasePath}  --target spectroscape -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
 ctest 
 
 cmake --install . --prefix ${currentPath}/build 
 
-make package -j `nproc`
-make package_source  -j `nproc`
+
+cpack --config CPackConfig.cmake
+cpack --config CPackSourceConfig.cmake
+
+# make package -j `nproc`
+# make package_source  -j `nproc`
 cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi
