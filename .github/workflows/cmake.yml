@@ -24,7 +24,6 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        rm ${{github.workspace}}/External/boost1.65.1/tmp/boost_1_65_1.tar.gz
         sudo apt-get install libopenblas-dev 
         mkdir -p ${{github.workspace}}/cmake-build-release-cpu 
         cd ${{github.workspace}}/cmake-build-release-cpu 
@@ -35,6 +34,7 @@ jobs:
       run: |
         cd ${{github.workspace}}/cmake-build-release-cpu 
         cmake --build ${{github.workspace}}/cmake-build-release-cpu --target boost 
+        sha1sum ${{github.workspace}}/External/boost1.65.1/tmp/boost_1_65_1.tar.gz
         cmake --build ${{github.workspace}}/cmake-build-release-cpu --target spectroscape 
 
     - name: Test
