@@ -40,7 +40,7 @@ cd ${currentPath}/${releasePath}/
 #--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
 cmake -DWITH_GPU=${with_GPU}  -DCMAKE_INSTALL_PREFIX=${currentPath}/build ..
 #/usr/local/spectralarchive ..
-# cmake -DCMAKE_INSTALL_PREFIX=/usr/local/spectralarchive --graphviz=foo.dot ..
+# cmake  --graphviz=foo.dot ..
 # cmake ..
 
 
