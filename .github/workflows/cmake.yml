@@ -26,8 +26,9 @@ jobs:
       run: |
         sudo apt-get install libopenblas-dev 
         mkdir -p ${{github.workspace}}/cmake-build-release-cpu 
+        mkdir -p ${{github.workspace}}/build  
         cd ${{github.workspace}}/cmake-build-release-cpu 
-        cmake ..
+        cmake -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/build  ..
 
     - name: Build
       # Build your program with the given configuration
