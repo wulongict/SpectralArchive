@@ -37,7 +37,7 @@ spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot op
 
 This means that there is no CUDA available on this computer, we can only use CPU. 
 
-# Jan 26, 2022, try to install  in binary, fail, try to fix it with two different binary package. 
+
 
 ## Compile from source code
 
@@ -45,15 +45,16 @@ Using the following command to compile the code.
 
 ### Prerequisites
 
-To compile the source code, you need to have cmake, gcc installed. 
+To compile from source code, you need to have cmake, gcc installed. 
 ```bash
+sudo apt update
 sudo apt install cmake build-essential 
 ```
 
 The source code requires two extra libraries, fcgi and lapack. 
 
 ```bash
-sudo apt install libfcgi-dev liblapack-dev
+sudo apt install libfcgi-dev liblapack-dev 
 ```
 
 To make the web service work, two more tools should be installed, spawn-fcgi and nginx. 
