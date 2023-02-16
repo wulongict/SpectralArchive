@@ -35,7 +35,6 @@ jobs:
       run: |
         cd ${{github.workspace}}/cmake-build-release-cpu 
         cmake --build ${{github.workspace}}/cmake-build-release-cpu --target boost -- -j 10 
-        sha1sum ${{github.workspace}}/External/boost1.65.1/tmp/boost_1_65_1.tar.gz
         cmake --build ${{github.workspace}}/cmake-build-release-cpu --target spectroscape msmstest -- -j 10
 
     - name: Test
