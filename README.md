@@ -1,12 +1,14 @@
 # Query for nearest neighbors against a spectral archive with Spectroscape
 
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/cmake.yml/badge.svg)
-## Install with a deb file
-Users could install spectroscape from compiled binary files. This following command has been teted on Ubuntu 22.04. The .deb file of version v1.0.5 can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb). More newer version will be released on [this page](https://github.com/wulongict/SpectralArchive/releases). 
 
-To use the following deb package, users have to install libopenblas-dev first with the following command. 
+## Binary installation 
+This following command has been teted on Ubuntu 22.04. The .deb file of version v1.0.7 can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). Note that there are CPU and GPU version available. If you do not have CUDA environment, please try to use CPU version.  
+
+Before installation of the deb package, users have to install its dependencies using following commands.  
 ```bash
-sudo apt-get install libopenblas-dev
+sudo apt update
+sudo apt install libopenblas-dev libfcgi-dev sqlite
 ```
 
 The CUDA enviroment is also required. If not, users could try use CPU-only version, which can be downloaded from release v1.0.6
