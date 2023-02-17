@@ -54,7 +54,7 @@ cmake --install . --prefix ${currentPath}/build
 
 
 cpack --config CPackConfig.cmake
-cpack --config CPackSourceConfig.cmake
+cpack -D "CPACK_PACKAGING_INSTALL_PREFIX=" --config CPackSourceConfig.cmake
 
 # make package -j `nproc`
 # make package_source  -j `nproc`

@@ -82,7 +82,8 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/package")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/.vscode" ".idea" "./SpectralArchiveWeb")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/faiss-1.7.1/faiss_tmp*")
 
-list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release/.*")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-cpu/.*")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-gpu/.*")
 
 include(CPack)
 
