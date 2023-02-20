@@ -12,10 +12,13 @@ sudo apt update
 sudo apt install ./Spectroscape_CPU-1.0.8-Linux.deb
 ```
 
-The CUDA enviroment is also required. If not, users could try use CPU-only version as shown above.
+The CUDA enviroment is required to install the [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb). Otheriwise, users may see error information as follows. 
 
+```bash
+spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
+```
 
-## Compile from source code
+## Source code installation
 
 Using the following command to compile the code. 
 
@@ -41,15 +44,14 @@ sudo apt install spawn-fcgi nginx
 
 ### Compile
 
-First you can run the following command to get the source code from GitHub. 
+First, run the following command to get the latest source code from GitHub. 
 
 ```bash
  git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git
 ```
 
-From the source code folder, run the following scripts. 
+From the source code folder, run the following scripts to have a clean start. 
 ```bash
-# to have a clean start
 ./cleanMake.bash
 
 ```
@@ -57,12 +59,12 @@ From the source code folder, run the following scripts.
 Users can compile a GPU version or CPU version using option TRUE or FALSE. 
 
 ```bash
-# compile spectral archive tool, compile GPU version with 
+# GPU version 
 ./compile.bash TRUE
 ```
 
 ```bash
-# compile spectral archive tool, compile CPU version with 
+# CPU version
 ./compile.bash FALSE
 ```
 
