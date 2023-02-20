@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.20)
 project(mytool LANGUAGES CXX)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11 -fpermissive -fopenmp  -fPIC -Wreturn-type  -Werror=return-type ")
+
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+# set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+if(APPLE)
+  set(CMAKE_INSTALL_RPATH "@loader_path/../lib;@loader_path")
+elseif(UNIX)
+  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/")
+endif()
+# set(CMAKE_INSTALL_RPATH "../lib")
 
 add_subdirectory(External/boost1.65.1)
 ExternalProject_Get_Property(boost install_dir )
@@ -73,7 +81,9 @@ add_subdirectory(ArchiveSearch)
 include_directories(External)
 include_directories(External/spdlog-1.x/include)
 
-set(CMAKE_CXX_FLAGS " -Wreturn-type ${CMAKE_CXX_FLAGS} -std=c++11  ")
+
+
+# set(CMAKE_CXX_FLAGS " -Wreturn-type ${CMAKE_CXX_FLAGS} -std=c++11  ")
 
 
 enable_testing()

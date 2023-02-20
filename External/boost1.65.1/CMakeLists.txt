@@ -29,7 +29,7 @@ ExternalProject_Add( boost
         -j 30
 #        echo done
         INSTALL_COMMAND ""
-        INSTALL_DIR ${boost_INSTALL}
+        # INSTALL_DIR ${boost_INSTALL}
         )
 
 

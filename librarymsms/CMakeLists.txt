@@ -40,6 +40,8 @@ target_include_directories(msms INTERFACE ../External/spdlog-1.x/include ../Exte
 # target_link_libraries(msms z sqlite3 )
 set_target_properties(msms PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(msms INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_options(msms PRIVATE -static-libgcc -static-libstdc++)
+# target_link_libraries(msms -static )
 
 
 

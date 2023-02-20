@@ -7,36 +7,12 @@ This following command has been teted on Ubuntu 22.04. The .deb file of version 
 
 Before installation of the deb package, users have to install its dependencies using following commands.  
 ```bash
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_CPU-1.0.8-Linux.deb
 sudo apt update
-sudo apt install libopenblas-dev libfcgi-dev sqlite
+sudo apt install ./Spectroscape_CPU-1.0.8-Linux.deb
 ```
 
-The CUDA enviroment is also required. If not, users could try use CPU-only version, which can be downloaded from release v1.0.6
-
-```bash 
-# the following wget command downloads the v1.0.5 version. Change the url to get a newer version.
-wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.5/Spectroscape-1.0.5-Linux.deb
-sudo dpkg -i Spectroscape-1.0.5-Linux.deb
-```
-
-User may encounter the following error: 
-```bash
-spectroscape: error while loading shared libraries: libopenblas.so.0: cannot open shared object file: No such file or directory
-```
-
-Try the following command to get the missing package.
-
-```bash
-sudo apt-get install libopenblas-dev
-```
-
-User may also encounter the following error:
-```bash
-spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
-```
-
-This means that there is no CUDA available on this computer, we can only use CPU. 
-
+The CUDA enviroment is also required. If not, users could try use CPU-only version as shown above.
 
 
 ## Compile from source code

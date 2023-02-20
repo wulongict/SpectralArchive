@@ -9,7 +9,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
 link_directories(${CMAKE_BINARY_DIR}/Release)
 
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+# set(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
 
 # code can be moved to other places: might rely libraries in dependentlibs
 add_subdirectory(dependentlibs)
@@ -56,10 +56,12 @@ add_dependencies(spectroscape boost ${DPGPU})
 #target_link_libraries(LibraryRetrieval specarchive)
 
 install(TARGETS spectroscape DESTINATION bin )
-install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
+# install(TARGETS    linear  DESTINATION lib OPTIONAL)
+# install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
 set(CPACK_PACKAGE_VERSION_MAJOR 1)
 set(CPACK_PACKAGE_VERSION_MINOR 0)
 set(CPACK_PACKAGE_VERSION_PATCH 8)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopenblas-dev,libfcgi-dev,libgomp1,sqlite")
 set(CPACK_PACKAGE_NAME Spectroscape_CPU)
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
 if(${WITH_GPU})
