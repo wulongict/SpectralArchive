@@ -12,10 +12,25 @@ sudo apt update
 sudo apt install ./Spectroscape_CPU-1.0.8-Linux.deb
 ```
 
-The [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb) can be installed similarly. However, users should first make sure CUDA enviroment avaiable.  . Otheriwise, users may see error information as follows. 
+The [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb) can be installed similarly. 
+
+
+```bash
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb
+sudo apt update
+sudo apt install ./Spectroscape_GPU-1.0.8-Linux.deb
+```
+
+However, users should first make sure CUDA enviroment avaiable.  . Otheriwise, users may see error information as follows. 
 
 ```bash
 spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
+```
+
+## Uninstallation
+use the following command line to remove spectroscape (both GPU and CPU versions) from Ubuntu system. 
+```bash
+sudo apt remove spectroscape_cpu spectroscape_gpu
 ```
 
 ## Source code installation
@@ -49,13 +64,14 @@ First, get the latest source code of spectroscape from GitHub.
  git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git
 ```
 
-From the source code folder, run the following scripts to have a clean start. 
+Start from here, all the command should be excuted under the source code folder, namely, SpectralArchive. 
+
+Run the following scripts to remove any intermediant files generated from previous failed compilation and have a clean start. 
 ```bash
 ./cleanMake.bash
-
 ```
 
-Users can compile a CPU or GPU version using option TRUE or FALSE. 
+Users can compile a CPU or GPU version using option FALSE or TRUE. 
 
 ```bash
 # CPU version
@@ -67,6 +83,14 @@ Users can compile a CPU or GPU version using option TRUE or FALSE.
 ./compile.bash TRUE
 ```
 
+After the compilation, the excutable files are under the build/bin folder inside the source code directory. 
+```bash
+build/
+├── bin
+├── include
+├── lib
+└── share
+```
 
 ## Usage
 ### Build archive
@@ -102,7 +126,7 @@ Adult_Adrenalgland_Gel_Elite_49_f24.mzXML
 ```
 Then run the following command to build a spectral archive
 ```bash
-SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist
+SpectralArchive/build/bin/spectroscape  -m mzxmllist
 ```
 #### Add search results
 The spectral archive should be properly annotated. Currently, it supports the following input format.
