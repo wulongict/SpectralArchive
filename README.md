@@ -1,18 +1,18 @@
-# Query for nearest neighbors against a spectral archive with Spectroscape
+# Spectroscape: searching for similar PSMs in spectral archives
 
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/cmake.yml/badge.svg)
 
 ## Binary installation 
-This following command has been teted on Ubuntu 22.04. The .deb file of version v1.0.7 can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). Note that there are CPU and GPU version available. If you do not have CUDA environment, please try to use CPU version.  
+This following command has been teted on Ubuntu 22.04. The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). Spectroscape comes with CPU and GPU versions. If CUDA environment is not available, please use CPU version.  
 
-Before installation of the deb package, users have to install its dependencies using following commands.  
+Spectroscape (CPU version) can be installed on Ubuntu 22.04 using following command lines. 
 ```bash
 wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_CPU-1.0.8-Linux.deb
 sudo apt update
 sudo apt install ./Spectroscape_CPU-1.0.8-Linux.deb
 ```
 
-The CUDA enviroment is required to install the [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb). Otheriwise, users may see error information as follows. 
+The [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_GPU-1.0.8-Linux.deb) can be installed similarly. However, users should first make sure CUDA enviroment avaiable.  . Otheriwise, users may see error information as follows. 
 
 ```bash
 spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
@@ -20,31 +20,30 @@ spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot op
 
 ## Source code installation
 
-Using the following command to compile the code. 
-
 ### Prerequisites
 
-To compile from source code, you need to have cmake, gcc installed. 
+CMake and gcc are reqired to compilation of C++ code.  
 ```bash
 sudo apt update
 sudo apt install cmake build-essential 
 ```
 
-The source code requires two extra libraries, fcgi and lapack. 
+The source code requires two extra libraries, libfcgi and liblapack. 
 
 ```bash
 sudo apt install libfcgi-dev liblapack-dev 
 ```
 
-To make the web service work, two more tools should be installed, spawn-fcgi and nginx. 
+To make the web interface work, two more tools should be installed, spawn-fcgi and nginx. 
 ```bash
 sudo apt install spawn-fcgi nginx
 ```
 
+Finally, to compile GPU version, CUDA environment is required. 
 
 ### Compile
 
-First, run the following command to get the latest source code from GitHub. 
+First, get the latest source code of spectroscape from GitHub. 
 
 ```bash
  git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git
@@ -56,16 +55,16 @@ From the source code folder, run the following scripts to have a clean start.
 
 ```
 
-Users can compile a GPU version or CPU version using option TRUE or FALSE. 
-
-```bash
-# GPU version 
-./compile.bash TRUE
-```
+Users can compile a CPU or GPU version using option TRUE or FALSE. 
 
 ```bash
 # CPU version
 ./compile.bash FALSE
+```
+
+```bash
+# GPU version 
+./compile.bash TRUE
 ```
 
 
