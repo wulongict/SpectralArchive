@@ -229,158 +229,183 @@ void displayTitle() {
 
 
 int main(int argc, char *argv[]) {
-    try {
+    try
+    {
         SimpleTimer st(false);
-        initlog("spectral_clustering.log", "A");
+        spdlog::details::os::create_dir("log");
+        initlog("log/spectroscape.log", "A");
         spdlog::set_level(spdlog::level::debug);
         displayTitle();
-        spdlog::get("A")->info("CMD: {}", argToStr(argc, argv));
+        try
+        {
 
-        auto vm = getParam(argc, argv);
-        string indexfilename = vm.at("indexfile").as<string>();
-        string mzXMLList = vm.at("mzxmlfiles").as<string>();
-        string archivename = vm.at("archivename").as<string>();
-        string pepxmls = vm.at("pepxmls").as<string>();
-        bool rebuild = vm.at("rebuild").as<bool>();
-        bool verbose = vm.at("verbose").as<bool>();
-        bool use_gpu = vm.at("use_gpu").as<bool>();
-        string indexFactoryStr = vm.at("indexstring").as<string>();
-        string inputsource = vm.at("inputsource").as<string>();
-        int topn = vm.at("topn").as<int>();
-        int popDataFileNum = vm.at("popDataFileNum").as<int>();
-        int shrinkto = vm.at("shrinkto").as<int>();
+            spdlog::get("A")->info("CMD: {}", argToStr(argc, argv));
 
-        int numPvalueCalculator = vm.at("numPvalueCalculator").as<int>();
-        bool saveBackgroundScore = vm.at("saveBackgroundScore").as<bool>();
-        bool plotHistogram = vm.at("plotHistogram").as<bool>();
-        int bgspecseed = vm.at("bgspecseed").as<int>();
-        int numprobe = vm.at("numprobe").as<int>();
-        bool update_index = vm.at("update").as<bool>();
-        string new_experimental_data = vm.at("updaterawdata").as<string>();
-        string new_experimental_datalist = vm.at("updaterawdatalist").as<string>();
-        string new_search_result = vm.at("updategt").as<string>();
-        string new_search_result_list = vm.at("updategtlist").as<string>();
-        string datafile = vm.at("datafile").as<string>();
-        string searchfile = vm.at("validation").as<string>();
-        bool newImp = vm.at("newimp").as<bool>();
-        bool tophit = vm.at("tophit").as<bool>();
-        bool search_range = vm.at("search_in_range_of_archive").as<bool>();
-        bool saveAnns = vm.at("saveAnns").as<bool>();
-        long first = vm.at("first").as<long>();
-        long last = vm.at("last").as<long>();
+            auto vm = getParam(argc, argv);
+            string indexfilename = vm.at("indexfile").as<string>();
+            string mzXMLList = vm.at("mzxmlfiles").as<string>();
+            string archivename = vm.at("archivename").as<string>();
+            string pepxmls = vm.at("pepxmls").as<string>();
+            bool rebuild = vm.at("rebuild").as<bool>();
+            bool verbose = vm.at("verbose").as<bool>();
+            bool use_gpu = vm.at("use_gpu").as<bool>();
+            string indexFactoryStr = vm.at("indexstring").as<string>();
+            string inputsource = vm.at("inputsource").as<string>();
+            int topn = vm.at("topn").as<int>();
+            int popDataFileNum = vm.at("popDataFileNum").as<int>();
+            int shrinkto = vm.at("shrinkto").as<int>();
 
-        int port_listening = vm["port"].as<int>();
-        int max_connection_allowed = vm["maxconnection"].as<int>();
+            int numPvalueCalculator = vm.at("numPvalueCalculator").as<int>();
+            bool saveBackgroundScore = vm.at("saveBackgroundScore").as<bool>();
+            bool plotHistogram = vm.at("plotHistogram").as<bool>();
+            int bgspecseed = vm.at("bgspecseed").as<int>();
+            int numprobe = vm.at("numprobe").as<int>();
+            bool update_index = vm.at("update").as<bool>();
+            string new_experimental_data = vm.at("updaterawdata").as<string>();
+            string new_experimental_datalist = vm.at("updaterawdatalist").as<string>();
+            string new_search_result = vm.at("updategt").as<string>();
+            string new_search_result_list = vm.at("updategtlist").as<string>();
+            string datafile = vm.at("datafile").as<string>();
+            string searchfile = vm.at("validation").as<string>();
+            bool newImp = vm.at("newimp").as<bool>();
+            bool tophit = vm.at("tophit").as<bool>();
+            bool search_range = vm.at("search_in_range_of_archive").as<bool>();
+            bool saveAnns = vm.at("saveAnns").as<bool>();
+            long first = vm.at("first").as<long>();
+            long last = vm.at("last").as<long>();
 
-        bool removeprecursor = vm["removeprecursor"].as<bool>();
-        bool useflankingbins = vm["useflankingbins"].as<bool>();
+            int port_listening = vm["port"].as<int>();
+            int max_connection_allowed = vm["maxconnection"].as<int>();
 
-        bool debug_cpu_gpu = vm["debug_cpu_gpu"].as<bool>();
-        bool skipBackgroundScoreCalc=vm["skipBackgroundScoreCalc"].as<bool>();
-        int initcenoption = vm.at("centroidinit").as<int>();
-        string indexstrs = vm.at("indexstrs").as<string>();
-        string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
-        int tolerance = vm["tolerance"].as<int>();
-        int minPeakNum = vm["minPeakNum"].as<int>();
-        int searchBatchSize = vm["searchBatchSize"].as<int>();
-        bool recallTrueNeighbor = vm["recall_true_neighbor"].as<bool>();
-        int recallTNNtopK = vm["recallTrueNeighborTopK"].as<int>();
-        int minPeakNumInSpec = vm["recallTrueNeighborMinPeakNumInQuery"].as<int>();
-        double recallTNNMinDP = vm["recallTrueNeighborMinDP"].as<double>();
-        double minDpOfNeighborRecordedInSqlDB = vm["minDpOfNeighborRecordedInSqlDB"].as<double>();
-        bool createFileNameBlackList = vm["createFileNameBlackList"].as<bool>();
+            bool removeprecursor = vm["removeprecursor"].as<bool>();
+            bool useflankingbins = vm["useflankingbins"].as<bool>();
 
+            bool debug_cpu_gpu = vm["debug_cpu_gpu"].as<bool>();
+            bool skipBackgroundScoreCalc = vm["skipBackgroundScoreCalc"].as<bool>();
+            int initcenoption = vm.at("centroidinit").as<int>();
+            string indexstrs = vm.at("indexstrs").as<string>();
+            string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
+            int tolerance = vm["tolerance"].as<int>();
+            int minPeakNum = vm["minPeakNum"].as<int>();
+            int searchBatchSize = vm["searchBatchSize"].as<int>();
+            bool recallTrueNeighbor = vm["recall_true_neighbor"].as<bool>();
+            int recallTNNtopK = vm["recallTrueNeighborTopK"].as<int>();
+            int minPeakNumInSpec = vm["recallTrueNeighborMinPeakNumInQuery"].as<int>();
+            double recallTNNMinDP = vm["recallTrueNeighborMinDP"].as<double>();
+            double minDpOfNeighborRecordedInSqlDB = vm["minDpOfNeighborRecordedInSqlDB"].as<double>();
+            bool createFileNameBlackList = vm["createFileNameBlackList"].as<bool>();
 
-        CPQParam option;
-        option._option = static_cast<CPQParam::PQ_OPTIONS>(initcenoption);
-        const int topPeakNum = 50;
+            CPQParam option;
+            option._option = static_cast<CPQParam::PQ_OPTIONS>(initcenoption);
+            const int topPeakNum = 50;
 
-        // pass seeds in.
-        CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
-                                 minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
-                                 createFileNameBlackList, saveBackgroundScore, verbose, archivename, indexshuffleseeds);
-        archive.setRecallTNN(recallTrueNeighbor, recallTNNtopK, recallTNNMinDP, minPeakNumInSpec); // the parameter is set here. 
-        // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
-        archive.setnProbe(numprobe);
-        int removeFileNumToShrink = archive.getNumOfFilesToRemoveForShrinkingArchiveTo(shrinkto);
+            // pass seeds in.
+            CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
+                                     minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
+                                     createFileNameBlackList, saveBackgroundScore, verbose, archivename, indexshuffleseeds);
+            archive.setRecallTNN(recallTrueNeighbor, recallTNNtopK, recallTNNMinDP, minPeakNumInSpec); // the parameter is set here.
+            // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
+            archive.setnProbe(numprobe);
+            int removeFileNumToShrink = archive.getNumOfFilesToRemoveForShrinkingArchiveTo(shrinkto);
 
-        popDataFileNum = popDataFileNum > removeFileNumToShrink ? popDataFileNum: removeFileNumToShrink;
-        if (popDataFileNum > 0 ){
-            // remove data get top priority. after remove, program will exit.
-            // remove information of the last file
-            archive.remove(popDataFileNum);
-        }
-        else if (update_index) {
-            archive.update(new_experimental_data, new_search_result, new_search_result_list, new_experimental_datalist);
-            spdlog::get("A")->info("Index updated!");
-        }
-        else  {
-            if (inputsource == "socket") {
-                //nginx
-                spdlog::get("A")->info("Starting index server via socket.. ");
-                shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
-                CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn,0, socketSummary);
-                fastcgiserver.startFastCGIServer();
-
+            popDataFileNum = popDataFileNum > removeFileNumToShrink ? popDataFileNum : removeFileNumToShrink;
+            if (popDataFileNum > 0)
+            {
+                // remove data get top priority. after remove, program will exit.
+                // remove information of the last file
+                archive.remove(popDataFileNum);
             }
-            else if (inputsource == "msocket") {
-                //nginx
-                spdlog::get("A")->info("Starting index server via socket.. ");
-                vector<shared_ptr<CFastCGIServer>> multiServer;
-                int threadNum = 10;
-
-                shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
-                for(int i = 0; i < threadNum; i ++){
-                    multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i,socketSummary));
-                }
-                // create threads
-                vector<thread> threads;
-
-                for(int i = 0; i < threadNum; i ++){
-                    threads.push_back(std::thread(std::bind(&CFastCGIServer::startFastCGIServer, multiServer[i])));
-                }
-
-                for(int i = 0; i < threadNum; i ++){
-                    threads[i].join();
-                }
-
+            else if (update_index)
+            {
+                archive.update(new_experimental_data, new_search_result, new_search_result_list, new_experimental_datalist);
+                spdlog::get("A")->info("Index updated!");
             }
-            else {
-                // all the other cases goes here,
-                if (search_range){
-                    archive.searchNeighborsWithin(minDpOfNeighborRecordedInSqlDB, first, last, searchBatchSize);
+            else
+            {
+                if (inputsource == "socket")
+                {
+                    // nginx
+                    spdlog::get("A")->info("Starting index server via socket.. ");
+                    shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
+                    CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn, 0, socketSummary);
+                    fastcgiserver.startFastCGIServer();
                 }
-                else if (datafile.empty()) {
+                else if (inputsource == "msocket")
+                {
+                    // nginx
+                    spdlog::get("A")->info("Starting index server via socket.. ");
+                    vector<shared_ptr<CFastCGIServer>> multiServer;
+                    int threadNum = 10;
 
-                    cout << "datafile should not be empty" << endl;
-                    throw runtime_error("--datafile should not be empty!");
+                    shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
+                    for (int i = 0; i < threadNum; i++)
+                    {
+                        multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i, socketSummary));
+                    }
+                    // create threads
+                    vector<thread> threads;
+
+                    for (int i = 0; i < threadNum; i++)
+                    {
+                        threads.push_back(std::thread(std::bind(&CFastCGIServer::startFastCGIServer, multiServer[i])));
+                    }
+
+                    for (int i = 0; i < threadNum; i++)
+                    {
+                        threads[i].join();
+                    }
                 }
-                else {
+                else
+                {
+                    // all the other cases goes here,
+                    if (search_range)
+                    {
+                        archive.searchNeighborsWithin(minDpOfNeighborRecordedInSqlDB, first, last, searchBatchSize);
+                    }
+                    else if (datafile.empty())
+                    {
 
-                    double mzTol = 2 * tolerance * 2000.0 / 65535;
-                    CMzFileReader mzfile(datafile, false, false, removeprecursor, mzTol, minPeakNum, verbose);
-                    mzfile.init(false, false, removeprecursor); // added back.
+                        cout << "datafile should not be empty" << endl;
+                        throw runtime_error("--datafile should not be empty!");
+                    }
+                    else
+                    {
 
-                    archive.searchMzFileInBatch(mzfile, first, last, searchfile, topn, numPvalueCalculator,
-                                                recallTrueNeighbor,
-                                                searchBatchSize, bgspecseed, recallTNNtopK, recallTNNMinDP,
-                                                skipBackgroundScoreCalc, useflankingbins, tophit, plotHistogram);
+                        double mzTol = 2 * tolerance * 2000.0 / 65535;
+                        CMzFileReader mzfile(datafile, false, false, removeprecursor, mzTol, minPeakNum, verbose);
+                        mzfile.init(false, false, removeprecursor); // added back.
+
+                        archive.searchMzFileInBatch(mzfile, first, last, searchfile, topn, numPvalueCalculator,
+                                                    recallTrueNeighbor,
+                                                    searchBatchSize, bgspecseed, recallTNNtopK, recallTNNMinDP,
+                                                    skipBackgroundScoreCalc, useflankingbins, tophit, plotHistogram);
+                    }
                 }
             }
+            ostringstream oss;
+            CTimeSummary::getInstance()->print(oss, archive.getNumOfQueriesSearched());
+
+            spdlog::get("A")->info("Time report:\n{}\n", oss.str());
+            double timeused = st.secondsElapsed();
+            spdlog::get("A")->info("Spectroscape task is finished. \nThe spectra number in archive is {}.\nTotal time elapsed: {:.4f} seconds", archive.size(), timeused);
+
+            return 0;
         }
-        ostringstream oss;
-        CTimeSummary::getInstance()->print(oss, archive.getNumOfQueriesSearched());
+        catch (const exception &ex)
+        {
 
-        spdlog::get("A")->info("Time report:\n{}\n", oss.str());
-        double timeused = st.secondsElapsed();
-        spdlog::get("A")->info("Spectroscape task is finished. \nThe spectra number in archive is {}.\nTotal time elapsed: {:.4f} seconds", archive.size(), timeused);
+            spdlog::get("A")->info("program exit with error: {}", ex.what());
 
-        return 0;
+            return -1;
+        }
     }
-    catch (const exception &ex) {
-
-        spdlog::get("A")->info("program exit with error: {}", ex.what());
+    catch (const exception &ex)
+    {
+        std::cout << "Error: " << ex.what() << endl;
         return -1;
     }
-
+    catch (...)
+    {
+        std::cout << "Error: program exit with unknown error " << endl;
+    }
 }

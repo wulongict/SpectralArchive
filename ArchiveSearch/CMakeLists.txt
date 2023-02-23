@@ -58,15 +58,18 @@ add_dependencies(spectroscape boost ${DPGPU})
 install(TARGETS spectroscape DESTINATION bin )
 # install(TARGETS    linear  DESTINATION lib OPTIONAL)
 # install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
-set(CPACK_PACKAGE_VERSION_MAJOR 1)
-set(CPACK_PACKAGE_VERSION_MINOR 0)
-set(CPACK_PACKAGE_VERSION_PATCH 8)
+
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopenblas-dev,libfcgi-dev,libgomp1,sqlite")
 set(CPACK_PACKAGE_NAME Spectroscape_CPU)
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
 if(${WITH_GPU})
 	set(CPACK_PACKAGE_NAME Spectroscape_GPU)
 endif()
+
+# The name of the package file to generate, not including the extension. For example, cmake-2.6.1-Linux-i686. The default value is:
+# ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
+set(CPACK_PACKAGE_VERSION 1.0.8)
+set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER Long WU)
 set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR}/package)

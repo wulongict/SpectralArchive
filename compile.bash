@@ -60,4 +60,4 @@ cpack -D "CPACK_PACKAGING_INSTALL_PREFIX=" --config CPackSourceConfig.cmake
 
 # make package -j `nproc`
 # make package_source  -j `nproc`
-cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi
+# cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi
