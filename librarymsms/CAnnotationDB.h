@@ -175,6 +175,7 @@ public:
 
     void insertTnnInfo(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe, string date, vector<long> &tnnidx, vector<double> &tnndp);
 
+    // retrieve TNNs from archive, return true if found, otherwise, false
     bool getTNN(long queryindex, int topk, double mindp, int indexnum, long archivesize, int nprobe, vector<long> &tnnidx, vector<double> &tnndp);
 
     void add(specfileinfo &sfinfo);

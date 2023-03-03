@@ -976,7 +976,8 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
             }
 
 
-        }else{
+        }
+        else{
             cout << "skipping calculation" << endl;
         }
 
@@ -1094,6 +1095,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                 continue;
             }
             vector<long> collectIdx;
+            // approximate scores.
             vector<double> collectScores;
             m_indices->collectANNs(indexChoice, ret_num, results,results_dist,  j, collectIdx, collectScores,  verbose);
             long queryIndex = query.getQueryIndex(j);
@@ -1109,7 +1111,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
             int numOfTNN = topKTrueNN[j].size();
             int numberOfTNNsFound = 0;
 //            long queryindex = query.getQueryIndex(j);
-            vector<double> x, y;
+            vector<double> approx_scores, acc_normalied_dp;
             for (int k = 0; k < topKTrueNN[j].size(); k++) {
                 int idx = -1;
 
@@ -1125,20 +1127,20 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                 }
 
                 if(isfound){
-                    x.push_back(collectScores[idx]); // approximate score.
+                    approx_scores.push_back(collectScores[idx]); // approximate score.
 
                     float querynorm = m_csa->getSquaredNorm(queryIndex);
                     float neighbornorm = m_csa->getSquaredNorm(collectIdx[idx]);
                     float normalized_dp = 0;
                     if(querynorm>1e-8 and neighbornorm>1e-8){
                         // previously ,we use MAX_SCORE to normalize
-                        // y.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
+                        // acc_normalied_dp.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
                         normalized_dp = topKTrueNNScore[j][k]/sqrt(querynorm * neighbornorm);
                         if (normalized_dp>1.0){
                             normalized_dp = 1.0;
                         }
                     }
-                    y.push_back(normalized_dp);
+                    acc_normalied_dp.push_back(normalized_dp);
                     tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "true",collectIdx[idx] , collectScores[idx],topKTrueNNScore[j][k],  numberOfTNNsFound*1.0/(k+1), "\n");
                 }else{
                     tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "false", idx, "nan", topKTrueNNScore[j][k], numberOfTNNsFound*1.0/(k+1), "\n");
@@ -1159,7 +1161,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                         .set_filename(to_string(m_mzXMLListFileName, "_", queryIndex, "scatter_ann_dist_tnn_dp.png" ));
 //                    .set_terminaltype("dumb");
 
-                CVisual::gnuplot_curve_topng(x,y," points pt 7 ",info);
+                CVisual::gnuplot_curve_topng(approx_scores, acc_normalied_dp, " points pt 7 ", info);
             }
 
 
@@ -1174,12 +1176,12 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
             agtsummary.writeToLogFile(tmp);
             cout << tmp << flush;
             tmp="#---------------------\n";
-            for(int k=0; k < x.size(); k ++){
-                if(y[k]>1.0){
-                    cout << "Error: " << k << "\t" << y[k] << endl;
+            for(int k=0; k < approx_scores.size(); k ++){
+                if(acc_normalied_dp[k] > 1.0){
+                    cout << "Error: " << k << "\t" << acc_normalied_dp[k] << endl;
                 }
-                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp",  x[k], y[k],"nprobe", agtsummary.m_nprobe,
-                                "indexNum", m_indices->getNumOfindexInUse(),"mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
+                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp", approx_scores[k], acc_normalied_dp[k], "nprobe", agtsummary.m_nprobe,
+                                "indexNum", m_indices->getNumOfindexInUse(), "mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
             }
             agtsummary.writeToLogFile(tmp);
 

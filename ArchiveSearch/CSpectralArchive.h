@@ -297,6 +297,7 @@ private:
     void exportResponse(int query_index, vector<CAnnSpectra*> &annSpecList, string &jsonstring, vector<int> *ptrDPs, SLinearRegressionModel *ptrLRModel);
     void filterWithMinPeakNum(bool verbose, vector<long> &retIdx) ;
     void getAccurateTopNeighbor(ICQuery &query, vector<long> &topIdx, bool isLowMassAcc);
+    // get top k true nearest neighbor, exhaustive search.
     void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx, vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
                                  int dp_UInt);
     int getDim();
