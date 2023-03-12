@@ -490,6 +490,9 @@ float ICMzFile::getSquaredNorm(uint16_t *p) {
     return norm;
 }
 
+// calculate norm of rank transformed spectrum,
+// a regular spectra will be 50^2+...+1^2
+// if the peak number is less than 50. norm will be smaller.
 float ICMzFile::getSquaredNorm(const uint16_t *p, const int PEAKNUM_PER_SEPC)  {
     float norm = 0;
     for (int i = 0; i < PEAKNUM_PER_SEPC; i++) {

@@ -346,6 +346,8 @@ void CMzFileReader::initPeakNum(bool verbose) {
     }
 }
 
+// Note: the squared norm is a integer, but stored in float.
+// wasting bytes
 float CMzFileReader::getSquaredNorm(long queryindex) {
     if(m_norm2_ptr==nullptr)   {
 //        cout << "First call--- initializing..." << endl;

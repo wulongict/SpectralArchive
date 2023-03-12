@@ -51,6 +51,11 @@ endif()
 
 if (${WITH_GPU})
         CHECK_LANGUAGE(CUDA)
+		if (CMAKE_CUDA_COMPILER)
+			message("CUDA Available.")
+		else()
+			message(FATAL_ERROR "CUDA not available. ")
+		endif ()
 endif()
 
 if(CMAKE_CUDA_COMPILER)

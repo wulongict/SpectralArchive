@@ -928,9 +928,10 @@ struct IdxScore {
 
 };
 
-void
-CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx, vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
-                                          int dp_UInt) {
+// default min_dp_score_int: 30047, corresponding to 0.7 dot product.
+void CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx,
+                                               vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
+                                               int min_dp_score_int) {
     // get True Nearest Neighbors from the spectral archive.
     int MAX_SCORE = 42925;
     if (m_csa->getSpecNum() == 0) {
@@ -941,6 +942,10 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
 //        cout << topKTnnIdx.size() << endl;
 //        cout << topKTnnIdx[i].size() << endl;
         if(topKTnnIdx[i].empty()) {
+            // if the topKTnnIndex of i-th query is empty,
+            // calculate distance against the entire archive and find the most similar one.
+            // above a threshold,  min_int_score_int.
+            // by default, it is equvilent to 0.7 cosine score.
             if(query.getMzSpec(i).getPeakNum()<agtsummary.m_minPeakNumInSpec) continue;
             vector<long> idx(m_csa->getSpecNum(), 0);
             vector<int> score(m_csa->getSpecNum(), 0);
@@ -958,12 +963,12 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
 
             // filter score first.
             for (long k = 0; k < idx.size(); k++) {
-                if (score[k] > dp_UInt) {
+                if (score[k] > min_dp_score_int) {
                     res.emplace_back(idx[k], score[k]);
                 }
             }
-            cout << endl << "number of candidates with dp score (normalized: " << normalized_dp<<") larger than " << dp_UInt << ": " << res.size() << endl;
-            string tmp = to_string("candidates dp > ", " ", dp_UInt, res.size(), "\n");
+            cout << endl << "number of candidates with dp score (normalized: " << normalized_dp << ") larger than " << min_dp_score_int << ": " << res.size() << endl;
+            string tmp = to_string("candidates dp > ", " ", min_dp_score_int, res.size(), "\n");
             agtsummary.writeToLogFile(tmp);
             CTimeSummary::getInstance()->startTimer("tnnValidation-sorting-score-gt-mindp");
             stable_sort(res.begin(), res.end(), [](const IdxScore &x, const IdxScore &y) { return x.Score > y.Score; });
@@ -974,14 +979,12 @@ CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &
                 topKTnnIdx[i].push_back(res[k].idx);
                 topKTnnScore[i].push_back(res[k].Score);
             }
-
-
         }
         else{
             cout << "skipping calculation" << endl;
         }
 
-        // some output
+        // some output to log file
         cout << endl << "QueryID\tRank\tIdx\tScore\tDP" << endl;
         string tmp = "QueryID\tRank\tIdx\tScore\tDP\n";
         agtsummary.writeToLogFile(tmp);
@@ -1044,12 +1047,12 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 
     int ret_num = 1024;
     int indexChoice = -1;
-    vector<vector<long>> results;  // only idx
-    vector<vector<double>> results_dist;  // distance.
+    vector<vector<long>> ann_idx_of_queries;  // only idx
+    vector<vector<double>> ann_dist_of_queries;  // distance.
     int querySize = query.size();
 
     CTimeSummary::getInstance()->startTimer("queryANN");
-    m_indices->getAnns(query, ret_num, results,results_dist, indexNum);
+    m_indices->getAnns(query, ret_num, ann_idx_of_queries, ann_dist_of_queries, indexNum);
     CTimeSummary::getInstance()->pauseTimer("queryANN");
 
 
@@ -1067,7 +1070,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
         int minDpScoreInt = mindp * MAX_SCORE; // this seems bad.
         int topK = agtsummary.m_recallTNNtopK;
         bool isLowMassAcc = false;
-        // now try to insert the results.
+        // now try to insert the ann_idx_of_queries.
         CTimeSummary::getInstance()->startTimer("tnnValidation-db-query");
         string timeNow = getTimeStemp();
         for(int i =0; i < query.size(); i ++){
@@ -1086,7 +1089,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
         CTimeSummary::getInstance()->pauseTimer("tnnValidation-db-insert");
 
 
-        if (topKTrueNN.size() == results.size()) {// WHY!!!
+        if (topKTrueNN.size() == ann_idx_of_queries.size()) {// WHY!!!
             if(verbose) cout << "[OK] same size for top k true neighbors, and top k approx neighbors " << endl;
         }
 
@@ -1094,59 +1097,59 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
             if(query.getMzSpec(j).getPeakNum()<agtsummary.m_minPeakNumInSpec){
                 continue;
             }
-            vector<long> collectIdx;
+            vector<long> ann_idx;
             // approximate scores.
-            vector<double> collectScores;
-            m_indices->collectANNs(indexChoice, ret_num, results,results_dist,  j, collectIdx, collectScores,  verbose);
+            vector<double> ann_dist;
+            m_indices->collectANNs(indexChoice, ret_num, ann_idx_of_queries, ann_dist_of_queries, j, ann_idx, ann_dist, verbose);
             long queryIndex = query.getQueryIndex(j);
             string tmp = "rank\tTruthID\tFound\tReportID\tAnnScore\tTNNScore\tRecall@rank\tquery\t" + to_string(queryIndex) + "\n";
 //            cout << tmp;
             map<long, int> zIdx2Pos;
+
             // mapping id to its last occurence 
             // therefore we got list of unique keys. id.
-            for (int k = 0; k < collectIdx.size(); k++) {
-                zIdx2Pos[collectIdx[k]] = k;
+            for (int k = 0; k < ann_idx.size(); k++) {
+                zIdx2Pos[ann_idx[k]] = k;
             }
             // stats
             int numOfTNN = topKTrueNN[j].size();
             int numberOfTNNsFound = 0;
 //            long queryindex = query.getQueryIndex(j);
-            vector<double> approx_scores, acc_normalied_dp;
+            vector<double> approx_dist_to_tnn, normalied_dp_to_tnn;
+            vector<long> idx_of_tnn;
             for (int k = 0; k < topKTrueNN[j].size(); k++) {
                 int idx = -1;
 
-                bool isfound = false;
-                if (zIdx2Pos.count(topKTrueNN[j][k]) == 0){
-                    // k-th TNN not found.
-                    isfound = false;
-                }else{
+                bool isTopKTNNfound = false;
+                if (zIdx2Pos.find(topKTrueNN[j][k]) != zIdx2Pos.end()){
                     // k-th TNN found.
                     idx = zIdx2Pos[topKTrueNN[j][k]];
-                    isfound = true;
+                    isTopKTNNfound = true;
                     numberOfTNNsFound += 1;
                 }
 
-                if(isfound){
-                    approx_scores.push_back(collectScores[idx]); // approximate score.
+                if(isTopKTNNfound){
+                    approx_dist_to_tnn.push_back(ann_dist[idx]); // approximate score.
 
                     float querynorm = m_csa->getSquaredNorm(queryIndex);
-                    float neighbornorm = m_csa->getSquaredNorm(collectIdx[idx]);
+                    float neighbornorm = m_csa->getSquaredNorm(ann_idx[idx]);
                     float normalized_dp = 0;
                     if(querynorm>1e-8 and neighbornorm>1e-8){
                         // previously ,we use MAX_SCORE to normalize
-                        // acc_normalied_dp.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
+                        // normalied_dp_to_tnn.push_back(topKTrueNNScore[j][k]/MAX_SCORE);
                         normalized_dp = topKTrueNNScore[j][k]/sqrt(querynorm * neighbornorm);
                         if (normalized_dp>1.0){
                             normalized_dp = 1.0;
                         }
                     }
-                    acc_normalied_dp.push_back(normalized_dp);
-                    tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "true",collectIdx[idx] , collectScores[idx],topKTrueNNScore[j][k],  numberOfTNNsFound*1.0/(k+1), "\n");
+                    normalied_dp_to_tnn.push_back(normalized_dp);
+                    idx_of_tnn.push_back(topKTrueNN[j][k]);
+                    tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "true", ann_idx[idx] , ann_dist[idx], topKTrueNNScore[j][k], numberOfTNNsFound * 1.0 / (k + 1), "\n");
                 }else{
                     tmp = to_string(tmp, "\t", k, topKTrueNN[j][k], "false", idx, "nan", topKTrueNNScore[j][k], numberOfTNNsFound*1.0/(k+1), "\n");
                 }
 
-                agtsummary.increase(isfound, queryIndex);
+                agtsummary.increase(isTopKTNNfound, queryIndex);
             }
             bool plot_ann_tnn_scatterplot=false;
             if(plot_ann_tnn_scatterplot){
@@ -1161,13 +1164,11 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
                         .set_filename(to_string(m_mzXMLListFileName, "_", queryIndex, "scatter_ann_dist_tnn_dp.png" ));
 //                    .set_terminaltype("dumb");
 
-                CVisual::gnuplot_curve_topng(approx_scores, acc_normalied_dp, " points pt 7 ", info);
+                CVisual::gnuplot_curve_topng(approx_dist_to_tnn, normalied_dp_to_tnn, " points pt 7 ", info);
             }
-
 
             cout << tmp;
             agtsummary.writeToLogFile(tmp);
-
 
             tmp = to_string("","\t","QueryIndex",queryIndex, 
             "#TNN", numOfTNN, "#TNNFound",  numberOfTNNsFound, 
@@ -1176,13 +1177,18 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
             agtsummary.writeToLogFile(tmp);
             cout << tmp << flush;
             tmp="#---------------------\n";
-            for(int k=0; k < approx_scores.size(); k ++){
-                if(acc_normalied_dp[k] > 1.0){
-                    cout << "Error: " << k << "\t" << acc_normalied_dp[k] << endl;
+            for(int k=0; k < approx_dist_to_tnn.size(); k ++){
+                if(normalied_dp_to_tnn[k] > 1.0){
+                    cout << "Error: " << k << "\t" << normalied_dp_to_tnn[k] << endl;
                 }
-                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp", approx_scores[k], acc_normalied_dp[k], "nprobe", agtsummary.m_nprobe,
-                                "indexNum", m_indices->getNumOfindexInUse(), "mindp", agtsummary.m_recallTNNminDP, "topK", agtsummary.m_recallTNNtopK, "\n");
+                tmp = to_string(tmp, "\t", "ANN-TNN-dist-dp", approx_dist_to_tnn[k], normalied_dp_to_tnn[k], "nprobe",
+                                agtsummary.m_nprobe,
+                                "indexNum", m_indices->getNumOfindexInUse(), "mindp", agtsummary.m_recallTNNminDP,
+                                "topK", agtsummary.m_recallTNNtopK, "query", queryIndex, "TNN-IDX", idx_of_tnn[k],
+                                "\n");
             }
+            // inside the log file, I will found the lines above. contains the pair of scan and
+            // dot product.
             agtsummary.writeToLogFile(tmp);
 
         }
@@ -1195,7 +1201,7 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
     vector<double> tmp;
 
     for (int i = 0; i < querySize; i++) {
-        m_indices->collectANNs(indexChoice, ret_num, results, results_dist, i, allRetIdx[i], tmp, verbose);
+        m_indices->collectANNs(indexChoice, ret_num, ann_idx_of_queries, ann_dist_of_queries, i, allRetIdx[i], tmp, verbose);
         filterWithMinPeakNum(verbose, allRetIdx[i]);
         m_AnnotationDB->filterwithblacklist(verbose, allRetIdx[i]);
     }
@@ -1215,7 +1221,8 @@ void CSpectralArchive::searchICQuery(ICQuery &query, int tolerance, bool verbose
 // calculate real distances.
 // keep top N neighbors
 void
-CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes, int indexNum) {
+CSpectralArchive::searchICQuery(int topN, ICQuery &query, int tolerance, bool verbose, CArxivSearchResult &archiveRes,
+                                int indexNum) {
     agtsummary.m_num_queries_searched += query.size();
     searchICQuery(query, tolerance, verbose, archiveRes,indexNum);
     CTimeSummary::getInstance()->startTimer("keepTopN");

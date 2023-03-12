@@ -299,7 +299,7 @@ private:
     void getAccurateTopNeighbor(ICQuery &query, vector<long> &topIdx, bool isLowMassAcc);
     // get top k true nearest neighbor, exhaustive search.
     void getkTrueNearestNeighbor(ICQuery &query, vector<vector<long>> &topKTnnIdx, vector<vector<double>> &topKTnnScore, bool isLowMassAcc, int topK,
-                                 int dp_UInt);
+                                 int min_dp_score_int);
     int getDim();
     void getScorerFactoryPtr();
     void massdiff(ICQuery &q, CArxivSearchResult &annRes);
