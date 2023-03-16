@@ -66,7 +66,7 @@ First, get the latest source code of spectroscape from GitHub.
 
 Start from here, all the command should be excuted under the source code folder, namely, SpectralArchive. 
 
-Run the following scripts to remove any intermediant files generated from previous failed compilation and have a clean start. 
+Run the following scripts to remove any intermediate files generated from previous failed compilation and have a clean start. 
 ```bash
 ./cleanMake.bash
 ```
@@ -139,7 +139,7 @@ SpectralArchive/build/bin/spectroscape  -m mzxmllist --update --updategt interac
 ```
 
 ### Add new MS data file
-The spectral archive can be expanded to include more and more MS data file. Run the following command to add a new mzXML file.
+The spectral archive can be expanded to include more MS data file. Run the following command to add a new mzXML file.
 ```bash
 SpectralArchive/build/bin/spectroscape  -m mzxmllist --update --updaterawdata <input>.mzXML
 ```

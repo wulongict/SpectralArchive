@@ -4,23 +4,9 @@ project(msbasicproj)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wreturn-type  -fPIC -fpermissive -Werror=return-type ")
 
 set(SOURCE_FILES
-#        BasePSMFeature.cpp
         CDebugMode.cpp
-#        CFragScore.cpp
-#        classifier.cpp
         commonfun.cpp
-#        ConcretePSMFeatures.cpp
-#        CPeakPair.cpp
-#        CPeakPairsImporter.cpp
-#        FragmentationScore.cpp
-#        gnuplot_functions.cpp
-#        liblinearWrapper.cpp
-#        MGFReader.cpp
-#        PeakInfo.cpp
-#        PeakPairScore.cpp
-#        peak_annotation.cpp
-#        PSMScoreCalculator.cpp
-#        CFlow.cpp
+
         )
 
 add_library(msbasic_obj OBJECT ${SOURCE_FILES})
