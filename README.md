@@ -21,9 +21,11 @@ sudo apt update
 sudo apt install ./Spectroscape_GPU-1.0.8-Linux.deb
 ```
 
-However, users should first make sure CUDA enviroment avaiable.  . Otheriwise, users may see error information as follows. 
+However, users should first make sure CUDA enviroment avaiable. Otheriwise, the following error occurs when running spectroscape. 
 
 ```bash
+spectroscape
+
 spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
 ```
 
