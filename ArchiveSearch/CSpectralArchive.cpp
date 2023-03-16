@@ -1603,6 +1603,7 @@ string CSpectralArchive::getPlatform() {
     return m_usegpu ? "GPU" : "CPU";
 }
 
+// record the file that has been used for annotation.
 void CSpectralArchive::addpepxmlfile(string pepxmllist, string new_gt_file) {
     if (not File::isExist(pepxmllist,true)) {
 //        cout << "pepxmllist file not found: " << pepxmllist << endl;

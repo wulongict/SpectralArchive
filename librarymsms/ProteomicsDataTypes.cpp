@@ -1265,10 +1265,14 @@ void SptxtParser::load(string filename, vector<CSpectrum *> &spec, int start, in
 
 //            kvp.display();
             pSpec->setCollisionEnery(kvp.getvalue("HCD"));
-            pSpec->setProtein(kvp.getvalue("NISTProtein"));
+            // This is where we make incorrect choice. 
+            string proteinname = kvp.getvalue("Protein");
+            // we need to split it into two 1/sp|3abcd|ksdfkls 
+            proteinname = proteinname.substr(proteinname.find_first_of('/')+1);
+            // pSpec->setProtein(kvp.getvalue("NISTProtein"));
 //            cout << "parsing protein" << endl;
             if (pSpec->getProtein() == ""){
-                pSpec->setProtein(kvp.getvalue("Protein"));
+                pSpec->setProtein(proteinname);
             }
             string retentionTime_triplets =kvp.getvalue("RetentionTime");
             if(not retentionTime_triplets.empty()){
