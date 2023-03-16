@@ -135,13 +135,13 @@ The spectral archive should be properly annotated. Currently, it supports the fo
 
 Run the following command to update the annotation of spectra in the 24 mzXML used above. One can get the interact-Adult_Adrenalgland_Gel_Elite_49.ipro.pep.xml file from a Comet+xinteract database searching pipeline in TPP.
 ```
-SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist --update --updategt interact-Adult_Adrenalgland_Gel_Elite_49.ipro.pep.xml
+SpectralArchive/build/bin/spectroscape  -m mzxmllist --update --updategt interact-Adult_Adrenalgland_Gel_Elite_49.ipro.pep.xml
 ```
 
 ### Add new MS data file
 The spectral archive can be expanded to include more and more MS data file. Run the following command to add a new mzXML file.
 ```bash
-SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist --update --updaterawdata <input>.mzXML
+SpectralArchive/build/bin/spectroscape  -m mzxmllist --update --updaterawdata <input>.mzXML
 ```
 Currently, it supports the following input formats of MS data file.
 - mzXML
@@ -153,7 +153,7 @@ Currently, it supports the following input formats of MS data file.
 Run the following command to search a data file. Before searching against an archvie, make sure the spectra are annotated by search results under FDR control, e.g. annotated by pepXML files of iProphet/PeptidePropeht. 
 
 ```bash
-SpectralArchive/build/bin/fastcgi_similarity.fcgi  -m mzxmllist --inputsource cmd --datafile <input>.mzXML
+SpectralArchive/build/bin/spectroscape  -m mzxmllist --inputsource cmd --datafile <input>.mzXML
 ```
 
 
