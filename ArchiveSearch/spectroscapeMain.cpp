@@ -41,9 +41,10 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "The characters a-f should be integers. default equivalent to customized:0;1;2;3;4;5.")
 
              // option to launch the archive.
-            ("inputsource", po::value<string>()->default_value("cmd"),
-             "the source of query: 1. socket; 2. msocket; 3. cmd. The cmd will only search the given datafile, "
-             "while the socket and msocket will keep accepting queries from client side")
+            ("inputsource", po::value<string>()->default_value("create"),
+             "the source of query: 1. socket; 2. msocket; 3. cmd. 4. create.\n"
+             "The option `create` will only build a archive and exit; the option`cmd` will search the given datafile, "
+             "the option `socket` and `msocket` will keep accepting queries from client side")
             ("numprobe", po::value<int>()->default_value(8),
              "number of buckets to look into, the web API allows user to change this value in each query. default: 8 ")
             ("use_gpu,g", po::bool_switch()->default_value(false),
@@ -355,7 +356,7 @@ int main(int argc, char *argv[]) {
                         threads[i].join();
                     }
                 }
-                else
+                else if (inputsource == "cmd")
                 {
                     // all the other cases goes here,
                     if (search_range)
@@ -380,6 +381,9 @@ int main(int argc, char *argv[]) {
                                                     searchBatchSize, bgspecseed, recallTNNtopK, recallTNNMinDP,
                                                     skipBackgroundScoreCalc, useflankingbins, tophit, plotHistogram);
                     }
+                }else if (inputsource == "create"){
+                    // do nothing, just create archive and exit. 
+                    spdlog::get("A")->info("spectral archive created.");
                 }
             }
             ostringstream oss;
