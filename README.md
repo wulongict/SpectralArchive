@@ -3,9 +3,9 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/cmake.yml/badge.svg)
 
 ## Binary installation 
-This following command has been teted on Ubuntu 22.04. The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). Spectroscape comes with CPU and GPU versions. If CUDA environment is not available, please use CPU version.  
+This following command has been tested on Ubuntu 22.04 and 20.04.  The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). Spectroscape comes with CPU and GPU versions. If CUDA environment is not available, please use CPU version.  
 
-Spectroscape (CPU version) can be installed on Ubuntu 22.04 using following command lines. 
+Spectroscape (CPU version) can be installed using following command lines. 
 ```bash
 wget https://github.com/wulongict/SpectralArchive/releases/download/v1.0.8/Spectroscape_CPU-1.0.8-Linux.deb
 sudo apt update
@@ -36,7 +36,7 @@ sudo apt remove spectroscape_cpu spectroscape_gpu
 ## Source code installation
 
 ### Prerequisites
-
+This following command has been tested on Ubuntu 22.04. It does not compile on older versions because of the `cmake_minimum_required` parameter. 
 CMake and gcc are reqired to compilation of C++ code.  
 ```bash
 sudo apt update
