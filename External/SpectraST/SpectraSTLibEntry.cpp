@@ -373,10 +373,10 @@ void SpectraSTLibEntry::readFromBinaryFile(ifstream &libFin, bool forSearch) {
 
     } else {
 
-        if (m_fullName[1] != '.') {
-            g_log->error("GENERAL", "Corrupt .splib file from which to import entry.");
-            g_log->crash();
-        }
+        // if (m_fullName[1] != '.') {
+        //     g_log->error("GENERAL", "Corrupt .splib file from which to import entry.");
+        //     g_log->crash();
+        // }
 
         string fullNameMinusFrag(m_fullName);
         string::size_type spacePos = m_fullName.find(" (");

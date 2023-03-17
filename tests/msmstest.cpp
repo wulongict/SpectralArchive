@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../librarymsms/ProteomicsDataTypes.h"
+#include "../ArchiveSearch/dependentlibs/randomSpecParser.h"
 #include "gtest/gtest.h"
 using namespace std;
 
@@ -23,4 +24,12 @@ TEST(MSMS_TEST, PEAK_REMOVAL){
     
     ASSERT_EQ(mz.size(), 1);
     
+}
+
+TEST(SPTXT_PARSER, RANDOM_ACCESS){
+    string filename = "/data/wulong/data/iPRG/NIST_human_hcd_all_2020_TargetDecoy.sptxt";
+    vector<double> mz, intensity;
+    getPeakList(filename, 0,mz, intensity);
+    cout << "Done" << endl;
+
 }

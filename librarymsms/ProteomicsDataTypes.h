@@ -213,15 +213,8 @@ class ICFileParser {
 public:
     virtual ~ICFileParser();
 
-    // this function is so difficult to write.
-    // Shall we load everything to memory?
-    // Of course not!
-    // We do not have that much momery in any time.
-    // So, we should get a handle for that file or spectrum
-    // We could access the spectrum anytime very fast.
-    // We should maintain a cache to keep some of the spectra
-    // how about this! Each time we keep one file in memory?
-    // Great!
+    // Share we load everything to memory at once? Maybe not. 
+    // Next, we could only keep an handle to the file, and maintain a cache to access spectra.
     virtual void load(string filename, vector<CSpectrum *> &spec) =0;
     virtual void load(string filename, vector<CSpectrum *> &spec, int start, int end)=0;
 };

@@ -132,6 +132,7 @@ MSSpectrumType MSReader::getFileType(){
 
 
 bool MSReader::readMGFFile(const char* c, Spectrum& s){
+  cout << "Error: this funciton readMGFFile only retrieve the first scan" << endl; 
 
   char* tok;
   char str[1024];

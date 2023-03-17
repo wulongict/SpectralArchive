@@ -69,6 +69,14 @@ bool AnnotationDataFile::updateGtInfo(SPsmAnnotation &gtinfo) {
 
         if(ext=="sptxt"){
             gtinfo.protein = spec->getProtein();// update protein
+            if (string::npos == gtinfo.protein.find("DECOY")){
+                // not found DECOY label, it is a target protein.
+            }
+            else{
+                gtinfo.isDecoy = 1;
+                gtinfo.significance=0;
+
+            }
         }
 
         ret = true;
