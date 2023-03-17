@@ -33,3 +33,13 @@ TEST(SPTXT_PARSER, RANDOM_ACCESS){
     cout << "Done" << endl;
 
 }
+
+TEST(MGFPARSER, RANDOM_ACCESS){
+    string filename = "/data/wulong/data/iPRG/iPRG2012.mgf";
+    vector<double> mz, intensity;
+    getPeakList(filename, 2,mz, intensity);
+    cout << "peak number " << mz.size() << " " << intensity.size() << endl;
+    cout << mz[0] << "\t" << intensity[0] << endl;
+    cout << "Done" << endl;
+
+}
