@@ -237,7 +237,9 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     // load index, create if not exist.
     if(m_indices->isExist()){
         m_indices->loadIndices();
+        if (m_usegpu)m_indices->toGpu();
     }    else{
+        if (m_usegpu)m_indices->toGpu();
         m_indices->trainOnFileList(m_mzXMLListFileName);
     }
     m_indices->display();
@@ -248,11 +250,11 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
     // --------------------Now add some data files.
+    if (m_usegpu)m_indices->toGpu();
     this->update("","","",m_mzXMLListFileName);
 
 //    cout << "Index created" << endl;
     m_AnnotationDB->populateGtfilesTable(m_pepxmlFileName);  // GTFILES not used!
-    if (m_usegpu)m_indices->toGpu();
     // to start the service.
     getScorerFactoryPtr();
     int threadnum=1;
