@@ -7,7 +7,7 @@
 #include "spdlog/spdlog.h"
 
 #include <faiss/AutoTune.h>
-#include <faiss/gpu/GpuCloner.h>
+// #include <faiss/gpu/GpuCloner.h>
 #include "CFaissIndex.h"
 #include <faiss/index_io.h>
 #include "GpuResourceObj.h"
@@ -133,9 +133,11 @@ void CFaissIndexWrapper::toCPU() {
     // delete m_index;
     // m_index = m_tmp;
     if(not m_isCPU){
+        #ifdef __CUDA__
         cout << "[Info] Moving index from GPU to CPU" << endl;
         m_index = faiss::gpu::index_gpu_to_cpu(m_index);
         m_isCPU = true;
+        #endif
     }
 
 }
