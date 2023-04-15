@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 
 #include <faiss/AutoTune.h>
+#include <faiss/gpu/GpuCloner.h>
 #include "CFaissIndex.h"
 #include <faiss/index_io.h>
 #include "GpuResourceObj.h"
@@ -124,13 +125,19 @@ void CFaissIndexWrapper::setPtr(faiss::Index *newptr) {
     m_index = newptr;
 }
 
-void CFaissIndexWrapper::backup() {
-    m_tmp = m_index;
-}
+// void CFaissIndexWrapper::backup() {
+//     m_tmp = m_index;
+// }
 
 void CFaissIndexWrapper::toCPU() {
-    delete m_index;
-    m_index = m_tmp;
+    // delete m_index;
+    // m_index = m_tmp;
+    if(not m_isCPU){
+        cout << "[Info] Moving index from GPU to CPU" << endl;
+        m_index = faiss::gpu::index_gpu_to_cpu(m_index);
+        m_isCPU = true;
+    }
+
 }
 
 void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
@@ -139,13 +146,30 @@ void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
 }
 
 void CFaissIndexWrapper::toGPU() {
-#ifdef __CUDA__
-    cout << "[Info] Moving index from CPU to GPU" << endl;
-    backup();
-    GpuResourceObj *gpuRes = GpuResourceObj::getInstance();
-    setPtr(gpuRes->cpu_to_gpu(getPtr()));
-    m_isCPU = false;
-#endif
+    if (not m_isCPU){
+        // already using GPU. no change.
+    }
+    else{
+
+    #ifdef __CUDA__
+        cout << "[Info] Moving index from CPU to GPU" << endl;
+        int ngpus = faiss::gpu::getNumDevices();
+        printf("Number of GPUs: %d\n", ngpus);
+        std::vector<faiss::gpu::GpuResourcesProvider*> res;
+        std::vector<int> devs;
+        for (int i = 0; i < ngpus; i++)
+        {
+            res.push_back(new faiss::gpu::StandardGpuResources);
+            devs.push_back(i);
+        }
+        m_index = faiss::gpu::index_cpu_to_gpu_multiple(res,devs,m_index);
+        // backup();
+        // GpuResourceObj *gpuRes = GpuResourceObj::getInstance();
+        // setPtr(gpuRes->cpu_to_gpu(getPtr()));
+        
+        m_isCPU = false;
+    #endif
+    }
 }
 
 void CFaissIndexWrapper::train(int batchSize, float *vecBatch) {
@@ -166,7 +190,14 @@ void CFaissIndexWrapper::add(long newspecnum, float *vec) {
 void CFaissIndexWrapper::removeIds(vector<long> &idx) {
     faiss::IDSelectorRange sel(idx.front(), idx.back()+1);
     cout << "removing index of size " << idx.size() << endl;
+    bool usingGPU = not m_isCPU;
+    if(usingGPU){
+        toCPU();
+    }
     int n = m_index->remove_ids(sel);
+    if(usingGPU){
+        toGPU();
+    }
     cout << n << " vectors removed from index" << endl;
 
 }

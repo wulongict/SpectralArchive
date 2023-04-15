@@ -212,9 +212,17 @@ void MultipleIndicesImpl::readIndex(int i, string filename) {
 }
 
 void MultipleIndicesImpl::write() {
+    bool usingGPU = not  m_useCpu; 
+    if (usingGPU){
+        toCPU();
+    }
     cout << "Attention: writing to index in use may result in inconsistence between the indice in use and not in use" << endl;
     for (int i = 0; i < getNum(); i++) {
+        
         writeIndex(i);
+    }
+    if(usingGPU){
+        toGPU();
     }
 }
 

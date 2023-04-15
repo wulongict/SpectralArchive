@@ -11,7 +11,7 @@
 
 class CFaissIndexWrapper: public ICIndexWrapper {
     faiss::Index *m_index;
-    faiss::Index * m_tmp;
+    // faiss::Index * m_tmp;
     bool m_isCPU;
 public:
     CFaissIndexWrapper();
@@ -33,7 +33,7 @@ public:
     void train(int batchSize, float * vecBatch) override;
 private:
     void setPtr(faiss::Index *newptr);
-    void backup();
+    // void backup();
     faiss::Index * getPtr();
 };
 

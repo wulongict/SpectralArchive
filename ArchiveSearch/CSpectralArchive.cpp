@@ -237,9 +237,9 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     // load index, create if not exist.
     if(m_indices->isExist()){
         m_indices->loadIndices();
-        if (m_usegpu)m_indices->toGpu();
+        // if (m_usegpu)m_indices->toGpu();
     }    else{
-        if (m_usegpu)m_indices->toGpu();
+        // if (m_usegpu)m_indices->toGpu();
         m_indices->trainOnFileList(m_mzXMLListFileName);
     }
     m_indices->display();

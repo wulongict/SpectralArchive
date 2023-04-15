@@ -76,7 +76,8 @@ add_subdirectory(External/SpectraST)
 
 option(BUILD_TESTING "build testing for faiss library" OFF)
 
-add_subdirectory(External/faiss-1.7.1)
+# add_subdirectory(External/faiss-1.7.1)
+add_subdirectory(External/faiss-1.7.3)
 add_subdirectory(librarymsms)
 add_subdirectory(External/gtest-1.7.0)
 add_subdirectory(tests)
