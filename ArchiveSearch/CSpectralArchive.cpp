@@ -186,7 +186,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
                                    string indexstrings,
                                    bool usegpu, bool rebuildsqldb, int seedpvalue, const int topPeakNum,
                                    bool createfilenameBlackList, bool saveBackgroundScore, bool verbose,
-                                   string archivename, string indexshuffleseeds) : PeakNumPerSpec(
+                                   string archivename, string indexshuffleseeds, string gpuidx) : PeakNumPerSpec(
         topPeakNum) {
             m_savebackgroundscore = saveBackgroundScore;
     // checking the parameters.
@@ -250,7 +250,26 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
     // --------------------Now add some data files.
-    if (m_usegpu)m_indices->toGpu();
+    // vector<int> gpu_idx={1,2,3,4,5};
+
+    if (m_usegpu)
+    {
+        vector<string> gpu_idx_str;
+        split_string(gpuidx, gpu_idx_str, ';');
+        for(auto x: gpu_idx_str){
+            cout << "gpu idx str: " << x << endl;
+        }
+        vector<int> gpu_idx;
+        for (auto &s : gpu_idx_str)
+        {
+            gpu_idx.push_back(stoi(s));
+        }
+        for(auto x: gpu_idx){
+            cout << "gpu idx " << x << endl;
+        }
+        m_indices->toMultipleGPUs(gpu_idx);
+    }
+
     this->update("","","",m_mzXMLListFileName);
 
 //    cout << "Index created" << endl;
@@ -448,12 +467,24 @@ void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     } else {
         newFileAdded = true;
         DataFile df(mzXMLfile, 0, -1);
-        m_AnnotationDB->appendNewDataFile(df);
+        thread toDB([&](){
+m_AnnotationDB->appendNewDataFile(df);
         cout << "DB updated" << endl;
+        });
+        thread toMZ([&](){
         m_csa->append(df, m_removeprecursor, nullptr);
         cout << "DB MZ updated" << endl;
-        m_indices->append(df);
-        cout << "DB MZ INDEX updated" << endl;
+
+        });
+        thread toIndices([&](){
+            m_indices->append(df);
+                    cout << "DB MZ INDEX updated" << endl;
+        });
+
+        toDB.join();
+        toMZ.join();
+        toIndices.join();
+       
         // m_indices->write();  // as there is only one file, we could write here.
         // the mzXML file will not be updated.
         // appendFileName(mzXMLfile);

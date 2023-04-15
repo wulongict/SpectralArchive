@@ -162,11 +162,27 @@ void MultipleIndicesImpl::toGPU() {
     }
 }
 
+void MultipleIndicesImpl::toMultipleGPUs(vector<int> &gpu_idx) {
+    if (m_useCpu) {
+        for (int i = 0; i < getNum(); i++) {
+            toMultipleGPUs(i, gpu_idx);
+        }
+        m_useCpu = false;
+    }
+}
+
 void MultipleIndicesImpl::toGPU(int i) {
     if (m_useCpu) {
         getShuffledIndex(i)->toGPU();
     }
 }
+
+void MultipleIndicesImpl::toMultipleGPUs(int i, vector<int> &gpu_idx) {
+    if (m_useCpu) {
+        getShuffledIndex(i)->toMultipleGPUs(gpu_idx);
+    }
+}
+
 
 void MultipleIndicesImpl::toCPU() {
     if (not m_useCpu) {

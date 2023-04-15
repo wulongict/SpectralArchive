@@ -39,6 +39,9 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "the string for creating indices with shuffle seeds. if the value is not default,"
              " a customized seeds list can be: customized:a;b;c;d;e;f when there are six indexes. "
              "The characters a-f should be integers. default equivalent to customized:0;1;2;3;4;5.")
+             ("gpuidx", po::value<string>()->default_value(
+                     "0;1;2"),
+             "the list of gpu ids for use.")
 
              // option to launch the archive.
             ("inputsource", po::value<string>()->default_value("create"),
@@ -286,6 +289,7 @@ int main(int argc, char *argv[]) {
             int initcenoption = vm.at("centroidinit").as<int>();
             string indexstrs = vm.at("indexstrs").as<string>();
             string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
+            string gpuidx = vm.at("gpuidx").as<string>();
             int tolerance = vm["tolerance"].as<int>();
             int minPeakNum = vm["minPeakNum"].as<int>();
             int searchBatchSize = vm["searchBatchSize"].as<int>();
@@ -303,7 +307,7 @@ int main(int argc, char *argv[]) {
             // pass seeds in.
             CSpectralArchive archive(mzXMLList, pepxmls, indexfilename, removeprecursor, useflankingbins, tolerance,
                                      minPeakNum, newImp, option, indexstrs, use_gpu, rebuild, bgspecseed, topPeakNum,
-                                     createFileNameBlackList, saveBackgroundScore, verbose, archivename, indexshuffleseeds);
+                                     createFileNameBlackList, saveBackgroundScore, verbose, archivename, indexshuffleseeds, gpuidx);
             archive.setRecallTNN(recallTrueNeighbor, recallTNNtopK, recallTNNMinDP, minPeakNumInSpec); // the parameter is set here.
             // July 2 2019:  fixed a bug for GPU index, the setnprobe and toGPU are not interchangable. First to setnprobe();
             archive.setnProbe(numprobe);

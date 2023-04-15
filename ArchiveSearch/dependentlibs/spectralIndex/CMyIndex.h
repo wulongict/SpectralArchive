@@ -35,6 +35,7 @@ public:
     void createEmptyIndex(int dim, string indexstr) override;
     void train(int batchSize, float * vecBatch) override;
     void toGPU() override; // todo
+    void toMultipleGPUs(vector<int> &gpu_index);
     virtual void toCPU() override;
 };
 

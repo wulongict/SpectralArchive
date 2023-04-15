@@ -89,6 +89,7 @@ int CMyIndex::dim() { return cpq->getDim(); }
 
 void CMyIndex::toCPU() {}
 
+void CMyIndex::toMultipleGPUs(vector<int> &gpu_index){}
 void CMyIndex::toGPU() {}
 
 void CMyIndex::removeIds(vector<long> &idx) {

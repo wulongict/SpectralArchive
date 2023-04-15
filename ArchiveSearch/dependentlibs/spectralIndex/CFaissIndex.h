@@ -13,6 +13,7 @@ class CFaissIndexWrapper: public ICIndexWrapper {
     faiss::Index *m_index;
     // faiss::Index * m_tmp;
     bool m_isCPU;
+    vector<int> m_gpu_idx;
 public:
     CFaissIndexWrapper();
     void removeIds(vector<long> &idx) override;
@@ -30,6 +31,7 @@ public:
     void toCPU() override;
     void createEmptyIndex(int dim, string indexstr) override;
     void toGPU() override; // todo
+    void toMultipleGPUs(vector<int> &gpu_idx) override; // todo
     void train(int batchSize, float * vecBatch) override;
 private:
     void setPtr(faiss::Index *newptr);

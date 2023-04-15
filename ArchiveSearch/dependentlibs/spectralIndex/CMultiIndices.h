@@ -63,6 +63,7 @@ public:
 	void train(long specnum, int dim,float *vec);
 	void createEmptyIndices(vector<string> &indexstrs, int dim);
 	void toGPU();
+	void toMultipleGPUs(vector<int> &gpu_idx);
 	void toCPU();
 	void initialize(int numIndex, string indexpath, string basename, bool useMyOwn, shared_ptr<CPQParam> option, string indexshuffleseeds);
 
@@ -90,6 +91,7 @@ private:
 	void display(int i);
 	void createEmptyIndex(int i, string indexstr, int dim);
 	void toGPU(int i);
+	void toMultipleGPUs(int i, vector<int> &gpu_idx);
 	void shufflevector(int seed, float * p, int dim);
 };
 
@@ -133,6 +135,9 @@ public:
     void append(DataFile &df);
 	void setNprobe(int nprobe, bool verbose);
     void toGpu();
+	void toMultipleGPUs(vector<int> &gpu_idx){
+		m_impl.toMultipleGPUs(gpu_idx);
+	}
     void toCpu();
     void display();
     void getAnns(ICQuery& q, int ret_num, vector<vector<long>> &results, vector<vector<double>> &results_dist, int indexNum);

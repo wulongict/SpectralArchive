@@ -146,8 +146,72 @@ void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
     //cout << "Creating empty index ..." << endl;
     setPtr(faiss::index_factory(dim, indexstr.c_str()));
 }
+#include <map>
+void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
+    // print element in gpu idx
+    for(auto x:gpu_idx){
+        cout << "gpu idx: " << x << endl;
+    }
+    if(m_gpu_idx.empty()){
+        m_gpu_idx = gpu_idx;
+        for(auto y: m_gpu_idx){
+            cout << "m_gpu_idx " << y << endl;
+        }
+    }
+    if (not m_isCPU){
+        // already using GPU. no change.
+    }
+    else{
+
+#ifdef __CUDA__
+        cout << "[Info] Moving index from CPU to MultipleGPU" << endl;
+        int ngpus = faiss::gpu::getNumDevices();
+        printf("Number of GPUs: %d\n", ngpus);
+        int num_valid_gpu_id = 0;
+        std::map<int, bool> id_map;
+        for (auto x : m_gpu_idx)
+        {
+            if (x < ngpus)
+            {
+                num_valid_gpu_id += 1;
+                id_map[x] = true;
+            }
+        }
+        if (num_valid_gpu_id == 0)
+        {
+            cout << "[Info] all the gpu ids are invalid, will try first GPU. " << endl;
+            m_gpu_idx.erase(gpu_idx.begin(), gpu_idx.end());
+            m_gpu_idx.push_back(0);
+            id_map[0] = true;
+        }
+        std::vector<faiss::gpu::GpuResourcesProvider *> res;
+        std::vector<int> devs;
+        for (int i = 0; i < ngpus; i++)
+        {
+            if (id_map.count(i))
+            {
+                cout << "adding gpu " << i << endl;
+                res.push_back(new faiss::gpu::StandardGpuResources);
+                devs.push_back(i);
+            }
+        }
+        m_index = faiss::gpu::index_cpu_to_gpu_multiple(res, devs, m_index);
+        // backup();
+        // GpuResourceObj *gpuRes = GpuResourceObj::getInstance();
+        // setPtr(gpuRes->cpu_to_gpu(getPtr()));
+
+        m_isCPU = false;
+#endif
+    }
+}
 
 void CFaissIndexWrapper::toGPU() {
+    if(m_gpu_idx.empty()){
+        m_gpu_idx.push_back(0);
+        }
+    toMultipleGPUs(m_gpu_idx);
+    return;
+    cout << "--------------call to GPU--------------------" << endl;
     if (not m_isCPU){
         // already using GPU. no change.
     }

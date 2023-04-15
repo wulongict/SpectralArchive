@@ -222,7 +222,7 @@ public:
     CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor, bool useflankingbins,
                      int tol, int minPeakNum, bool myOwnIndex, CPQParam option, string indexstrings, bool usegpu,
                      bool rebuildsqldb, int seedpvalue, const int topPeakNum, bool createfilenameBlackList,
-                     bool saveBackgroundScore, bool verbose, string archivename="", string indexshuffleseeds="default");
+                     bool saveBackgroundScore, bool verbose, string archivename="", string indexshuffleseeds="default", string gpuidx="1;2;3");
 
     long getNumOfQueriesSearched(){
         return agtsummary.m_num_queries_searched;

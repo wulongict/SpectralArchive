@@ -23,6 +23,7 @@ public:
     virtual void removeIds(vector<long> &idx)=0;
 
     virtual void toGPU()=0;
+    virtual void toMultipleGPUs(vector<int> &gpu_idx)=0;
     virtual void toCPU()=0;
 
     // API: Pure Virtual functions
