@@ -27,7 +27,7 @@ TEST(MSMS_TEST, PEAK_REMOVAL){
 }
 
 TEST(SPTXT_PARSER, RANDOM_ACCESS){
-    string filename = "/data/wulong/data/iPRG/NIST_human_hcd_all_2020_TargetDecoy.sptxt";
+    string filename = "../tests/data/abc.sptxt";
     vector<double> mz, intensity;
     getPeakList(filename, 0,mz, intensity);
     cout << "Done" << endl;
@@ -35,7 +35,7 @@ TEST(SPTXT_PARSER, RANDOM_ACCESS){
 }
 
 TEST(MGFPARSER, RANDOM_ACCESS){
-    string filename = "/data/wulong/data/iPRG/iPRG2012.mgf";
+    string filename = "../tests/data/iPRG2012_first_3scans.mgf";
     vector<double> mz, intensity;
     getPeakList(filename, 2,mz, intensity);
     cout << "peak number " << mz.size() << " " << intensity.size() << endl;

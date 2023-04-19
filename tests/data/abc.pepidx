@@ -1,0 +1,14 @@
+### abc.pepidx
+### 
+### Total number of spectra in library: 2
+### Total number of distinct peptide ions in library: 2
+### Total number of distinct stripped peptides in library: 1
+### 
+### CHARGE            +1: 0 ; +2: 1 ; +3: 1 ; +4: 0 ; +5: 0 ; >+5: 0 ; Unk: 0
+### TERMINI           Tryptic: 0 ; Semi-tryptic: 2 ; Non-tryptic: 0
+### PROBABILITY       >0.9999: 2 ; 0.999-0.9999: 0 ; 0.99-0.999: 0 ; 0.9-0.99: 0 ; <0.9: 0
+### NREPS             20+: 0 ; 10-19: 0 ; 4-9: 0 ; 2-3: 0 ; 1: 2
+### MODIFICATIONS     None
+### ===
+MHAPGK	2|0|HCD	595 
+MHAPGK	3|0|HCD	4365 
