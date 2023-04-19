@@ -353,7 +353,7 @@ void CAnnotationDB::addFileNameToResultsOfGTRecords(vector<vector<string>> &resu
 
 // single row
 void CAnnotationDB::getGtinfoRow(long idx, CDBEntry &entry) {
-    string sql = "select * from GROUNDTRUTH where ID=" + to_string(idx);
+    string sql = "select * from GROUNDTRUTH  join rescue on rescue.node = GROUNDTRUTH.id where ID=" + to_string(idx);
     m_dbmanager->getRow(entry,sql,false);
 }
 
@@ -691,6 +691,24 @@ void CAnnotationDB::addColumnRFScoreIfNotExist(bool verbosity) {
 
 }
 
+void CAnnotationDB::addColumnRescuedPepIfNotExist(bool verbosity) {
+    string sql = R"(select sql from sqlite_master where type='table' and name like "%GROUNDTRUTH%" and sql like '%, RESCUEDPEPTIDE %';)";
+
+    CDBEntry dbEntry;
+    m_dbmanager->getRow(dbEntry, sql, verbosity);
+    if (dbEntry.empty()) {
+        // column does not exist
+        cout << "to add one more column to our table " << sql << endl;
+        //ALTER TABLE table_name
+        //  ADD new_column_name column_definition;
+        sql = R"(ALTER TABLE GROUNDTRUTH ADD RESCUEDPEPTIDE VARCHAR)";
+        m_dbmanager->execAsTransaction(sql, verbosity);
+    } else if (verbosity){
+        cout << "column RESCUEDPEPTIDE already exist in table GROUNDTRUTH; will NOT add again" << endl;
+    }
+
+}
+
 void CAnnotationDB::addColumnAlterPepIfNotExist(bool verbosity) {
     string sql = R"(select sql from sqlite_master where type='table' and name like "%GROUNDTRUTH%" and sql like '%, ALTERPEPTIDE %';)";
 
@@ -807,6 +825,7 @@ void CAnnotationDB::createTables(bool rebuild, bool verbose) {
     addColumnAlterPepIfNotExist(verbose);
     addColumnRFScoreIfNotExist(verbose);
     addColumnNeighborIfNotExist(verbose);
+    addColumnRescuedPepIfNotExist(verbose);
     cout << "Tables created" << endl;
 
 

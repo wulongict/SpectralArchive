@@ -22,6 +22,7 @@ struct SPsmAnnotation {
     string protein;
 
     string peptideseq;// = "UNKNOWN";
+    string m_rescued_peptide;
     double score;// = -1;
     double cterm_mass;// = 0;
     double nterm_mass;// = 0;

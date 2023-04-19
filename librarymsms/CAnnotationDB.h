@@ -201,6 +201,8 @@ public:
 
     void addColumnAlterPepIfNotExist(bool verbosity);
 
+    void addColumnRescuedPepIfNotExist(bool verbosity);
+
     void addColumnRFScoreIfNotExist(bool verbosity);
 
     void appendGtFileList(const vector<string> &annotationFiles);

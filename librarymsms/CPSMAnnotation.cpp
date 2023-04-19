@@ -74,6 +74,9 @@ void SPsmAnnotation::initWithRow(CDBEntry &results) {
     protein = results.get("PROTEIN",0);// gtrow.toString(CSqlGtTableRow::PROTEIN);
 
     m_neighbors = results.get("NEIGHBOR",0);
+    m_rescued_peptide = results.get("expected_annotation",0);
+
+
 }
 
 string SPsmAnnotation::getModifiedPeptide(bool verbose) const{
@@ -189,6 +192,7 @@ string SPsmAnnotation::createChargeUpdateSql() const {
 
 void SPsmAnnotation::toOstringStreamNoId(ostringstream &oss) const{
     oss << R"("peptide": ")" << peptideseq
+        << R"("rescued_peptide": ")" << m_rescued_peptide
         << R"(","filename": ")" << mzxml_filename
         << R"(", "precursor": )" << precursorMz
         << R"(, "charge": )" << charge

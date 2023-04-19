@@ -20,6 +20,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     po::options_description genericOptions("Command line only"), basicOptions("Config file"), hiddenOptions(
             "advancedOptions");
     genericOptions.add_options()
+            ("init", po::bool_switch()->default_value(false),
+             "check the folder, generate config file, if not exist")
             ("config", po::value<string>(),
              "the config file")
             ("help,h", po::bool_switch()->default_value(false), "print help information");
@@ -227,7 +229,49 @@ void displayTitle() {
                            "-------------------------------------------------", __DATE__, __TIME__);
 }
 
+#include <filesystem>
+namespace  fs = std::filesystem;
 
+void writeConfigFile(string filename){
+    File::CFile fileobj(filename);
+    const fs::path path(fileobj.path);
+    if(fs::exists(path)){
+        cout << "Path ready"<< endl;
+    }else{
+        try{
+            fs::create_directories(path);
+            cout << "Path not exist, created successfully " << endl;
+        }catch (const std::exception & ex) {
+            std::cerr << "Fail to create path " << path << " - " << ex.what() << endl;
+        }
+
+    }
+
+    ofstream  fout(filename, ios::out);
+    fout << "mzxmlfiles= \n"
+ "use_gpu = false\n"
+ "removeprecursor = true\n"
+ "useflankingbins = true\n"
+ "\n"
+ "inputsource = socket\n"
+ "topn = 10\n"
+ "port = 8710\n"
+ "maxconnection = 10\n"
+ "\n"
+ "indexstrs = IVF256,PQ16;IVF256,PQ16\n"
+ "indexshuffleseeds = customized:1;2\n"
+ "\n"
+ "#tolerance low mass accuracy: 1; high mass accuracy: 15\n"
+ "# 1 ~ 0.03 Th  15 ~ 0.45 Th\n"
+ "tolerance = 1\n"
+ "\n"
+ "# the background spectra list seed\n"
+ "bgspecseed = 42\n"
+ "saveBackgroundScore = false" << endl;
+    fout.close();
+    cout << "config file generate " << filename << endl;
+
+}
 
 // run the web appliaction: ./scripts/webinterface_8710.bash
 
@@ -246,6 +290,17 @@ int main(int argc, char *argv[]) {
             spdlog::get("A")->info("CMD: {}", argToStr(argc, argv));
 
             auto vm = getParam(argc, argv);
+            bool init = vm.at("init").as<bool>();
+            if (init){
+                // generate config file if not exist.
+                string config_file = "conf/spectroscape_auto.conf";
+                if(File::isExist(config_file)){
+                    cout << "config file " << config_file << " already exist"<< endl;
+                }else{
+                    writeConfigFile(config_file);
+                }
+                return 0;
+            }
             string indexfilename = vm.at("indexfile").as<string>();
             string mzXMLList = vm.at("mzxmlfiles").as<string>();
             string archivename = vm.at("archivename").as<string>();
