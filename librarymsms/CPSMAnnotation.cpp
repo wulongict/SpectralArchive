@@ -15,6 +15,7 @@ void SPsmAnnotation::initMembers() {
     fileid = -1;
 
     peptideseq = "UNKNOWN";
+    m_rescued_peptide = "";
     score = -1;
     cterm_mass = 0;
     nterm_mass = 0;
@@ -74,7 +75,7 @@ void SPsmAnnotation::initWithRow(CDBEntry &results) {
     protein = results.get("PROTEIN",0);// gtrow.toString(CSqlGtTableRow::PROTEIN);
 
     m_neighbors = results.get("NEIGHBOR",0);
-    m_rescued_peptide = results.get("expected_annotation",0);
+    m_rescued_peptide = results.get("RESCUEDPEPTIDE",0);
 
 
 }
@@ -191,10 +192,10 @@ string SPsmAnnotation::createChargeUpdateSql() const {
 }
 
 void SPsmAnnotation::toOstringStreamNoId(ostringstream &oss) const{
-    oss << R"("peptide": ")" << peptideseq
-        << R"("rescued_peptide": ")" << m_rescued_peptide
-        << R"(","filename": ")" << mzxml_filename
-        << R"(", "precursor": )" << precursorMz
+    oss << R"("peptide": ")" << peptideseq << "\", "
+        << "\"rescued_peptide\": \"" << m_rescued_peptide << "\", "
+        << " \"filename\": \"" << mzxml_filename << "\", "
+        << " \"precursor\": " << precursorMz
         << R"(, "charge": )" << charge
         << R"(, "scan": )" << ms2_scan
         << R"(, "cterm": ")" << cterm_mass

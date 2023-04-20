@@ -679,6 +679,8 @@ void CMultiIndices::printIndicesStr() {
              [](const string &keystr) { cout << keystr << endl; });
 }
 
+// print information like:
+//    [2023-04-20 14:06:49.857] [A] [info] index: d = 4096, is_trained = true, ntotal =24988311
 void CMultiIndices::display() {
     m_impl.display();
 }

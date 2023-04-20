@@ -166,7 +166,7 @@ CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
 //    m_verboseMsger = make_shared<CVerboseMessage>();
     m_dbmanager = nullptr;
     m_tablename2header["GROUNDTRUTH"] = {"ID","FILEID","MS2COUNTS","PEPTIDE","SCORE","SCAN","CTERM","NTERM","MODIFICATION","PRECURSOR","CHARGE",
-                                         "RT","PEPTIDEPROPHETPROB","IPROPHETPROB","RFSCORE","ISDECOY","SIGNIFICANCE","PROTEIN","CE","ALTERPEPTIDE","NEIGHBOR"};
+                                         "RT","PEPTIDEPROPHETPROB","IPROPHETPROB","RFSCORE","ISDECOY","SIGNIFICANCE","PROTEIN","CE","ALTERPEPTIDE","NEIGHBOR","RESCUEDPEPTIDE"};
 
     m_createTableSql["GROUNDTRUTH"] = "CREATE TABLE GROUNDTRUTH("
                                       "ID                 INTEGER PRIMARY KEY AUTOINCREMENT ,"
@@ -188,7 +188,8 @@ CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
                                       "SIGNIFICANCE           INT, "
                                       "PROTEIN               varchar, "
                                       "CE                     varchar, "
-                                      "ALTERPEPTIDE          varchar);"
+                                      "ALTERPEPTIDE          varchar,"
+                                      "RESCUEDPEPTIDE          varchar);"
                                       "CREATE INDEX GROUNDTRUTH_PEPTIDE ON GROUNDTRUTH (PEPTIDE);";
 
 
@@ -353,7 +354,7 @@ void CAnnotationDB::addFileNameToResultsOfGTRecords(vector<vector<string>> &resu
 
 // single row
 void CAnnotationDB::getGtinfoRow(long idx, CDBEntry &entry) {
-    string sql = "select * from GROUNDTRUTH  join rescue on rescue.node = GROUNDTRUTH.id where ID=" + to_string(idx);
+    string sql = "select * from GROUNDTRUTH  where ID=" + to_string(idx);
     m_dbmanager->getRow(entry,sql,false);
 }
 
