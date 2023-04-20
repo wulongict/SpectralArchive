@@ -13,6 +13,8 @@
 #include "../../External/SpectraST/SpectraSTLib.hpp"
 #include "../../librarymsms/Util.h"
 
+// random-access spectrum reads not allowed with MGF format.
+// it will retrieve the first scan in the mgf file.
 bool getPeakListMzxmlMzml(string filename, int scannum, vector<double> &mz, vector<double> &intensity){
     MSToolkit::MSReader mstreader;
     vector<MSToolkit::MSSpectrumType> m{MSToolkit::MS1, MSToolkit::MS2};
