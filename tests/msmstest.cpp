@@ -2,6 +2,8 @@
 #include "../librarymsms/ProteomicsDataTypes.h"
 #include "../ArchiveSearch/dependentlibs/randomSpecParser.h"
 #include "gtest/gtest.h"
+#include "CAnnotationDB.h"
+
 using namespace std;
 
 TEST(CASE1, EQUAL_INT){
@@ -31,6 +33,8 @@ TEST(SPTXT_PARSER, RANDOM_ACCESS){
     vector<double> mz, intensity;
     getPeakList(filename, 0,mz, intensity);
     cout << "Done" << endl;
+    ASSERT_FLOAT_EQ(102.0552, mz[1]);
+    ASSERT_FLOAT_EQ(	232.7415, intensity[1]);
 
 }
 
@@ -41,5 +45,16 @@ TEST(MGFPARSER, RANDOM_ACCESS){
     cout << "peak number " << mz.size() << " " << intensity.size() << endl;
     cout << mz[0] << "\t" << intensity[0] << endl;
     cout << "Done" << endl;
+//    989.6261597 72.00098419
+    ASSERT_FLOAT_EQ(989.6261597,mz[1]);
+    ASSERT_FLOAT_EQ(72.00098419, intensity[1]);
 
 }
+
+TEST(DB, NEW_COL){
+    cout << "testing new db" << endl;
+    shared_ptr<CAnnotationDB> m_AnnotationDB = make_shared<CAnnotationDB>(false);
+    m_AnnotationDB->createDatabase(false, "abc.sqlite3db",true);
+}
+
+
