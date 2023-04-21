@@ -988,7 +988,7 @@ void CAnnotationDB::deleteLastNFile(int n) {
     cout << "DB updated" << endl;
 }
 
-void CAnnotationDB::createDatabase(bool rebuild, string dbfilename, bool verbose) {
+void CAnnotationDB::connectDatabase(bool rebuild, string dbfilename, bool verbose) {
     setDB(dbfilename);
     createTables(rebuild, verbose);
 

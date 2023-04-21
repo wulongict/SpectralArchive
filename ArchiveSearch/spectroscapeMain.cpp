@@ -225,7 +225,7 @@ void displayTitle() {
                            "-------------------------------------------------\n"
                            "#       Spectral Archive Search Engine          #\n"
                            "#       Build Date: {} {}        #\n"
-                           "#     Developed in Henry Lam's Group @ HKUST    #\n"
+                           "#      Developed in Henry Lam Group @ HKUST     #\n"
                            "-------------------------------------------------", __DATE__, __TIME__);
 }
 

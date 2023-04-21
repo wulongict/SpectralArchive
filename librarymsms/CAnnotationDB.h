@@ -115,7 +115,7 @@ public:
     void createBlackListWithFileName(const string &datafilename, bool verbose);
     // init database, create if not exist
     // creating empty tables in database.
-    void createDatabase(bool rebuild, string dbfilename, bool verbose);
+    void connectDatabase(bool rebuild, string dbfilename, bool verbose);
 
     // create table if not exist.
     bool createTable(const string& tableName, bool overwrite, bool verbosity);

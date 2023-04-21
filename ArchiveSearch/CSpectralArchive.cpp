@@ -196,7 +196,7 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     }
     m_verbose = verbose;
 
-    m_AnnotationDB = make_shared<CAnnotationDB>(createfilenameBlackList);
+    
     m_usegpu = usegpu;
     m_mzXMLListFileName = mzXMLList;
     if (archivename.empty()){
@@ -223,7 +223,8 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
 
 
     cout << "[info] 1/3 Connecting to SQLite Database " << endl;
-    m_AnnotationDB->createDatabase(rebuildsqldb, m_mzXMLListFileName + ".sqlite3db", m_verbose);
+    m_AnnotationDB = make_shared<CAnnotationDB>(createfilenameBlackList);
+    m_AnnotationDB->connectDatabase(rebuildsqldb, m_mzXMLListFileName + ".sqlite3db", m_verbose);
 
     cout << "[info] 2/3 Initialize MZ file " << endl;
     m_csa = CMzFileReader::makeShared(m_mzXMLListFileName, false, true, m_removeprecursor, intTol2double(m_tol),

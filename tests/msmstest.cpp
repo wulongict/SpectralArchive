@@ -54,7 +54,7 @@ TEST(MGFPARSER, RANDOM_ACCESS){
 TEST(DB, NEW_COL){
     cout << "testing new db" << endl;
     shared_ptr<CAnnotationDB> m_AnnotationDB = make_shared<CAnnotationDB>(false);
-    m_AnnotationDB->createDatabase(false, "abc.sqlite3db",true);
+    m_AnnotationDB->connectDatabase(false, "abc.sqlite3db",true);
 }
 
 
