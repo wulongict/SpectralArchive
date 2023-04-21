@@ -1,3 +1,13 @@
+External/SpectraST/CMakeFiles/
+External/SpectraST/cmake_install.cmake
+External/SpectraST/libspectrastlib_static.a
+External/SpectraST/linux_standalone/
+External/SpectraST/spectrast
+External/spdlog-1.x/CPackConfig.cmake
+External/spdlog-1.x/CPackSourceConfig.cmake
+External/spdlog-1.x/spdlog.pc
+External/spdlog-1.x/spdlogConfig.cmake
+External/spdlog-1.x/spdlogConfigVersion.cmake
 External/boost1.65.1/tmp/
 gsl-1.16.tar.gz
 gsl-1.16/
