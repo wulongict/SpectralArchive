@@ -1,7 +1,10 @@
+External/boost1.65.1/tmp/
 gsl-1.16.tar.gz
 gsl-1.16/
 cmake-build-release*
 build
+build_dev
 faiss-1.7.1/faiss_tmp*
 .vscode
+.idea
 package
