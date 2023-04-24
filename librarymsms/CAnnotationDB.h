@@ -94,6 +94,7 @@ class CAnnotationDB
     map<string, vector<string>> m_tablename2header;
     CBlackList m_cbl;
     bool m_createFileNameBlackList;
+    bool m_verbose;
 
 public:
     void deleteLastNFile(int n);
