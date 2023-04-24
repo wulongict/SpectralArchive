@@ -539,7 +539,7 @@ void CScanFile::write_specinfo(ofstream &fout) {
 void CScanFile::write_specinfo() {
     ofstream scanout(m_scanFilename, ios::out);
     write_specinfo(scanout);
-    spdlog::get("A")->info("scan file saved as {}", m_scanFilename);
+    // spdlog::get("A")->info("scan file saved as {}", m_scanFilename);
 }
 
 bool CScanFile::isCreated() {

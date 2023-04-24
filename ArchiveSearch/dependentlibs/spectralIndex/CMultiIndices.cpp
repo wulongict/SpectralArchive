@@ -12,7 +12,7 @@
 #include "CKMeans.h"
 #include "ICIndexWrapper.h"
 
-MultipleIndicesImpl::MultipleIndicesImpl() : m_useCpu(true) {
+MultipleIndicesImpl::MultipleIndicesImpl() : m_useCpu(true),m_verbose(false) {
 }
 
 // create multiple indices, set the filename
@@ -125,13 +125,21 @@ void MultipleIndicesImpl::addshuffle(int i, float *vec, long specnum) {
 }
 
 void MultipleIndicesImpl::add(float *vec, long specnum) {
-    cout << "append spectrum to " << getNum() << " indices: " ;
+    if(m_verbose){
+        cout << "append spectrum to " << getNum() << " indices: " ;
+
+    }
     for (int i = 0; i < getNum(); i++) {
-        cout << i +1 << " " << flush;
+        if(m_verbose){
+            cout << i +1 << " " << flush;
+        }
 //        cout << "append to " << i << "-th index, #spectra:  " << specnum << endl;
         addshuffle(i, vec, specnum);
     }
-    cout << endl;
+    if(m_verbose){
+        cout << endl;
+    }
+    // cout << endl;
 }
 
 void MultipleIndicesImpl::shufflevector(int seed, float *p, int dim) {

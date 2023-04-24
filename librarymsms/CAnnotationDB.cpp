@@ -162,6 +162,7 @@ specfileinfo CAnnotationDB::addToGtTable(DataFile &df, ICGtInfoUpdate *updater) 
 
 // todo: it is safer to get the value based on column names. As we have added several new columns now
 CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
+    m_verbose = false;
     m_createFileNameBlackList = createFileNameBlackList;
 //    m_verboseMsger = make_shared<CVerboseMessage>();
     m_dbmanager = nullptr;
@@ -188,7 +189,7 @@ CAnnotationDB::CAnnotationDB(bool createFileNameBlackList) {
                                       "SIGNIFICANCE           INT, "
                                       "PROTEIN               varchar, "
                                       "CE                     varchar, "
-                                      "ALTERPEPTIDE          varchar,"
+                                      "ALTERPEPTIDE          varchar, "
                                       "RESCUEDPEPTIDE          varchar);"
                                       "CREATE INDEX GROUNDTRUTH_PEPTIDE ON GROUNDTRUTH (PEPTIDE);";
 
@@ -401,11 +402,13 @@ void CAnnotationDB::appendGtFileList(const vector<string> &annotationFiles) {
 void CAnnotationDB::addNewGtFile(string gtfile) {
     string sql = "INSERT INTO GTFILES (FILENAME) VALUES('" + gtfile + "');";
     cout << "running: " << sql << endl;
-    m_dbmanager->execAsTransaction(sql, false);
+    m_dbmanager->execAsTransaction(sql, m_verbose);
 }
 
 void CAnnotationDB::add(specfileinfo &sfinfo) {
-    sfinfo.display();
+    if(m_verbose){
+        sfinfo.display();
+    }
     vector<string> filenames;
     searchSpecFileName(sfinfo.filename, filenames);
     if (filenames.empty()) {
@@ -413,7 +416,7 @@ void CAnnotationDB::add(specfileinfo &sfinfo) {
         oss << sfinfo.fileid << ",'" << sfinfo.filename << "'," << sfinfo.start << "," << sfinfo.end << endl;
         string sql = "INSERT INTO SPECFILES (FILE_ID, FILENAME,START, END) "
                      "VALUES (" + oss.str() + ");";
-        m_dbmanager->execAsTransaction(sql, false);
+        m_dbmanager->execAsTransaction(sql, m_verbose);
     } else {
         // If we skip this file, we should not add the corresponding peaks/annotations also.
         // TODO: conflicts caused by duplicate file in database: Sep 2020
@@ -429,7 +432,7 @@ int CAnnotationDB::getLastFileIdInSpecFileTable() {
     if (getTotalFileNum() > 0) {
         string sql = "select max(FILE_ID) as max_file_id from SPECFILES;";
         CDBEntry dbentry;
-        m_dbmanager->getRow(dbentry,sql,false);
+        m_dbmanager->getRow(dbentry,sql,m_verbose);
         if(not dbentry.empty()){
             last_fileid = dbentry.getInt("max_file_id",0);
         }
@@ -506,16 +509,10 @@ bool CAnnotationDB::retrieveGtinfo(long residx, SPsmAnnotation &gtinfo) {
     return ret;
 }
 
-// NO!!! I forget the charge state.
-// todo: NO another big problem, the peptide could come with a modification,
-//  it is not guarranteed to find the unmodified version...
-//  but we have open search,it is still in the search space.
-//  although the peaks may be different and the dp score maybe lower.
-//  Because we are not using open search...
+
 void CAnnotationDB::searchSigPeptide(double precursor_neutral_mass, int charge, const string& peptide,
                                      vector<vector<string>> &results,
                                      const string& excludefile) {
-    // looking for peptide with charge state
     File::CFile fileObj(std::move(excludefile));
     string sql = "select * from GROUNDTRUTH where PEPTIDE=\"" + peptide + "\" and SIGNIFICANCE=1 and CHARGE=" +
                  to_string(charge) +
@@ -662,7 +659,6 @@ void CAnnotationDB::addColumnNeighborIfNotExist(bool verbosity) {
 
     CDBEntry dbEntry;
     m_dbmanager->getRow(dbEntry, sql, verbosity);
-//    dbEntry.print();
     if (dbEntry.empty()) {
         // cout << "to add one more column NEIGHBOR to our table " << sql << endl;
         //ALTER TABLE table_name
@@ -679,7 +675,6 @@ void CAnnotationDB::addColumnNeighborIfNotExist(bool verbosity) {
 void CAnnotationDB::addColumnRFScoreIfNotExist(bool verbosity) {
     string sql = R"(select sql from sqlite_master where type='table' and name like "%GROUNDTRUTH%" and sql like '%, RFSCORE %';)";
 
-
     CDBEntry dbEntry;
     m_dbmanager->getRow(dbEntry, sql, verbosity);
     if (dbEntry.empty()) {
@@ -693,15 +688,11 @@ void CAnnotationDB::addColumnRFScoreIfNotExist(bool verbosity) {
 }
 
 void CAnnotationDB::addColumnRescuedPepIfNotExist(bool verbosity) {
-    string sql = R"(select sql from sqlite_master where type='table' and name like "%GROUNDTRUTH%" and sql like '%, RESCUEDPEPTIDE %';)";
+    string sql = R"(select sql from sqlite_master where type='table' and name like "%GROUNDTRUTH%" and sql like '%RESCUEDPEPTIDE %';)";
 
     CDBEntry dbEntry;
     m_dbmanager->getRow(dbEntry, sql, verbosity);
     if (dbEntry.empty()) {
-        // column does not exist
-        cout << "to add one more column to our table " << sql << endl;
-        //ALTER TABLE table_name
-        //  ADD new_column_name column_definition;
         sql = R"(ALTER TABLE GROUNDTRUTH ADD RESCUEDPEPTIDE VARCHAR)";
         m_dbmanager->execAsTransaction(sql, verbosity);
     } else if (verbosity){
@@ -716,10 +707,6 @@ void CAnnotationDB::addColumnAlterPepIfNotExist(bool verbosity) {
     CDBEntry dbEntry;
     m_dbmanager->getRow(dbEntry, sql, verbosity);
     if (dbEntry.empty()) {
-        // column does not exist
-        cout << "to add one more column to our table " << sql << endl;
-        //ALTER TABLE table_name
-        //  ADD new_column_name column_definition;
         sql = R"(ALTER TABLE GROUNDTRUTH ADD ALTERPEPTIDE VARCHAR)";
         m_dbmanager->execAsTransaction(sql, verbosity);
     } else if (verbosity){

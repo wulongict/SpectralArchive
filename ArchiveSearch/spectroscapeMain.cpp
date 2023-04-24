@@ -11,6 +11,8 @@
 #include <thread>
 #include "CTimerSummary.h"
 #include "Util.h"
+#include <filesystem>
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -22,6 +24,13 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     genericOptions.add_options()
             ("init", po::bool_switch()->default_value(false),
              "check the folder, generate config file, if not exist")
+             ("run", po::bool_switch()->default_value(false),
+             "run the archive specified by `archivename`")
+             ("datasearchpath", po::value<string>()->default_value("./"),
+             "search for data files in the given path")
+             ("yes", po::bool_switch()->default_value(false),
+             "ask user to confirm by default. If --yes is specified, directly overwrite existing archive.")
+
             ("config", po::value<string>(),
              "the config file")
             ("help,h", po::bool_switch()->default_value(false), "print help information");
@@ -195,14 +204,53 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
 
     // po::store(po::command_line_parser(argc, argv).options(visible).run(), visiable_vm);
+    bool run = vm["run"].as<bool>();
 
     if (vm.count("config")) {
-        std::ifstream ifs{vm["config"].as<string>().c_str()};
+        string config_file = vm["config"].as<string>();
+        if(not File::isExist(config_file)){
+            cout << "config file not exist: " << config_file << endl;
+            exit(1);
+        }
+        fs::path config_file_path  = fs::absolute(config_file);
+        cout << "The config file is " << config_file_path << endl;
+        std::ifstream ifs{config_file.c_str()};
         if (ifs) {
             // po::store will not overwrite existing options.
             po::store(parse_config_file(ifs, config_file_options), vm);
             // po::store(parse_config_file(ifs, config_file_options), visiable_vm);
         }
+    } else if (run){
+        // if run specified, we will try default conf file. 
+        string archivie_name = vm["archivename"].as<string>();
+        if(archivie_name == ""){
+            // vm["archivename"] = boost::lexical_cast<std::string>(fs::current_path().string());
+            archivie_name =fs::current_path().string();
+            
+        }
+        cout << "The archive name is " << archivie_name << endl;
+        fs::path archivie_path = fs::absolute(archivie_name);
+        string config_file = archivie_path / "conf/spectroscape_auto.conf";
+        
+        // vm["config"] = boost::lexical_cast<std::string>(config_file);
+        fs::path config_file_path  = fs::absolute(config_file);
+        cout << "The config file is " << config_file_path << endl;
+        if(fs::exists(config_file_path)){
+            cout << "The config file is " << config_file_path << endl;
+        }else{
+            cout << "The config file is not exist" << config_file_path << endl;
+            exit(1);
+        }
+        std::ifstream ifs{config_file.c_str()};
+        if (ifs) {
+            // po::store will not overwrite existing options.
+            po::store(parse_config_file(ifs, config_file_options), vm);
+            // po::store(parse_config_file(ifs, config_file_options), visiable_vm);
+        }
+        cout << "vm refreshed" << vm["mzxmlfiles"].as<string>() << endl;
+
+
+    
     }
 
     po::notify(vm);
@@ -232,7 +280,7 @@ void displayTitle() {
 #include <filesystem>
 namespace  fs = std::filesystem;
 
-void writeConfigFile(string filename){
+void writeConfigFile(string filename, string mzxmlfile){
     File::CFile fileobj(filename);
     const fs::path path(fileobj.path);
     if(fs::exists(path)){
@@ -248,7 +296,7 @@ void writeConfigFile(string filename){
     }
 
     ofstream  fout(filename, ios::out);
-    fout << "mzxmlfiles= \n"
+    fout << "mzxmlfiles= "<< mzxmlfile <<"\n"
  "use_gpu = false\n"
  "removeprecursor = true\n"
  "useflankingbins = true\n"
@@ -273,6 +321,16 @@ void writeConfigFile(string filename){
 
 }
 
+std::vector<fs::path> get_mz_file_list(const fs::path& dir_path) {
+    std::vector<fs::path> file_list;
+    for (const auto& entry : fs::recursive_directory_iterator(dir_path)) {
+        if (entry.is_regular_file() && (entry.path().extension() == ".mzXML" || entry.path().extension() == ".mzML")) {
+            file_list.push_back(entry.path());
+        }
+    }
+    return file_list;
+}
+
 // run the web appliaction: ./scripts/webinterface_8710.bash
 
 
@@ -291,19 +349,100 @@ int main(int argc, char *argv[]) {
 
             auto vm = getParam(argc, argv);
             bool init = vm.at("init").as<bool>();
+            bool yes_overwrite = vm.at("yes").as<bool>();
+            string archivename = vm.at("archivename").as<string>();
+            string datasearchpath = vm.at("datasearchpath").as<string>();
             if (init){
+                if(archivename==""){
+                    cout << "archive name not specified, used current folder" << endl;
+                    archivename = fs::current_path().string();
+                    // empty archive name?
+                    // return 1;
+                }
+                // check if the archive name is already exist.
+                if(fs::exists(archivename)){
+                    cout << "archive name already exist" << endl;
+                    
+                }else{
+                    bool archive_folder_created = fs::create_directory(archivename);
+                    if(not archive_folder_created){
+                        cout << "fail to create archive folder " << endl;
+                        return 1;
+                    }
+                }
+
+                
+                // the archive name points to everything, but we would like to get it as a absolute path. 
+                archivename = fs::absolute(archivename).string();
+
+                // put those files into a text file called archive under the archive folder.
+                fs::path archive_path(archivename);
+                fs::path archive_file = archive_path / "archive";
+
+                if(fs::exists(archive_file) and not yes_overwrite){
+                    cout << "archive file already exist, type yes to continue and overwrite the existing file. type no to quit"
+                    << endl << "(yes/no):" << flush;
+                    string input;
+                    cin >> input;
+                    if (input == "yes"){
+                        cout << "overwrite the existing archive file" << endl;
+                    }
+                    else{
+                        cout << "quit" << endl;
+                        return 1;
+                    }
+                    
+                }
+
+                // look for mzXML and mzML files in the datasearch path.
+                auto datafiles = get_mz_file_list(datasearchpath);
+                // sort the datafiles 
+                sort(datafiles.begin(), datafiles.end());
+
+                // confirmed with yes or yes-overwrite is used. 
+                ofstream fout(archive_file);
+                for(auto & file: datafiles){
+                    fout << file.string() << endl;
+                }
+                // the archive folder will be used to build the spectral archive.
+
+                
+                // create the archive folder. if exist, do nothing.
+                // string archivepath = "archive/" + archivename;
+
                 // generate config file if not exist.
-                string config_file = "conf/spectroscape_auto.conf";
-                if(File::isExist(config_file)){
+                fs::path config_file = archive_path / "conf/spectroscape_auto.conf";
+                if(fs::exists(config_file)){
                     cout << "config file " << config_file << " already exist"<< endl;
                 }else{
-                    writeConfigFile(config_file);
+                    writeConfigFile(config_file, archive_file);
                 }
+                cout << "the archive is initialized successfully. " << endl;
+
+                // // string config_file = "conf/spectroscape_auto.conf";
+                // if(File::isExist(config_file)){
+                //     cout << "config file " << config_file << " already exist"<< endl;
+                // }else{
+                //     writeConfigFile(config_file);
+                // }
                 return 0;
             }
+            bool run = vm.at("run").as<bool>();
+            // refresh the parameters by changing the config file path.
+            if(run){
+                // checking parameters, if not in current path, change as current path.
+                if(archivename==""){
+                    // if conf file is relative path, 
+                    archivename = fs::current_path().string();
+                    // fs::current_path(archivename);
+                }
+
+            }
+
+
             string indexfilename = vm.at("indexfile").as<string>();
             string mzXMLList = vm.at("mzxmlfiles").as<string>();
-            string archivename = vm.at("archivename").as<string>();
+            
             string pepxmls = vm.at("pepxmls").as<string>();
             bool rebuild = vm.at("rebuild").as<bool>();
             bool verbose = vm.at("verbose").as<bool>();

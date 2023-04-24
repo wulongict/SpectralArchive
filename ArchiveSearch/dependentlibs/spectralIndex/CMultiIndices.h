@@ -45,6 +45,7 @@ class MultipleIndicesImpl {
     int m_numIndexUsed;
 	vector<int> m_seeds;
     int m_nprobe;
+	bool m_verbose;
 public:
     bool usingCPU();
 	MultipleIndicesImpl();
