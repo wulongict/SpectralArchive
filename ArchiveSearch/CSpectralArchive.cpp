@@ -469,17 +469,22 @@ void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
         newFileAdded = true;
         DataFile df(mzXMLfile, 0, -1);
         thread toDB([&](){
-m_AnnotationDB->appendNewDataFile(df);
-        cout << "DB updated" << endl;
+            m_AnnotationDB->appendNewDataFile(df);
+            if(m_verbose){
+                    cout << "DB updated" << endl;
+            }
         });
         thread toMZ([&](){
-        m_csa->append(df, m_removeprecursor, nullptr);
-        cout << "DB MZ updated" << endl;
-
+            m_csa->append(df, m_removeprecursor, nullptr);
+            if(m_verbose){
+            cout << "DB MZ updated" << endl;
+            }
         });
         thread toIndices([&](){
             m_indices->append(df);
+            if(m_verbose){
                     cout << "DB MZ INDEX updated" << endl;
+            }
         });
 
         toDB.join();
