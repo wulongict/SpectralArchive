@@ -154,6 +154,8 @@ cd spectral_archives
 
 spectroscape --init --datasearchpath ../mass_spectra/
 
+spectroscape --run
+
 ```
 
 After this step, spectroscape creates a spectral archive using the data in `../mass_spectra/` with default parameters in `./conf/spectroscape_auto.conf`. 
