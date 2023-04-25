@@ -68,7 +68,7 @@ endif()
 
 # The name of the package file to generate, not including the extension. For example, cmake-2.6.1-Linux-i686. The default value is:
 # ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
-set(CPACK_PACKAGE_VERSION 1.0.9)
+set(CPACK_PACKAGE_VERSION 1.1.0)
 set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER Long WU)

@@ -28,6 +28,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "run the archive specified by `archivename`")
              ("datasearchpath", po::value<string>()->default_value("./"),
              "search for data files in the given path")
+             ("add", po::bool_switch()->default_value(false),
+             "add data file to archive by searching for data files specified by option `--datasearchpath`")
              ("yes", po::bool_switch()->default_value(false),
              "ask user to confirm by default. If --yes is specified, directly overwrite existing archive.")
 
@@ -179,6 +181,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             ("maxconnection", po::value<int>()->default_value(10),
              "The port which socket to listen to. Default: port=10; "
              "check /proc/sys/net/core/somaxconn for maximal number of connections allowed on local computer")
+             ("wwwroot", po::value<string>()->default_value("./"),
+             "path of root folder of spectroscape web UI, config this to the SpectralArchiveWeb/arxiv folder. ")
             ("indexstring", po::value<string>()->default_value("IVF100,PQ8"),
              "the string for index_factory() to build index")
 
@@ -205,6 +209,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
 
     // po::store(po::command_line_parser(argc, argv).options(visible).run(), visiable_vm);
     bool run = vm["run"].as<bool>();
+    bool add = vm["add"].as<bool>();
 
     if (vm.count("config")) {
         string config_file = vm["config"].as<string>();
@@ -220,7 +225,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             po::store(parse_config_file(ifs, config_file_options), vm);
             // po::store(parse_config_file(ifs, config_file_options), visiable_vm);
         }
-    } else if (run){
+    } else if (run or add){
         // if run specified, we will try default conf file. 
         string archivie_name = vm["archivename"].as<string>();
         if(archivie_name == ""){
@@ -270,11 +275,13 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
 
 void displayTitle() {
     spdlog::get("A")->info("\n"
-                           "-------------------------------------------------\n"
-                           "#       Spectral Archive Search Engine          #\n"
-                           "#       Build Date: {} {}        #\n"
-                           "#      Developed in Henry Lam Group @ HKUST     #\n"
-                           "-------------------------------------------------", __DATE__, __TIME__);
+                           "-----------------------------------------------------\n"
+                           "#                                                   #\n"
+                           "#              Spectroscape v1.1.0                  #\n"
+                           "#                                                   #\n"
+                           "#        Build Date: {} {}           #\n"
+                           "#  Developed by L. WU  in Henry Lam Group @ HKUST   #\n"
+                           "-----------------------------------------------------", __DATE__, __TIME__);
 }
 
 #include <filesystem>
@@ -330,6 +337,40 @@ std::vector<fs::path> get_mz_file_list(const fs::path& dir_path) {
     }
     return file_list;
 }
+
+// check if one string is end as another string as suffix. 
+// return true if the string is end with the suffix
+bool isEndWith(const std::string& str, const std::string& suffix)
+{
+    return str.size() >= suffix.size() &&
+           str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+// search for specific file extension, including
+// .mzXML, .pep.xml, .mzML, .mgf, .sptxt, .pepXML, .MGF etc. specifiec in lower case
+// we store the extension in a vector, and then search for the file
+// with the extension in the vector.
+std::vector<fs::path> get_file_list(const fs::path& dir_path, std::vector<std::string> ext_list) {
+    std::vector<fs::path> file_list;
+    for (const auto& entry : fs::recursive_directory_iterator(dir_path)) {
+        if (entry.is_regular_file()) {
+            for (auto ext : ext_list){
+                string fullpath = entry.path().string();
+                transform(fullpath.begin(), fullpath.end(), fullpath.begin(), ::tolower);
+                if (isEndWith(fullpath, ext)){
+                    file_list.push_back(entry.path());
+                } else{
+                    // cout << "skipping unsupported file format in " << entry.path() << endl;
+                }
+            }
+        }
+    }
+    return file_list;
+}
+
+
+
+
 
 // run the web appliaction: ./scripts/webinterface_8710.bash
 
@@ -476,6 +517,57 @@ int main(int argc, char *argv[]) {
             string new_experimental_datalist = vm.at("updaterawdatalist").as<string>();
             string new_search_result = vm.at("updategt").as<string>();
             string new_search_result_list = vm.at("updategtlist").as<string>();
+            bool add = vm.at("add").as<bool>();
+            if(add){
+                // checking parameters, if not in current path, change as current path.
+                if(archivename==""){
+                    // if conf file is relative path, 
+                    archivename = fs::current_path().string();
+                    // fs::current_path(archivename);
+                }
+                cout << "adding data " << endl;
+                fs::path archive_path(archivename);
+                // in this task, we add new data file to the archive. 
+                if(update_index){
+                    cout << "Error:\t--add and --update cannot be used together. " << endl;
+                    return 1;
+                }
+                // collect data from data path. 
+                vector<string> data_extensions = {".mzml", ".mzxml", ".mgf", ".sptxt", ".scanlist"};
+                fs::path fs_datasearchpath = fs::absolute(datasearchpath);
+                vector<fs::path> new_experimental_datafiles = get_file_list(fs_datasearchpath, data_extensions);
+                vector<string> searchfile_extensions = {".ipro.pep.xml", ".sptxt"};
+                vector<fs::path> new_search_result_files = get_file_list(fs_datasearchpath, searchfile_extensions);
+                // write the data file list to a temp file.
+                new_experimental_data="";
+                new_search_result="";
+                new_experimental_datalist = fs::absolute(archive_path) / "new_experimental_datafile_list.txt";
+                new_search_result_list = fs::absolute(archive_path) / "new_search_result_file_list.txt";
+
+                sort(new_experimental_datafiles.begin(), new_experimental_datafiles.end());
+                sort(new_search_result_files.begin(), new_search_result_files.end());
+                ofstream fout(new_experimental_datalist);
+                for(auto & file: new_experimental_datafiles){
+                    fout << file.string() << endl;
+                }
+                fout.close();
+                fout.open(new_search_result_list);
+                for(auto & file: new_search_result_files){
+                    fout << file.string() << endl;
+                }
+                fout.close();
+                // update the index.
+                update_index = true;
+                cout << "start to update " << mzXMLList << " archive is " << archivename << endl;
+                cout << "new experimental data file list is " << new_experimental_datalist << endl;
+                cout << "new search result file list is " << new_search_result_list << endl;
+                // output file number
+                cout << "new experimental data file number is " << new_experimental_datafiles.size() << endl;
+                cout << "new search result file number is " << new_search_result_files.size() << endl;
+
+            }
+
+
             string datafile = vm.at("datafile").as<string>();
             string searchfile = vm.at("validation").as<string>();
             bool newImp = vm.at("newimp").as<bool>();
@@ -495,6 +587,7 @@ int main(int argc, char *argv[]) {
             bool skipBackgroundScoreCalc = vm["skipBackgroundScoreCalc"].as<bool>();
             int initcenoption = vm.at("centroidinit").as<int>();
             string indexstrs = vm.at("indexstrs").as<string>();
+            string wwwroot = vm.at("wwwroot").as<string>();
             string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
             string gpuidx = vm.at("gpuidx").as<string>();
             int tolerance = vm["tolerance"].as<int>();
@@ -539,7 +632,7 @@ int main(int argc, char *argv[]) {
                     // nginx
                     spdlog::get("A")->info("Starting index server via socket.. ");
                     shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
-                    CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn, 0, socketSummary, "./");
+                    CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn, 0, socketSummary, wwwroot);
                     fastcgiserver.startFastCGIServer();
                 }
                 else if (inputsource == "msocket")
@@ -552,7 +645,7 @@ int main(int argc, char *argv[]) {
                     shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
                     for (int i = 0; i < threadNum; i++)
                     {
-                        multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i, socketSummary, "./"));
+                        multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i, socketSummary, wwwroot));
                     }
                     // create threads
                     vector<thread> threads;

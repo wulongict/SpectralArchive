@@ -121,9 +121,9 @@ void CFastCGIServer::startFastCGIServer() {
 
             if (uristr.find("/id/") != string::npos) {
                 // Long: update html_template_str every time... [to be optimized in the future]
-                string www_root = "./";
+                
                 string htmlfile = "faiss_ivf256_pq16_gpu.index.json.html";
-                fs::path htmlfile_path = fs::path(www_root) / htmlfile; 
+                fs::path htmlfile_path = fs::path(m_www_root) / htmlfile; 
                 string html_template_str = readlinesfromfile(htmlfile_path.string());
                 this->getPageWithId(uristr, html_template_str);
             } else if (uristr.find("/identification") != string::npos) {

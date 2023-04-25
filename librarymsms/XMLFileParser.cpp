@@ -103,15 +103,15 @@ void CometPepXMLParser::export_psm_info(vector<shared_ptr<PSMInfo>> &psm,xml_doc
 
         newfile += extension;
         m_allSourceFiles.push_back(newfile);
-        spdlog::get("A")->info("Get source fileanme: {}", newfile);
+        spdlog::get("A")->info("Source fileanme: {}", newfile);
 
         string keywords = "spectrum_query";
         m_currentNode = breadth_first_search(keywords, &doc, false);
         vector<xml_node<> *> psm_nodes = find_all_siblings("spectrum_query", m_currentNode);
 
-        Progress ps(psm_nodes.size(), "Parsing spectrum in CometPepXML file");
+        // Progress ps(psm_nodes.size(), "Parsing spectrum in CometPepXML file");
         for (auto spectrum_query_node: psm_nodes) {
-            ps.increase();
+            // ps.increase();
             psm.push_back(make_shared<PSMInfo>(spectrum_query_node));
         }
 
@@ -127,17 +127,18 @@ void CometPepXMLParser::export_psm_info(vector<shared_ptr<PSMInfo>> &psm,xml_doc
         }
     }
     m_use_scan2idxvec = true;
-    cout << "Mapping of scan to idx created" << endl;
+    // cout << "Mapping of scan to idx created" << endl;
 }
 
 CometPepXMLParser::CometPepXMLParser(string filename) {
     m_use_scan2idxvec = false;
     m_currentNode = nullptr;
-    cout << "[Info] Loading file " << filename << endl;
+    spdlog::get("A")->info("Loading file: {}", filename);
+    // cout << "[Info] Loading file " << filename << endl;
     long len = 0;
     File::getfilesize(filename, len);
 
-    cout << "File size :" << len * 1.0 / 1024 / 1024 << " MB" << endl;
+    // cout << "File size :" << len * 1.0 / 1024 / 1024 << " MB" << endl;
 
     FILE *pfile = fopen(filename.c_str(), "r");
     char *  m_buf = new char[len + 1];
@@ -152,9 +153,9 @@ CometPepXMLParser::CometPepXMLParser(string filename) {
     {
         xml_document<> doc;
         doc.parse<0>(m_buf);
-        cout << "[Info] extract PSMs " << endl;
+        // cout << "[Info] extract PSMs " << endl;
         export_psm_info(psm,doc);
-        cout << "[Info] " << psm.size() << " PSMs extracted from input file" << endl;
+        // cout << "[Info] " << psm.size() << " PSMs extracted from input file" << endl;
         doc.clear();
 
         for(int i = 0 ; i < psm.size(); i ++)   {
@@ -176,7 +177,7 @@ CometPepXMLParser::CometPepXMLParser(string filename) {
     delete[] m_buf;
 
     long memSize = accumulate(psm.begin(), psm.end(), 0L,[](long a, shared_ptr<PSMInfo> b){return a + b->getMemSize();});
-    cout << "[PSM]  Total size of memory taken " << memSize/1024/1024 << " MB" << endl;
+    // cout << "[PSM]  Total size of memory taken " << memSize/1024/1024 << " MB" << endl;
 }
 
 CometPepXMLParser::~CometPepXMLParser() {

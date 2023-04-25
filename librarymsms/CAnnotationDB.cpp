@@ -1122,9 +1122,9 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
             }
             batchSql->append(update_sql);
         }
-        cout << "[Info] " << rawfilename ;
-        cout << ", PSM annotation updated: " << sfinfo.end - sfinfo.start - nan_counts << " / " << sfinfo.end - sfinfo.start << " ~ "
-             << setprecision(4) << 100 - nan_counts * 100.0 / (sfinfo.end - sfinfo.start) << "%" << endl;
+
+        spdlog::get("A")->info("{}, PSM annotation updated:  {} / {} ~ {:.4f} %", rawfilename, sfinfo.end - sfinfo.start - nan_counts, sfinfo.end - sfinfo.start, 100 - nan_counts * 100.0 / (sfinfo.end - sfinfo.start));
+
     }
 
 }
@@ -1149,7 +1149,7 @@ CGtUpdater::~CGtUpdater() {
         string mzxml_name = File::CFile(m_gtfile).basename;
 
         if (ext == "pepXML") {
-            cout << "Got PepXML file" << endl;
+            // cout << "Got PepXML file" << endl;
             mzxml_name = m_gtfile;
         }
         update(mzxml_name, crp);
