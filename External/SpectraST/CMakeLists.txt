@@ -209,9 +209,9 @@ set(LIBHTMLSOURCEFILES
 #if(COMPILE_SPECTRAST)
 #    MESSAGE(STATUS "targets: spectrast, plogspectrast Lib2HTML and spectrastlib")
 
-    add_executable(spectrast ${SOURCEFILES} SpectraSTMain.cpp)
-    target_link_libraries(spectrast  z pthread)
-    target_compile_options(spectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
+    # add_executable(spectrast ${SOURCEFILES} SpectraSTMain.cpp)
+    # target_link_libraries(spectrast  z pthread)
+    # target_compile_options(spectrast PRIVATE -D__LGPL__ -DSTANDALONE_LINUX)
 
 #    add_executable(plotspectrast ${PLOTSPECTRASTFILES} plotspectrast.cpp)
 #    target_link_libraries(plotspectrast  z pthread)
