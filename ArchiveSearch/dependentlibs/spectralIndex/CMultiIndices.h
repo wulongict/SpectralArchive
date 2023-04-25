@@ -109,6 +109,7 @@ class CMultiIndices {
 	int m_dim;
 	const long TRAINING_SPEC_NUM;
     int m_nprobe_default;
+	bool m_verbose;
 public:
 	bool m_debug;
 

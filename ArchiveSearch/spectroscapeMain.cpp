@@ -239,6 +239,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             cout << "The config file is " << config_file_path << endl;
         }else{
             cout << "The config file is not exist" << config_file_path << endl;
+            cout << "Please run `<program-name> --init` first to create default config file" << endl;
             exit(1);
         }
         std::ifstream ifs{config_file.c_str()};
@@ -249,8 +250,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
         }
         cout << "vm refreshed" << vm["mzxmlfiles"].as<string>() << endl;
 
-
-    
+   
     }
 
     po::notify(vm);
@@ -354,14 +354,14 @@ int main(int argc, char *argv[]) {
             string datasearchpath = vm.at("datasearchpath").as<string>();
             if (init){
                 if(archivename==""){
-                    cout << "archive name not specified, used current folder" << endl;
+                    cout << "archive path not specified, used current folder" << endl;
                     archivename = fs::current_path().string();
                     // empty archive name?
                     // return 1;
                 }
                 // check if the archive name is already exist.
                 if(fs::exists(archivename)){
-                    cout << "archive name already exist" << endl;
+                    cout << "archive path '"<< archivename<<"' already exist" << endl;
                     
                 }else{
                     bool archive_folder_created = fs::create_directory(archivename);
@@ -379,7 +379,12 @@ int main(int argc, char *argv[]) {
                 fs::path archive_path(archivename);
                 fs::path archive_file = archive_path / "archive";
 
-                if(fs::exists(archive_file) and not yes_overwrite){
+                if(fs::exists(archive_file) and not fs::is_regular_file(archive_file) ){
+                    cout << "please make sure '" << archive_file << "' is a regular file" << endl;
+                    return 1;
+                }
+
+                if(fs::exists(archive_file) and fs::is_regular_file(archive_file) and not yes_overwrite){
                     cout << "archive file already exist, type yes to continue and overwrite the existing file. type no to quit"
                     << endl << "(yes/no):" << flush;
                     string input;
@@ -400,6 +405,14 @@ int main(int argc, char *argv[]) {
                 sort(datafiles.begin(), datafiles.end());
 
                 // confirmed with yes or yes-overwrite is used. 
+                int number_of_files = datafiles.size();
+                if(number_of_files == 0){
+                    cout << "Error:\tno mzXML or mzML files found in the search path. " << endl;
+                    cout <<"\tPlease make sure `--datasearchpath` is set to a folder with mzXML/mzML data files. " << endl;
+                    cout << "\tCurrent `--datasearchpath` is set to '" << datasearchpath <<"'"<< endl;
+                    cout << "\tSpectroscape will search in sub-folders. " << endl;
+                    return 1;
+                }
                 ofstream fout(archive_file);
                 for(auto & file: datafiles){
                     fout << file.string() << endl;
@@ -526,7 +539,7 @@ int main(int argc, char *argv[]) {
                     // nginx
                     spdlog::get("A")->info("Starting index server via socket.. ");
                     shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
-                    CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn, 0, socketSummary);
+                    CFastCGIServer fastcgiserver(max_connection_allowed, port_listening, archive, topn, 0, socketSummary, "./");
                     fastcgiserver.startFastCGIServer();
                 }
                 else if (inputsource == "msocket")
@@ -539,7 +552,7 @@ int main(int argc, char *argv[]) {
                     shared_ptr<CSocketServerSummary> socketSummary = make_shared<CSocketServerSummary>();
                     for (int i = 0; i < threadNum; i++)
                     {
-                        multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i, socketSummary));
+                        multiServer.push_back(make_shared<CFastCGIServer>(max_connection_allowed, port_listening, archive, topn, i, socketSummary, "./"));
                     }
                     // create threads
                     vector<thread> threads;

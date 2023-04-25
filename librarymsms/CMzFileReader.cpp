@@ -186,7 +186,7 @@ void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
             cout << "removed: " << m_scanInfo.getCombinedScanFilename() << endl;
         }
         
-        // try to fix it with some method. 
+        // try to fix it
         CAnnotationDB db(false);
         string sqldbname = m_mzxml_filelist + ".sqlite3db";
         db.setDB(sqldbname);

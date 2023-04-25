@@ -59,6 +59,8 @@ string get_request_content(const FCGX_Request &request) {
     return content;
 }
 
+#include <filesystem>
+namespace fs = std::filesystem;
 
 void CFastCGIServer::startFastCGIServer() {
     cout << "FCGX_IsCGI" << FCGX_IsCGI() << endl;
@@ -119,9 +121,10 @@ void CFastCGIServer::startFastCGIServer() {
 
             if (uristr.find("/id/") != string::npos) {
                 // Long: update html_template_str every time... [to be optimized in the future]
-
+                string www_root = "./";
                 string htmlfile = "faiss_ivf256_pq16_gpu.index.json.html";
-                string html_template_str = readlinesfromfile(htmlfile);
+                fs::path htmlfile_path = fs::path(www_root) / htmlfile; 
+                string html_template_str = readlinesfromfile(htmlfile_path.string());
                 this->getPageWithId(uristr, html_template_str);
             } else if (uristr.find("/identification") != string::npos) {
                 this->identification(content);
@@ -141,8 +144,8 @@ void CFastCGIServer::startFastCGIServer() {
 }
 
 
-CFastCGIServer::CFastCGIServer(int maxconnections, int port, CSpectralArchive &archive, int topn, int id, shared_ptr<CSocketServerSummary> socketSummary)
-        : m_archive(archive), m_request() {
+CFastCGIServer::CFastCGIServer(int maxconnections, int port, CSpectralArchive &archive, int topn, int id, shared_ptr<CSocketServerSummary> socketSummary, string www_root)
+        : m_archive(archive), m_request(), m_www_root(www_root) {
     if(socketSummary == nullptr){
         m_summary = make_shared<CSocketServerSummary>();
     }else{

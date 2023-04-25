@@ -149,9 +149,9 @@ void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
 #include <map>
 void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
     // print element in gpu idx
-    for(auto x:gpu_idx){
-        cout << "gpu idx: " << x << endl;
-    }
+    // for(auto x:gpu_idx){
+    //     cout << "gpu idx: " << x << endl;
+    // }
     if(m_gpu_idx.empty()){
         m_gpu_idx = gpu_idx;
         for(auto y: m_gpu_idx){

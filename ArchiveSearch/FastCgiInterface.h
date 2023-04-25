@@ -62,10 +62,11 @@ class CFastCGIServer {
     shared_ptr<CSocketServerSummary> m_summary;
     bool verbose;
     int m_id;
+    string m_www_root;
 public:
     // 1. return -Werror=return-type
     // 2. reference initialization as member list.
-    CFastCGIServer(int maxconnections, int port, CSpectralArchive &archive, int topn, int id, shared_ptr<CSocketServerSummary> socketSummary);
+    CFastCGIServer(int maxconnections, int port, CSpectralArchive &archive, int topn, int id, shared_ptr<CSocketServerSummary> socketSummary, string www_root);
     void response(string &message, string contentType);
     void startFastCGIServer();
     string getContent();
