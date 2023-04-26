@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../librarymsms/ProteomicsDataTypes.h"
+#include "../librarymsms/Util.h"
 #include "../ArchiveSearch/dependentlibs/randomSpecParser.h"
 #include "gtest/gtest.h"
 #include "CAnnotationDB.h"
@@ -55,6 +56,17 @@ TEST(DB, NEW_COL){
     cout << "testing new db" << endl;
     shared_ptr<CAnnotationDB> m_AnnotationDB = make_shared<CAnnotationDB>(false);
     m_AnnotationDB->connectDatabase(false, "abc.sqlite3db",true);
+}
+
+
+// creat a test of CTable to read a text file in data folder. 
+// the file name is new_search_result_file_list.txt
+TEST(CTABLE, READ_TXT){
+    string pepxmlfilelist = "../tests/data/new_search_result_file_list.txt";
+    CTable pepxmllist(pepxmlfilelist, '\t', false, 0);
+    
+    ASSERT_EQ(1,pepxmllist.m_row);
+    
 }
 
 

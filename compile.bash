@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 
 
 if (( $# < 1 )); then
@@ -26,7 +26,7 @@ fi
 currentPath=$(pwd)
 echo $currentPath
 
-mkdir ${releasePath}
+mkdir -p ${releasePath}
 cd ${currentPath}/${releasePath}/ 
  rm CMakeCache.txt
 
@@ -50,7 +50,7 @@ cmake  --build ../${releasePath}   --target  boost  -- -j `nproc`
 cmake  --build ../${releasePath}  --target spectroscape msmstest -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
-ctest 
+ctest --verbose
 
 cmake --install . --prefix ${currentPath}/build 
 

@@ -211,7 +211,7 @@ std::string to_string_with_precision(const T a_value, const int n = 6){
 template<class T>
 std::string FormatWithCommas(T value){
     std::stringstream ss;
-    ss.imbue(std::locale("en_US.UTF-8"));
+    ss.imbue(std::locale());
     ss << std::fixed << value;
     return ss.str();
 }
