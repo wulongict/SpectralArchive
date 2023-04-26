@@ -28,7 +28,7 @@ echo $currentPath
 
 mkdir -p ${releasePath}
 cd ${currentPath}/${releasePath}/ 
- rm CMakeCache.txt
+rm -f CMakeCache.txt
 
 #source ~/anaconda3/etc/profile.d/conda.sh
 #conda deactivate
