@@ -77,7 +77,7 @@ Finally, to compile GPU version, CUDA environment is required.
 First, get the latest source code of spectroscape from GitHub. 
 
 ```bash
- git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git
+ git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git --branch release
 ```
 
 Start from here, all the command should be excuted under the source code folder, namely, SpectralArchive. 
