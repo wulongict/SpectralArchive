@@ -204,6 +204,30 @@ Run the following command can be used to search a data file. Before searching ag
 spectroscape --run --inputsource cmd --datafile <input>.mzXML
 ```
 
+### Web UI
+To use the web UI, users should also download the SpectralArchiveWeb repository. If the installation is done with source code, then `SpectralArchiveWeb` is already included as submodule. 
+
+To open the web interface, users should navigate to the `SpectralArchiveWeb/scripts` folder and run the following command. The second command requires `sudo`. 
+
+```bash
+./generate_nginx_conf.bash localhost all ../arxiv/
+
+# the following command will require root previlage.
+./start_nginx_server.bash
+
+```
+
+The command lines above will open the nginx service on local computer. Then go to the spectral archive folder, and run the following command. 
+
+```bash 
+# absolute path to spectroscape is required, that is why we use `which spectroscape` 
+# the port 8710 is currently hardcoded into the nginx configuration file, therefore do not change it. 
+# the only thing can be changed accordingly is the path to the SpectralArchiveWeb/arxiv/ folder. 
+spawn-fcgi -p 8710 -n -- `which spectroscape` --run --wwwroot ~/SpectralArchive/SpectralArchiveWeb/arxiv/
+```
+After this step, we can open browser on local computer and go to the following [link: http://localhost:8709](http://localhost:8709 ). The UI will be shown as follows. 
+
+![](webui.png)
 ## Issues
 - When running archive tool, I got an error said "libdpgpu.so: cannot open shared object file: No such file or directory"?  
     If the binary of archive tool is called /path/to/archive/bin, then try add the library path, /path/to/archive/lib to LD_LIBRARY_PATH variable.
