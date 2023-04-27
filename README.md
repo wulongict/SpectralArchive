@@ -205,7 +205,7 @@ spectroscape --run --inputsource cmd --datafile <input>.mzXML
 ```
 
 ### Web UI
-To use the web UI, users should also download the SpectralArchiveWeb repository. If the installation is done with source code, then `SpectralArchiveWeb` is already included as submodule. 
+To use the web UI, users should also download the SpectralArchiveWeb repository. If the installation is done with source code, then `SpectralArchiveWeb` is already included as submodule. Here we breifly show how the web UI can be launched. For a detailed explanation of the web UI, please refer to the [README.md](https://github.com/wulongict/SpectralArchiveWeb/blob/main/README.md) file in `SpectralArchiveWeb` folder. 
 
 To open the web interface, users should navigate to the `SpectralArchiveWeb/scripts` folder and run the following command. The second command requires `sudo`. 
 
