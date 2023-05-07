@@ -380,22 +380,19 @@ int main(int argc, char *argv[]) {
                 }else{
                     bool archive_folder_created = fs::create_directory(archivename);
                     if(not archive_folder_created){
-                        cout << "fail to create archive folder " << endl;
-                        return 1;
+                        throw runtime_error("No such file or directory: " + archivename);
                     }
                 }
 
                 
-                // the archive name points to everything, but we would like to get it as a absolute path. 
                 archivename = fs::absolute(archivename).string();
 
-                // put those files into a text file called archive under the archive folder.
+                // put raw files into a text file called archive under the archive folder.
                 fs::path archive_path(archivename);
                 fs::path archive_file = archive_path / "archive";
 
                 if(fs::exists(archive_file) and not fs::is_regular_file(archive_file) ){
-                    cout << "please make sure '" << archive_file << "' is a regular file" << endl;
-                    return 1;
+                    throw runtime_error("can not access file " + archive_file.string() + ", please make sure it is a regular file.");
                 }
 
                 if(fs::exists(archive_file) and fs::is_regular_file(archive_file) and not yes_overwrite){
@@ -407,8 +404,8 @@ int main(int argc, char *argv[]) {
                         cout << "overwrite the existing archive file" << endl;
                     }
                     else{
-                        cout << "quit" << endl;
-                        return 1;
+//                        cout << "quit" << endl;
+                        throw runtime_error("initialization already done. ");
                     }
                     
                 }
@@ -425,7 +422,8 @@ int main(int argc, char *argv[]) {
                     cout <<"\tPlease make sure `--datasearchpath` is set to a folder with mzXML/mzML data files. " << endl;
                     cout << "\tCurrent `--datasearchpath` is set to '" << datasearchpath <<"'"<< endl;
                     cout << "\tSpectroscape will search in sub-folders. " << endl;
-                    return 1;
+                    throw runtime_error("No raw files specified  in path " + datasearchpath);
+
                 }
                 ofstream fout(archive_file);
                 for(auto & file: datafiles){
