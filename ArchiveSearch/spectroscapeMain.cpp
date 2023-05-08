@@ -296,6 +296,16 @@ void displayTitle() {
 }
 
 #include <filesystem>
+
+void archive_initialization(bool yes_overwrite, string &archivename, const string &datasearchpath);
+
+string &fix_archive_name(string &archivename);
+
+void
+collect_files_before_add(const string &datasearchpath, const string &mzXMLList, string &archivename, bool &update_index,
+                         string &new_experimental_data, string &new_experimental_datalist, string &new_search_result,
+                         string &new_search_result_list);
+
 namespace  fs = std::filesystem;
 
 void writeConfigFile(string filename, string mzxmlfile){
@@ -367,100 +377,13 @@ int main(int argc, char *argv[]) {
             string archivename = vm.at("archivename").as<string>();
             string datasearchpath = vm.at("datasearchpath").as<string>();
             if (init){
-                if(archivename==""){
-                    cout << "archive path not specified, used current folder" << endl;
-                    archivename = fs::current_path().string();
-                    // empty archive name?
-                    // return 1;
-                }
-                // check if the archive name is already exist.
-                if(fs::exists(archivename)){
-                    cout << "archive path '"<< archivename<<"' already exist" << endl;
-                    
-                }else{
-                    bool archive_folder_created = fs::create_directory(archivename);
-                    if(not archive_folder_created){
-                        throw runtime_error("No such file or directory: " + archivename);
-                    }
-                }
-
-                
-                archivename = fs::absolute(archivename).string();
-
-                // put raw files into a text file called archive under the archive folder.
-                fs::path archive_path(archivename);
-                fs::path archive_file = archive_path / "archive";
-
-                if(fs::exists(archive_file) and not fs::is_regular_file(archive_file) ){
-                    throw runtime_error("can not access file " + archive_file.string() + ", please make sure it is a regular file.");
-                }
-
-                if(fs::exists(archive_file) and fs::is_regular_file(archive_file) and not yes_overwrite){
-                    cout << "archive file already exist, type yes to continue and overwrite the existing file. type no to quit"
-                    << endl << "(yes/no):" << flush;
-                    string input;
-                    cin >> input;
-                    if (input == "yes"){
-                        cout << "overwrite the existing archive file" << endl;
-                    }
-                    else{
-//                        cout << "quit" << endl;
-                        throw runtime_error("initialization already done. ");
-                    }
-                    
-                }
-
-                // look for mzXML and mzML files in the datasearch path.
-                auto datafiles = get_mz_file_list(datasearchpath);
-                // sort the datafiles 
-                sort(datafiles.begin(), datafiles.end());
-
-                // confirmed with yes or yes-overwrite is used. 
-                int number_of_files = datafiles.size();
-                if(number_of_files == 0){
-                    cout << "Error:\tno mzXML or mzML files found in the search path. " << endl;
-                    cout <<"\tPlease make sure `--datasearchpath` is set to a folder with mzXML/mzML data files. " << endl;
-                    cout << "\tCurrent `--datasearchpath` is set to '" << datasearchpath <<"'"<< endl;
-                    cout << "\tSpectroscape will search in sub-folders. " << endl;
-                    throw runtime_error("No raw files specified  in path " + datasearchpath);
-
-                }
-                ofstream fout(archive_file);
-                for(auto & file: datafiles){
-                    fout << file.string() << endl;
-                }
-                // the archive folder will be used to build the spectral archive.
-
-                
-                // create the archive folder. if exist, do nothing.
-                // string archivepath = "archive/" + archivename;
-
-                // generate config file if not exist.
-                fs::path config_file = archive_path / "conf/spectroscape_auto.conf";
-                if(fs::exists(config_file)){
-                    cout << "config file " << config_file << " already exist"<< endl;
-                }else{
-                    writeConfigFile(config_file, archive_file);
-                }
-                cout << "the archive is initialized successfully. " << endl;
-
-                // // string config_file = "conf/spectroscape_auto.conf";
-                // if(File::isExist(config_file)){
-                //     cout << "config file " << config_file << " already exist"<< endl;
-                // }else{
-                //     writeConfigFile(config_file);
-                // }
+                archive_initialization(yes_overwrite, archivename, datasearchpath);
                 return 0;
             }
             bool run = vm.at("run").as<bool>();
             // refresh the parameters by changing the config file path.
             if(run){
-                // checking parameters, if not in current path, change as current path.
-                if(archivename==""){
-                    // if conf file is relative path, 
-                    archivename = fs::current_path().string();
-                    // fs::current_path(archivename);
-                }
+                archivename = fix_archive_name(archivename);
 
             }
 
@@ -490,51 +413,9 @@ int main(int argc, char *argv[]) {
             string new_search_result_list = vm.at("updategtlist").as<string>();
             bool add = vm.at("add").as<bool>();
             if(add){
-                // checking parameters, if not in current path, change as current path.
-                if(archivename==""){
-                    // if conf file is relative path, 
-                    archivename = fs::current_path().string();
-                    // fs::current_path(archivename);
-                }
-                cout << "adding data " << endl;
-                fs::path archive_path(archivename);
-                // in this task, we add new data file to the archive. 
-                if(update_index){
-                    cout << "Error:\t--add and --update cannot be used together. " << endl;
-                    return 1;
-                }
-                // collect data from data path. 
-                vector<string> data_extensions = {".mzml", ".mzxml", ".mgf", ".sptxt", ".scanlist"};
-                fs::path fs_datasearchpath = fs::absolute(datasearchpath);
-                vector<fs::path> new_experimental_datafiles = get_file_list(fs_datasearchpath, data_extensions);
-                vector<string> searchfile_extensions = {".ipro.pep.xml", ".sptxt"};
-                vector<fs::path> new_search_result_files = get_file_list(fs_datasearchpath, searchfile_extensions);
-                // write the data file list to a temp file.
-                new_experimental_data="";
-                new_search_result="";
-                new_experimental_datalist = fs::absolute(archive_path) / "new_experimental_datafile_list.txt";
-                new_search_result_list = fs::absolute(archive_path) / "new_search_result_file_list.txt";
-
-                sort(new_experimental_datafiles.begin(), new_experimental_datafiles.end());
-                sort(new_search_result_files.begin(), new_search_result_files.end());
-                ofstream fout(new_experimental_datalist);
-                for(auto & file: new_experimental_datafiles){
-                    fout << file.string() << endl;
-                }
-                fout.close();
-                fout.open(new_search_result_list);
-                for(auto & file: new_search_result_files){
-                    fout << file.string() << endl;
-                }
-                fout.close();
-                // update the index.
-                update_index = true;
-                cout << "start to update " << mzXMLList << " archive is " << archivename << endl;
-                cout << "new experimental data file list is " << new_experimental_datalist << endl;
-                cout << "new search result file list is " << new_search_result_list << endl;
-                // output file number
-                cout << "new experimental data file number is " << new_experimental_datafiles.size() << endl;
-                cout << "new search result file number is " << new_search_result_files.size() << endl;
+                collect_files_before_add(datasearchpath, mzXMLList, archivename, update_index, new_experimental_data,
+                                         new_experimental_datalist,
+                                         new_search_result, new_search_result_list);
 
             }
 
@@ -687,4 +568,138 @@ int main(int argc, char *argv[]) {
     {
         std::cout << "Error: program exit with unknown error " << endl;
     }
+}
+
+void
+collect_files_before_add(const string &datasearchpath, const string &mzXMLList, string &archivename, bool &update_index,
+                         string &new_experimental_data, string &new_experimental_datalist, string &new_search_result,
+                         string &new_search_result_list) {
+    // checking parameters, if not in current path, change as current path.
+    archivename = fix_archive_name(archivename);
+
+    cout << "adding data " << endl;
+    fs::path archive_path(archivename);
+    // in this task, we add new data file to the archive.
+    if(update_index){
+//                    cout << "Error:\t--add and --update cannot be used together. " << endl;
+        throw runtime_error("options --add and --update can not be used together. ");
+    }
+    // collect data from data path.
+    vector<string> data_extensions = {".mzml", ".mzxml", ".mgf", ".sptxt", ".scanlist"};
+    fs::path fs_datasearchpath = fs::absolute(datasearchpath);
+    vector<fs::path> new_experimental_datafiles = get_file_list(fs_datasearchpath, data_extensions);
+    vector<string> searchfile_extensions = {".ipro.pep.xml", ".sptxt"};
+    vector<fs::path> new_search_result_files = get_file_list(fs_datasearchpath, searchfile_extensions);
+    // write the data file list to a temp file.
+    new_experimental_data="";
+    new_search_result="";
+    new_experimental_datalist = fs::absolute(archive_path) / "new_experimental_datafile_list.txt";
+    new_search_result_list = fs::absolute(archive_path) / "new_search_result_file_list.txt";
+
+    sort(new_experimental_datafiles.begin(), new_experimental_datafiles.end());
+    sort(new_search_result_files.begin(), new_search_result_files.end());
+    ofstream fout(new_experimental_datalist);
+    for(auto & file: new_experimental_datafiles){
+        fout << file.string() << endl;
+    }
+    fout.close();
+    fout.open(new_search_result_list);
+    for(auto & file: new_search_result_files){
+        fout << file.string() << endl;
+    }
+    fout.close();
+    // update the index.
+    update_index = true;
+    cout << "start to update " << mzXMLList << " archive is " << archivename << endl;
+    cout << "new experimental data file list is " << new_experimental_datalist << endl;
+    cout << "new search result file list is " << new_search_result_list << endl;
+    // output file number
+    cout << "new experimental data file number is " << new_experimental_datafiles.size() << endl;
+    cout << "new search result file number is " << new_search_result_files.size() << endl;
+}
+
+// if archive_name is empty, change it to current folder.
+string &fix_archive_name(string &archivename) {// checking parameters, if not in current path, change as current path.
+    if(archivename==""){
+        archivename = fs::current_path().string();
+    }
+    return archivename;
+}
+
+// three steps to initialization.
+// 1. create folder with archive name.
+// 2. collecting data files into archive file.
+// 3. creating configuration files.
+// throw runtime_error when there are error inside.
+void archive_initialization(bool yes_overwrite, string &archivename, const string &datasearchpath) {
+    archivename = fix_archive_name(archivename);
+
+    // check if the archive name is already exist.
+    if(fs::exists(archivename)){
+        cout << "archive path '"<< archivename<<"' already exist" << endl;
+
+    }else{
+        bool archive_folder_created = fs::create_directory(archivename);
+        if(not archive_folder_created){
+            throw runtime_error("No such file or directory: " + archivename);
+        }
+    }
+
+
+    archivename = fs::absolute(archivename).string();
+
+    // put raw files into a text file called archive under the archive folder.
+    fs::path archive_path(archivename);
+    fs::path archive_file = archive_path / "archive";
+
+    if(fs::exists(archive_file) and not fs::is_regular_file(archive_file) ){
+        throw runtime_error("can not access file " + archive_file.string() + ", please make sure it is a regular file.");
+    }
+
+    if(fs::exists(archive_file) and fs::is_regular_file(archive_file) and not yes_overwrite){
+        cout << "archive file already exist, type yes to continue and overwrite the existing file. type no to quit"
+        << endl << "(yes/no):" << flush;
+        string input;
+        cin >> input;
+        if (input == "yes"){
+            cout << "overwrite the existing archive file" << endl;
+        }
+        else{
+//                        cout << "quit" << endl;
+            throw runtime_error("initialization already done. ");
+        }
+
+    }
+
+    // look for mzXML and mzML files in the datasearch path.
+    auto datafiles = get_mz_file_list(datasearchpath);
+    // sort the datafiles
+    sort(datafiles.begin(), datafiles.end());
+
+    // confirmed with yes or yes-overwrite is used.
+    int number_of_files = datafiles.size();
+    if(number_of_files == 0){
+        cout << "Error:\tno mzXML or mzML files found in the search path. " << endl;
+        cout <<"\tPlease make sure `--datasearchpath` is set to a folder with mzXML/mzML data files. " << endl;
+        cout << "\tCurrent `--datasearchpath` is set to '" << datasearchpath <<"'"<< endl;
+        cout << "\tSpectroscape will search in sub-folders. " << endl;
+        throw runtime_error("No raw files specified  in path " + datasearchpath);
+
+    }
+    ofstream fout(archive_file);
+    for(auto & file: datafiles){
+        fout << file.string() << endl;
+    }
+
+
+    // generate config file if not exist.
+    fs::path config_file = archive_path / "conf/spectroscape_auto.conf";
+    if(fs::exists(config_file)){
+        cout << "config file " << config_file << " already exist"<< endl;
+    }else{
+        writeConfigFile(config_file, archive_file);
+    }
+    cout << "the archive is initialized successfully. " << endl;
+
+
 }
