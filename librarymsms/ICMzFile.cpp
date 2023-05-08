@@ -584,21 +584,57 @@ void ICMzFile::scorePartiallyWithVecForm(int mzTopN, int tol, int blockSize, boo
         double querynorm = getSquaredNorm(queryspec);
         const int MAX_SCORE = 42925;
 
-        for (long i = 0; i < scores.size(); i++) {
-            double s = scores[i];
-            if (s > EPSILON) {
-                s /= sqrt(getSquaredNorm(indexlist[i]));
-                s /= sqrt(querynorm);
+        // again, write a thread based algorithm to accelerate the normalization.
+        int threadnum = 30;
+        // INIT 
+        cout << getSquaredNorm(0L) << endl;
+        vector<thread> threads;
+        long blocksize = scores.size() / threadnum;
+        for (int i = 0; i < threadnum; i++) {
+            long start = i * blocksize;
+            long end = (i + 1) * blocksize;
+            if (i == threadnum - 1) {
+                end = scores.size();
             }
+            threads.emplace_back([&, start, end]() {
+                for (long i = start; i < end; i++) {
+                    double s = scores[i];
+                    if (s > EPSILON) {
+                        s /= sqrt(getSquaredNorm(indexlist[i]));
+                        s /= sqrt(querynorm);
+                    }
 
-            s *= MAX_SCORE;
-            if (s < 0 or int(s) > MAX_SCORE ) {
-                cout << "Normalize Partial Scores: Invalid score s: " << s << " on index: " << indexlist[i] << endl;
-                cout << "origin: " << scores[i] << " norm: " << querynorm << " & " << getSquaredNorm(indexlist[i]) << endl;
+                    s *= MAX_SCORE;
+                    if (s < 0 or int(s) > MAX_SCORE ) {
+                        cout << "Normalize Partial Scores: Invalid score s: " << s << " on index: " << indexlist[i] << endl;
+                        cout << "origin: " << scores[i] << " norm: " << querynorm << " & " << getSquaredNorm(indexlist[i]) << endl;
 
-            }
-            scores[i] = int(s) > MAX_SCORE ? MAX_SCORE : int(s);
+                    }
+                    scores[i] = int(s) > MAX_SCORE ? MAX_SCORE : int(s);
+                }
+            });
         }
+        // join threads
+        for (auto &t: threads) {
+            t.join();
+        }
+
+
+        // for (long i = 0; i < scores.size(); i++) {
+        //     double s = scores[i];
+        //     if (s > EPSILON) {
+        //         s /= sqrt(getSquaredNorm(indexlist[i]));
+        //         s /= sqrt(querynorm);
+        //     }
+
+        //     s *= MAX_SCORE;
+        //     if (s < 0 or int(s) > MAX_SCORE ) {
+        //         cout << "Normalize Partial Scores: Invalid score s: " << s << " on index: " << indexlist[i] << endl;
+        //         cout << "origin: " << scores[i] << " norm: " << querynorm << " & " << getSquaredNorm(indexlist[i]) << endl;
+
+        //     }
+        //     scores[i] = int(s) > MAX_SCORE ? MAX_SCORE : int(s);
+        // }
     }
 }
 

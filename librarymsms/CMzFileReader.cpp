@@ -282,10 +282,38 @@ void CMzFileReader::calcDotProduct(int TopNPeak, int tol, uint16_t *queryspec, i
     get_vector_form(queryspec, tol, vecformY);
 
     bool debug = false;
-    for(int i = 0; i < indexlist.size(); i ++)    {
-            if (indexlist.at(i) == -1) cout << "Warning: index list contains -1, which is invalid index" << endl;
-            scores[i]= calculate_dot_product_with_vecfrom(indexlist.at(i), vecformY, TopNPeak, debug, 0);
+    // rewrite as multiple threads version. 
+    // the number of thread is 30 
+    // each thread will calculate a part of the indexlist
+    // the result will be stored in scores
+    // the indexlist is divided into 30 parts, each part is calculated by one thread
+    // the result is stored in scores
+
+    int threadnum = 30;
+    int blocksize = indexlist.size() / threadnum;
+    vector<thread> threads;
+    for(int i = 0; i < threadnum; i ++){
+        int start = i * blocksize;
+        int end = (i+1) * blocksize;
+        if(i == threadnum - 1){
+            end = indexlist.size();
+        }
+        // use lambda function to create thread
+        threads.push_back(thread([&, start, end](){
+            for(int j = start; j < end; j ++){
+                if (indexlist.at(j) == -1) cout << "Warning: index list contains -1, which is invalid index" << endl;
+                scores[j]= calculate_dot_product_with_vecfrom(indexlist.at(j), vecformY, TopNPeak, debug, 0);
+            }
+        }));
     }
+    // join the threads
+    for(auto &t: threads){
+        t.join();
+    }
+    // for(int i = 0; i < indexlist.size(); i ++)    {
+    //         if (indexlist.at(i) == -1) cout << "Warning: index list contains -1, which is invalid index" << endl;
+    //         scores[i]= calculate_dot_product_with_vecfrom(indexlist.at(i), vecformY, TopNPeak, debug, 0);
+    // }
 }
 
 class CDistTask:public ICThreadTask {

@@ -375,17 +375,14 @@ int main(int argc, char *argv[]) {
             bool init = vm.at("init").as<bool>();
             bool yes_overwrite = vm.at("yes").as<bool>();
             string archivename = vm.at("archivename").as<string>();
+            archivename = fix_archive_name(archivename);
             string datasearchpath = vm.at("datasearchpath").as<string>();
             if (init){
                 archive_initialization(yes_overwrite, archivename, datasearchpath);
                 return 0;
             }
             bool run = vm.at("run").as<bool>();
-            // refresh the parameters by changing the config file path.
-            if(run){
-                archivename = fix_archive_name(archivename);
-
-            }
+            
 
 
             string indexfilename = vm.at("indexfile").as<string>();
@@ -575,7 +572,7 @@ collect_files_before_add(const string &datasearchpath, const string &mzXMLList, 
                          string &new_experimental_data, string &new_experimental_datalist, string &new_search_result,
                          string &new_search_result_list) {
     // checking parameters, if not in current path, change as current path.
-    archivename = fix_archive_name(archivename);
+    // archivename = fix_archive_name(archivename);
 
     cout << "adding data " << endl;
     fs::path archive_path(archivename);
@@ -632,7 +629,7 @@ string &fix_archive_name(string &archivename) {// checking parameters, if not in
 // 3. creating configuration files.
 // throw runtime_error when there are error inside.
 void archive_initialization(bool yes_overwrite, string &archivename, const string &datasearchpath) {
-    archivename = fix_archive_name(archivename);
+    // archivename = fix_archive_name(archivename);
 
     // check if the archive name is already exist.
     if(fs::exists(archivename)){
