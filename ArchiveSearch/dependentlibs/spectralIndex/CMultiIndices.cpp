@@ -129,13 +129,28 @@ void MultipleIndicesImpl::add(float *vec, long specnum) {
         cout << "append spectrum to " << getNum() << " indices: " ;
 
     }
-    for (int i = 0; i < getNum(); i++) {
-        if(m_verbose){
-            cout << i +1 << " " << flush;
-        }
-//        cout << "append to " << i << "-th index, #spectra:  " << specnum << endl;
-        addshuffle(i, vec, specnum);
+    // use multiple threads to add.
+    vector<thread> threads;
+    for(int i=0; i<getNum(); i ++){
+        threads.push_back(thread([&](){
+            if(m_verbose){
+                cout << i +1 << " " << flush;
+            }
+            addshuffle(i, vec, specnum);
+        }));
     }
+    // join the threads
+    for(auto &t: threads){
+        t.join();
+    }
+
+//     for (int i = 0; i < getNum(); i++) {
+//         if(m_verbose){
+//             cout << i +1 << " " << flush;
+//         }
+// //        cout << "append to " << i << "-th index, #spectra:  " << specnum << endl;
+//         addshuffle(i, vec, specnum);
+//     }
     if(m_verbose){
         cout << endl;
     }

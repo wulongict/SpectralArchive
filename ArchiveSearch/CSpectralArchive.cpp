@@ -525,6 +525,7 @@ void CSpectralArchive::addRawData(DataFile &df){
         }
     });
     thread toIndices([&](){
+        // this step is very 3x slower than MZ, and 30x times slower than DB.
         m_indices->append(df);
         if(m_verbose){
                 cout << "INDEX updated after " << st.secondsElapsed() << " seconds" << endl;
