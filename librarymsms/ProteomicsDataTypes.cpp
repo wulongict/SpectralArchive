@@ -1337,75 +1337,28 @@ vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, b
 
     //Progress ps(end_spec_id-start_spec_id, "PeakList");
     vector<PeakList *> vpl;
-    // use two multiple threads to process the data. 
-    // first for each valid spectrum, generate the peak list. 
-    vector<CSpectrum *> validScans;
-    for (long i=start_spec_id; i< end_spec_id; i ++){
+    for (long i = start_spec_id; i < end_spec_id; i++) {
+        //ps.increase();
         CSpectrum *spec = getSpectrum(i);
         if (spec == nullptr or spec->getMSLevel() != msLevel) {
             continue;
         }
-        validScans.push_back(spec);
-        vpl.push_back(new PeakList());
+
+        vector<double> mz, intensity;
+        bool removeLowIntensePeaks = true;
+        bool rmIsotopicPeaks = true;
+        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
+
+        PeakList *pl = new PeakList();
+        if (pl == nullptr) {
+            cout << "fail to get space from server" << endl;
+            throw runtime_error("out of memory!");
+        }
+        pl->setM_mzList(mz);
+        pl->setM_intensityList(intensity);
+
+        vpl.push_back(pl);
     }
-    // next use many threads to process each of the spec, vpl pair. 
-    // use a thread pool to do this.
-    // cout << "start to process " << validScans.size() << " spectra" << endl;
-    long thread_num = 30;
-    long task_num = validScans.size()/thread_num+1;
-    vector<thread> threads;
-    for(int thread_id = 0; thread_id < thread_num; thread_id++){
-        // use a thread to run inner loop
-        threads.push_back(thread([&](){
-            for(long i = thread_id*task_num; i < validScans.size() and i < thread_id*task_num+task_num; i ++){
-                        CSpectrum *spec = validScans[i];
-                        vector<double> mz, intensity;
-                        bool removeLowIntensePeaks = true;
-                        bool rmIsotopicPeaks = true;
-                        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
-                        vpl[i]->setM_mzList(mz);
-                        vpl[i]->setM_intensityList(intensity);
-                    }
-            
-        }));
-        
-    }
-    
-    // for (int i = 0; i < validScans.size(); i++) {
-    //     tp.enqueue([&, i] {
-    //         CSpectrum *spec = validScans[i];
-    //         vector<double> mz, intensity;
-    //         bool removeLowIntensePeaks = true;
-    //         bool rmIsotopicPeaks = true;
-    //         spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
-    //         vpl[i]->setM_mzList(mz);
-    //         vpl[i]->setM_intensityList(intensity);
-    //     });
-    // }
-
-
-    // for (long i = start_spec_id; i < end_spec_id; i++) {
-    //     //ps.increase();
-    //     CSpectrum *spec = getSpectrum(i);
-    //     if (spec == nullptr or spec->getMSLevel() != msLevel) {
-    //         continue;
-    //     }
-
-    //     vector<double> mz, intensity;
-    //     bool removeLowIntensePeaks = true;
-    //     bool rmIsotopicPeaks = true;
-    //     spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
-
-    //     PeakList *pl = new PeakList();
-    //     if (pl == nullptr) {
-    //         cout << "fail to get space from server" << endl;
-    //         throw runtime_error("out of memory!");
-    //     }
-    //     pl->setM_mzList(mz);
-    //     pl->setM_intensityList(intensity);
-
-    //     vpl.push_back(pl);
-    // }
 
     return vpl;
 }
