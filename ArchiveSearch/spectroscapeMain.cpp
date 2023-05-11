@@ -673,7 +673,9 @@ void archive_initialization(bool yes_overwrite, string &archivename, const strin
     }
 
     // look for mzXML and mzML files in the datasearch path.
-    auto datafiles = get_mz_file_list(datasearchpath);
+    fs::path fs_datasearchpath = fs::absolute(datasearchpath);
+    auto datafiles = get_file_list(fs_datasearchpath, {".mzxml", ".mzml"});
+    // auto datafiles = get_mz_file_list(datasearchpath);
     // sort the datafiles
     sort(datafiles.begin(), datafiles.end());
 
