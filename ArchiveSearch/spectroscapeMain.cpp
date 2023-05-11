@@ -379,13 +379,17 @@ int main(int argc, char *argv[]) {
             bool init = vm.at("init").as<bool>();
             bool yes_overwrite = vm.at("yes").as<bool>();
             string archivename = vm.at("archivename").as<string>();
-            archivename = fix_archive_name(archivename);
+            
             string datasearchpath = vm.at("datasearchpath").as<string>();
             if (init){
+                archivename = fix_archive_name(archivename);
                 archive_initialization(yes_overwrite, archivename, datasearchpath);
                 return 0;
             }
             bool run = vm.at("run").as<bool>();
+            if(run){
+                archivename = fix_archive_name(archivename);
+            }
             
 
 
