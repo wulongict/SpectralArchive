@@ -374,6 +374,7 @@ void CSpectralArchive::updateListOfSpectra(string spectraList) {
     // add annotation. SQL-DB
 
 }
+#include <mutex>
 
 void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist, bool &newFileAdded) {
     if (new_experimental_datalist != "") {
@@ -390,15 +391,54 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
         }
         else{
             SimpleTimer st;
-            for (int i = 0; i < files.size(); i++) {
-                cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
-                addRawData(files[i], newFileAdded);
-                double time_elapsed = st.secondsElapsed();
-                double speed = time_elapsed/(i+1);
-                double time_to_be_used = (files.size()-1-i)*speed;
+            std::mutex m;
+            queue<shared_ptr<DataFile> > q;
+            thread readingfiles([&](){
+                for (int i = 0; i < files.size(); i++) {
+                    cout << "Reading " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
+                    newFileAdded = true;
+                    auto p = make_shared<DataFile>(files[i], 0, -1);
+                    std::lock_guard<std::mutex> lock(m);
+                    q.push(p);
+                }
+                std::lock_guard<std::mutex> lock(m);
+                q.push(nullptr);
+            });
+            int filenum_added = 0;
+            thread addingfiles([&](){
+                while(true){
+                    if(q.empty()) {sleep(0.1); continue;}
+                    shared_ptr<DataFile> p = q.front();
+                    if (p == nullptr) break;
 
-                spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
-            }
+                    cout << "Adding "<< p->getSourceFileName() << endl;
+                    addRawData(*p);
+                    filenum_added += 1;
+                    double time_elapsed = st.secondsElapsed();
+                    double speed = time_elapsed/filenum_added;
+                    double time_to_be_used = (files.size()-1-filenum_added)*speed;
+
+                    spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
+                    std::lock_guard<std::mutex> lock(m);
+                    q.pop();
+                }
+            });
+            // join the threads
+            readingfiles.join();
+            addingfiles.join();
+
+            // for (int i = 0; i < files.size(); i++) {
+            //     cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
+            //     newFileAdded = true;
+            //     DataFile df(files[i], 0, -1);
+            //     addRawData(df);
+
+            //     double time_elapsed = st.secondsElapsed();
+            //     double speed = time_elapsed/(i+1);
+            //     double time_to_be_used = (files.size()-1-i)*speed;
+
+            //     spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
+            // }
         }
        
     }
@@ -464,7 +504,30 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
     doAddSearchResult(pepxmlfile);
 }
 
+void CSpectralArchive::addRawData(DataFile &df){
+    thread toDB([&](){
+        m_AnnotationDB->appendNewDataFile(df);
+        if(m_verbose){
+                cout << "DB updated" << endl;
+        }
+    });
+    thread toMZ([&](){
+        m_csa->append(df, m_removeprecursor, nullptr);
+        if(m_verbose){
+        cout << "DB MZ updated" << endl;
+        }
+    });
+    thread toIndices([&](){
+        m_indices->append(df);
+        if(m_verbose){
+                cout << "DB MZ INDEX updated" << endl;
+        }
+    });
 
+    toDB.join();
+    toMZ.join();
+    toIndices.join();
+}
 
 void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     if (mzXMLfile.empty()) {
@@ -476,32 +539,7 @@ void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     } else {
         newFileAdded = true;
         DataFile df(mzXMLfile, 0, -1);
-        thread toDB([&](){
-            m_AnnotationDB->appendNewDataFile(df);
-            if(m_verbose){
-                    cout << "DB updated" << endl;
-            }
-        });
-        thread toMZ([&](){
-            m_csa->append(df, m_removeprecursor, nullptr);
-            if(m_verbose){
-            cout << "DB MZ updated" << endl;
-            }
-        });
-        thread toIndices([&](){
-            m_indices->append(df);
-            if(m_verbose){
-                    cout << "DB MZ INDEX updated" << endl;
-            }
-        });
-
-        toDB.join();
-        toMZ.join();
-        toIndices.join();
-       
-        // m_indices->write();  // as there is only one file, we could write here.
-        // the mzXML file will not be updated.
-        // appendFileName(mzXMLfile);
+        addRawData(df);
     }
 }
 

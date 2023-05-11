@@ -192,6 +192,7 @@ public:
 };
 string convertChromatogramToSVG(shared_ptr<Chromatogram> chr, string filename, string output_title="");
 class SimpleTimer;
+class DataFile;
 
 
 
@@ -283,6 +284,7 @@ private:
  * Attention: index is not saved.
  * */
     void addRawData(string mzXMLfile, bool &newFileAdded);
+    void addRawData(DataFile &df);
     void addSearchResult(string pepxmlfile);
     void addListOfSearchResults(string pepxmlfilelist);
 	void calcPvalue(int query_index, int tol, string outputbasename, bool normalize) ;
