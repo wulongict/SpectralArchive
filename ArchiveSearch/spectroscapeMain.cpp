@@ -12,8 +12,12 @@
 #include <thread>
 #include "CTimerSummary.h"
 #include "Util.h"
-#include <filesystem>
-namespace fs = std::filesystem;
+// #include <filesystem>
+// namespace fs = std::filesystem;
+
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+
 
 using namespace std;
 
@@ -236,7 +240,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
         }
         cout << "The archive name is " << archivie_name << endl;
         fs::path archivie_path = fs::absolute(archivie_name);
-        string config_file = archivie_path / "conf/spectroscape_auto.conf";
+        fs::path config_file = archivie_path / fs::path("conf/spectroscape_auto.conf");
         
         // vm["config"] = boost::lexical_cast<std::string>(config_file);
         fs::path config_file_path  = fs::absolute(config_file);
@@ -295,7 +299,7 @@ void displayTitle() {
                            ".............................................................................\n\n", __DATE__, __TIME__);
 }
 
-#include <filesystem>
+
 
 void archive_initialization(bool yes_overwrite, string &archivename, const string &datasearchpath);
 
@@ -306,7 +310,7 @@ collect_files_before_add(const string &datasearchpath, const string &mzXMLList, 
                          string &new_experimental_data, string &new_experimental_datalist, string &new_search_result,
                          string &new_search_result_list);
 
-namespace  fs = std::filesystem;
+
 
 void writeConfigFile(string filename, string mzxmlfile){
     File::CFile fileobj(filename);
@@ -590,8 +594,8 @@ collect_files_before_add(const string &datasearchpath, const string &mzXMLList, 
     // write the data file list to a temp file.
     new_experimental_data="";
     new_search_result="";
-    new_experimental_datalist = fs::absolute(archive_path) / "new_experimental_datafile_list.txt";
-    new_search_result_list = fs::absolute(archive_path) / "new_search_result_file_list.txt";
+    new_experimental_datalist = (fs::absolute(archive_path) / fs::path("new_experimental_datafile_list.txt")).string();
+    new_search_result_list = (fs::absolute(archive_path) / fs::path("new_search_result_file_list.txt")).string();
 
     sort(new_experimental_datafiles.begin(), new_experimental_datafiles.end());
     sort(new_search_result_files.begin(), new_search_result_files.end());
@@ -694,7 +698,7 @@ void archive_initialization(bool yes_overwrite, string &archivename, const strin
     if(fs::exists(config_file)){
         cout << "config file " << config_file << " already exist"<< endl;
     }else{
-        writeConfigFile(config_file, archive_file);
+        writeConfigFile(config_file.string(), archive_file.string());
     }
     cout << "the archive is initialized successfully. " << endl;
 

@@ -13,6 +13,10 @@
 #include "../librarymsms/ProteomicsDataTypes.h"
 
 using namespace std;
+// #include <filesystem>
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+// namespace fs = std::filesystem;
 
 
 
@@ -59,8 +63,7 @@ string get_request_content(const FCGX_Request &request) {
     return content;
 }
 
-#include <filesystem>
-namespace fs = std::filesystem;
+
 
 void CFastCGIServer::startFastCGIServer() {
     cout << "FCGX_IsCGI" << FCGX_IsCGI() << endl;
