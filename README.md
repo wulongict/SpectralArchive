@@ -12,7 +12,7 @@ For installation, users may also follow the following video tutorial.
 [![Watch the video](https://img.youtube.com/vi/C1a9RUqPxYs/maxresdefault.jpg)](https://youtu.be/C1a9RUqPxYs)
 
 ## Binary installation 
-This following command has been tested on Ubuntu 22.04 and 20.04.  The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). 
+This following command has been tested on **Ubuntu 22.04 and 20.04**.  The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). 
 
 Spectroscape comes with both CPU and GPU versions. If CUDA environment is not available, please use CPU version.  
 
