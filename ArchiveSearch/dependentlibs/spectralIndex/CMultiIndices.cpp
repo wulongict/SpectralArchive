@@ -703,9 +703,12 @@ void CMultiIndices::append(DataFile &df) {
         if(m_verbose){
             cout << "Scan:  " << start_spec_id << " - " << end_spec_id << "\t";
         }
+        SimpleTimer st("conversion");
         float *vec = df.toFloatVector(m_dim, newspecnum, m_removeprecursor, m_useFlankingBins, m_tolerance, start_spec_id,
                                       end_spec_id);
+        st.restart("add");
         m_impl.add(vec, newspecnum);
+        st.stop();
         delete[] vec;
     }
 }
