@@ -130,12 +130,18 @@ void MultipleIndicesImpl::add(float *vec, long specnum) {
 
     }
     SimpleTimer timer("add spectra to indices");
+    vector<thread> threads;
     for (int i = 0; i < getNum(); i++) {
         if(m_verbose){
             cout << i +1 << " " << flush;
         }
 //        cout << "append to " << i << "-th index, #spectra:  " << specnum << endl;
-        addshuffle(i, vec, specnum);
+        
+        // addshuffle(i, vec, specnum);
+        threads.push_back(thread(&MultipleIndicesImpl::addshuffle, this, i, vec, specnum));
+    }
+    for(auto &t: threads){
+        t.join();
     }
     if(m_verbose){
         cout << endl;

@@ -421,7 +421,7 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     filenum_added += 1;
                     double time_elapsed = st.secondsElapsed();
                     double speed = time_elapsed/filenum_added;
-                    double time_to_be_used = (files.size()-1-filenum_added)*speed;
+                    double time_to_be_used = ((int)files.size()-1-filenum_added)*speed;
 
                     spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
                     std::lock_guard<std::mutex> lock(m);
