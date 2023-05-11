@@ -702,7 +702,7 @@ void CMultiIndices::display() {
 }
 
 void CMultiIndices::append(DataFile &df) {
-    int batchsize = 10000;
+    int batchsize = 30000;
     for (long i = 0; i < df.getSpectrumNum(); i += batchsize) {
         long newspecnum = 0;
         long start_spec_id = i, end_spec_id = i + batchsize > df.getSpectrumNum() ? df.getSpectrumNum() : i + batchsize;
