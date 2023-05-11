@@ -196,11 +196,12 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     }else{
         // test if the file is empty.
         vector<string> data_files = readlines(mzXMLList);
-        if(data_files.empty()){
-            cerr << "No data files found in '" << mzXMLList << "' file " << endl;
-            cerr << "Please use `--datasearchpath` to specify path for collecting mzXML/mzML files in --init step." << endl;
-            throw runtime_error("No data file. ");
-        }
+        cout << "find " << data_files.size() << " data files in '" << mzXMLList << "' file " << endl;
+        // if(data_files.empty()){
+        //     cerr << "No data files found in '" << mzXMLList << "' file " << endl;
+        //     cerr << "Please use `--datasearchpath` to specify path for collecting mzXML/mzML files in --init step." << endl;
+        //     throw runtime_error("No data file. ");
+        // }
     }
     m_verbose = verbose;
 
@@ -398,8 +399,12 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     cout << "Reading " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
                     newFileAdded = true;
                     auto p = make_shared<DataFile>(files[i], 0, -1);
-                    std::lock_guard<std::mutex> lock(m);
-                    q.push(p);
+                    {
+                        std::lock_guard<std::mutex> lock(m);
+                        q.push(p);
+                    }
+
+                    while(q.size() > 3) sleep(0.5);
                 }
                 std::lock_guard<std::mutex> lock(m);
                 q.push(nullptr);
@@ -411,7 +416,7 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     shared_ptr<DataFile> p = q.front();
                     if (p == nullptr) break;
 
-                    cout << "Adding "<< p->getSourceFileName() << endl;
+                    cout << "Adding " << filenum_added +1 << " / " << files.size() << " file: " << p->getSourceFileName() << endl;
                     addRawData(*p);
                     filenum_added += 1;
                     double time_elapsed = st.secondsElapsed();
