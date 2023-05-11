@@ -136,7 +136,7 @@ void MultipleIndicesImpl::add(float *vec, long specnum) {
             if(m_verbose){
                 cout << i +1 << " " << flush;
             }
-            addshuffle(i, vec, specnum);
+            this->addshuffle(i, vec, specnum);
         }));
     }
     // join the threads
