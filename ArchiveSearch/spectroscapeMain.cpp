@@ -395,6 +395,7 @@ int main(int argc, char *argv[]) {
 
             string indexfilename = vm.at("indexfile").as<string>();
             string mzXMLList = vm.at("mzxmlfiles").as<string>();
+            cout << "The mzXML file is " << mzXMLList << endl;
             
             string pepxmls = vm.at("pepxmls").as<string>();
             bool rebuild = vm.at("rebuild").as<bool>();
