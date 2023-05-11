@@ -687,7 +687,7 @@ void archive_initialization(bool yes_overwrite, string &archivename, const strin
         throw runtime_error("No raw files specified  in path " + datasearchpath);
 
     }
-    ofstream fout(archive_file);
+    ofstream fout(archive_file.string());
     for(auto & file: datafiles){
         fout << file.string() << endl;
     }

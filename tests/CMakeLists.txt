@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project(tests)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++17 -fpermissive -fopenmp  -fPIC -Wreturn-type  -Werror=return-type ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11 -fpermissive -fopenmp  -fPIC -Wreturn-type  -Werror=return-type ")
 
 include_directories(../External/gtest-1.7.0/include ../librarymsms)
 add_executable(msmstest msmstest.cpp)
