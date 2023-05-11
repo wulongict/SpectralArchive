@@ -510,22 +510,24 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
 }
 
 void CSpectralArchive::addRawData(DataFile &df){
+    SimpleTimer st("adding raw data");
     thread toDB([&](){
         m_AnnotationDB->appendNewDataFile(df);
         if(m_verbose){
-                cout << "DB updated" << endl;
+                cout << "DB updated after " << st.secondsElapsed() << " seconds" << endl;
+                
         }
     });
     thread toMZ([&](){
         m_csa->append(df, m_removeprecursor, nullptr);
         if(m_verbose){
-        cout << "DB MZ updated" << endl;
+        cout << "MZ updated after " << st.secondsElapsed() << " seconds" << endl;
         }
     });
     thread toIndices([&](){
         m_indices->append(df);
         if(m_verbose){
-                cout << "DB MZ INDEX updated" << endl;
+                cout << "INDEX updated after " << st.secondsElapsed() << " seconds" << endl;
         }
     });
 
