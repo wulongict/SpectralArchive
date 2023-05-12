@@ -82,9 +82,9 @@ TsvAnnotation::TsvAnnotation(CTable &psm) :m_psm(psm){
     }
     //
     m_psm.build_table_index(m_psm.getColByHeader("spectrumname"));
-    cout << "index created " << endl;
-    m_psm.printRow(0);
-    m_psm.printRow(1);
+    // cout << "index created " << endl;
+    // m_psm.printRow(0);
+    // m_psm.printRow(1);
 }
 
 
@@ -116,9 +116,9 @@ CsvAnnotation::CsvAnnotation(CTable &psm) :m_psm(psm){
     }
     //
     m_psm.build_table_index(m_psm.getColByHeader("spectrumname"));
-    cout << "index created " << endl;
-    m_psm.printRow(0);
-    m_psm.printRow(1);
+    // cout << "index created " << endl;
+    // m_psm.printRow(0);
+    // m_psm.printRow(1);
 
 }
 

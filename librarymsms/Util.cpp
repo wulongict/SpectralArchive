@@ -321,7 +321,7 @@ void CTable::buildheader2column(bool rebuild) {
         {
             m_header2col[m_column_header[i]]=i;
         }
-        cout << "column index build" << endl;
+        // cout << "column index build" << endl;
     }
 }
 
