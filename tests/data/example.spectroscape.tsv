@@ -1,0 +1,11 @@
+filename	scan	modpep	charge	protein	ppprob	iprob	score
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	2	HGSGTGR	2	sp|A6NLU5|VTM2B_HUMAN	0.0	0.0	1.373
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	11	RKQEEADR	3	sp|Q05682|CALD1_HUMAN	0.0	0.0	2.435
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	60	HNGTGGK	2	sp|P62937|PPIA_HUMAN	0.0	0.0	3.329
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	484	HGNSHQGEPR	3	sp|P13645|K1C10_HUMAN	1.0	0.999999	0.0001883
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	496	QMHQNAPR	2	sp|Q9NSI6|BRWD1_HUMAN	0.1448	0.00492768	1.489
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	500	IDIFQTQAEQCHIAGISQKGWNFNR	5	DECOY_sp|P47755|CAZA2_HUMAN	0.0	0.0	1.792
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	501	VQGQNLDSMLHGTGMK	3	sp|P36894|BMR1A_HUMAN	0.0	0.0	2.722
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	514	EILKIDGSNTVDHK	4	sp|Q8IZH2|XRN1_HUMAN	0.0	0.0	2.151
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	517	HGNSHQGEPR	3	sp|P13645|K1C10_HUMAN	1.0	0.999999	2.31e-05
+../mass_spectra/Adult_Adrenalgland_Gel_Elite_49_f01.mzXML	520	TGTIACDPLLSWASQMSSR	4	DECOY_sp|A0A087WSZ0|KVD08_HUMAN	0.0	0.0	4.022

@@ -1176,7 +1176,27 @@ CGtUpdater::~CGtUpdater() {
             update(rawfilename, anno);
 
         }
-    } else {
+    } else if (ext == "tsv" and m_gtfile.find(".spectroscape.tsv") != string::npos) {
+        // support new spectroscape.tsv format.
+        // support tsv table.
+        cout << "Find new gt file type" << endl;
+        // find csv file
+        CTable psm(m_gtfile, '\t', true, 0);
+        cout << "table loaded" << endl;
+        CsvAnnotation anno(psm);
+        unordered_set<string> s;
+        for (int i = 0; i < psm.m_row; i++) {
+            s.insert(psm.getEntry(i, psm.getColByHeader("filename")));
+        }
+        for (const auto & it : s) {
+            //TODO: the following position to be changed.
+            string filename_prefix = "/nasbackup/wulong_backup/pxd000561/";
+            string rawfilename = filename_prefix + File::CFile(it).filename;
+            cout << "[Info] processing file " << rawfilename << endl;
+            update(rawfilename, anno);
+
+        }
+    }else {
         cout << "Unknown ground truth format! doing nothing " << endl;
     }
 }

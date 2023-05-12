@@ -25,6 +25,14 @@ public:
     bool updateGtInfo(SPsmAnnotation &gtinfo) override;
 };
 
+class TsvAnnotation: public ICGtInfoUpdate{
+    CTable &m_psm;
+public:
+    explicit TsvAnnotation(CTable &psm);
+    bool updateGtInfo(SPsmAnnotation &gtinfo) override;
+};
+
+
 class CsvAnnotation: public ICGtInfoUpdate
 {
     CTable &m_psm;

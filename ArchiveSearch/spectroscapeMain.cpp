@@ -27,9 +27,9 @@ using namespace std;
 
 
 void sigint_handler(int signal) {
-    std::cout << "============== Received SIGINT signal ==============" << std::endl;
+    std::cout << "\n============== Received SIGINT signal ==============" << std::endl;
     g_quit_flag.store(true);
-    std::cout << "============== Wait for a few seconds for Spectroscape to exit safely. ==============" << std::endl;
+    std::cout << "============== Wait for a few seconds for Spectroscape to exit safely. ==============\n" << std::endl;
 }
 
 boost::program_options::variables_map getParam(int argc, char *argv[]) {
