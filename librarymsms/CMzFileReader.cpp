@@ -153,7 +153,7 @@ void CMzFileReader::toMzScanFilePair(ofstream &fout_mzFile, DataFile &df, bool r
 
     m_scanInfo.getScanFileReader(m_scanInfo.getFileNum() - 1).write_specinfo();
     m_specnum += ms2count; // ms2count updated.
-    cout << "mz file contains " << m_specnum << " spectra " << endl;
+    // cout << "mz file contains " << m_specnum << " spectra " << endl;
 }
 
 int CMzFileReader::getPeakNumPerSpec() const {
