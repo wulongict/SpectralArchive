@@ -69,8 +69,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              " a customized seeds list can be: customized:a;b;c;d;e;f when there are six indexes. "
              "The characters a-f should be integers. default equivalent to customized:0;1;2;3;4;5.")
              ("gpuidx", po::value<string>()->default_value(
-                     "0;1;2"),
-             "the list of gpu ids for use.")
+                     "0"),
+             "the list of gpu ids for use. by default use first GPU. To use multiple GPUs, e.g. the first three gpus, use \"0;1;2\" as the value.")
 
              // option to launch the archive.
             ("inputsource", po::value<string>()->default_value("create"),

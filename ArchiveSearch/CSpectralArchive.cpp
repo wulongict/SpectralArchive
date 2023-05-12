@@ -434,7 +434,7 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     double speed = time_elapsed/filenum_added;
                     double time_to_be_used = ((int)files.size()-filenum_added)*speed;
                     // spdlog::get("A")->info("Added: {}",  p->getSourceFileName());
-                    spdlog::get("A")->info("#File {}/{} #Archive {}({}) elapsed {:.1f}s {:.1f} file/min {:5.0f} spec/s ETA: {:.1f}s ( {} hours {} minutes) done {}", filenum_added, files.size(), archivesize, spec_in_file, time_elapsed, filenum_added/time_elapsed*60, spec_num_added/time_elapsed ,time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 ,p->getSourceFileName());
+                    spdlog::get("A")->info("#File {}/{} #Archive {}({}) elapsed {:.1f}s {:.1f} file/min {:5.0f} spec/s ETA: {:.1f}s ({} hr {} min) done {}", filenum_added, files.size(), archivesize, spec_in_file, time_elapsed, filenum_added/time_elapsed*60, spec_num_added/time_elapsed ,time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 ,p->getSourceFileName());
                     // spdlog::get("A")->info("time used {:.1f}s\tSpeed: {:.1f} file/min\t{:5.0f} spec/s\tETA: {:.1f}s ( {} hours {} minutes)", time_elapsed, filenum_added/time_elapsed*60, spec_num_added/time_elapsed ,time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
                     std::lock_guard<std::mutex> lock(m);
                     q.pop();
