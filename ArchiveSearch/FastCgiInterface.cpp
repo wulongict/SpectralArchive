@@ -11,6 +11,7 @@
 #include "FastCgiInterface.h"
 #include "CSpectralArchive.h"
 #include "../librarymsms/ProteomicsDataTypes.h"
+#include "dependentlibs/msbasic/CDebugMode.h"
 
 using namespace std;
 // #include <filesystem>
@@ -78,7 +79,7 @@ void CFastCGIServer::startFastCGIServer() {
 
     // The loop of the server starts from here.
     // How can we make multiple thread call ?
-    while (FCGX_Accept_r(&m_request) == 0) {
+    while (!g_quit_flag.load() and  FCGX_Accept_r(&m_request) == 0) {
         char **env = m_request.envp;
         if (verbose) {
             while (*(++env)) {
