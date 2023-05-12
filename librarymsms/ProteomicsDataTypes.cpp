@@ -391,11 +391,11 @@ float *DataFile::toFloatVector(int dim, long &specnum, bool removeprecursor, boo
         end_spec_id = getSpectrumNum();
     }
     //cout << "Mz file contains peaks with lossy compression..." << endl;
-    SimpleTimer st("DataFile::toFloatVector");
+    // SimpleTimer st("DataFile::toFloatVector");
     int msLevel = 2;
     vector<PeakList *> vpl = toPeakList(tolerance, msLevel, removeprecursor, start_spec_id, end_spec_id);
     specnum = vpl.size();
-    st.restart("DataFile::toFloatVector::vpl_to_normalized_vec");
+    // st.restart("DataFile::toFloatVector::vpl_to_normalized_vec");
 
     float *ret = vpl_to_normalized_vec(vpl, dim, useFlankingBins,topPeakNum);
     releaseVectorPeakListPtr(vpl);
