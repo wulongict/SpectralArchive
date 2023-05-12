@@ -1162,7 +1162,7 @@ CGtUpdater::~CGtUpdater() {
         cout << "Find new gt file type" << endl;
         // find csv file
         CTable psm(m_gtfile, ',', true, 0);
-        cout << "table loaded" << endl;
+        // cout << "table loaded" << endl;
         CsvAnnotation anno(psm);
         unordered_set<string> s;
         for (int i = 0; i < psm.m_row; i++) {
@@ -1179,10 +1179,10 @@ CGtUpdater::~CGtUpdater() {
     } else if (ext == "tsv" and m_gtfile.find(".spectroscape.tsv") != string::npos) {
         // support new spectroscape.tsv format.
         // support tsv table.
-        cout << "Find new gt file type" << endl;
+        // cout << "Find new gt file type" << endl;
         // find csv file
         CTable psm(m_gtfile, '\t', true, 0);
-        cout << "table loaded" << endl;
+        // cout << "table loaded" << endl;
         TsvAnnotation anno(psm);
         unordered_set<string> s;
         for (int i = 0; i < psm.m_row; i++) {

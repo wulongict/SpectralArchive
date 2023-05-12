@@ -86,7 +86,7 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
         }
         fin.close();
     }
-    cout << "[Info] " << m_table.size() << " lines loaded." << endl;
+    // cout << "[Info] " << m_table.size() << " lines loaded." << endl;
     m_row = m_table.size();
     m_col = 0;
     if (m_row > 0) { m_col = m_table[0].size(); }
