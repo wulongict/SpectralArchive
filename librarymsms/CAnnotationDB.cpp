@@ -1183,7 +1183,7 @@ CGtUpdater::~CGtUpdater() {
         // find csv file
         CTable psm(m_gtfile, '\t', true, 0);
         cout << "table loaded" << endl;
-        CsvAnnotation anno(psm);
+        TsvAnnotation anno(psm);
         unordered_set<string> s;
         for (int i = 0; i < psm.m_row; i++) {
             s.insert(psm.getEntry(i, psm.getColByHeader("filename")));
