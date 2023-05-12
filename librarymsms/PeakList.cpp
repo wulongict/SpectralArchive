@@ -289,24 +289,48 @@ void PeakList::print() {
     cout << "// Peak End" << endl;
 }
 
-void PeakList::KeepTopN(int N) {
-    double threshold = 0;
-    vector<double> v = m_intensityList;
-    sort(v.begin(), v.end(), std::greater<double>());
-    if (N <= v.size()) {
-        threshold = v[N - 1];
-    }
-    vector<double> tmp_mz, tmp_intensity;
-    for (int i = 0; i < m_mzList.size(); ++i) {
-        if (m_intensityList[i] >= threshold) {
-            tmp_mz.push_back(m_mzList[i]);
-            tmp_intensity.push_back(m_intensityList[i]);
-        }
+ void PeakList::KeepTopN(int N) {
+    if (N >= m_intensityList.size()) {
+        return; // nothing to do
     }
 
-    m_mzList = tmp_mz;
-    m_intensityList = tmp_intensity;
+    // Sort mzList and intensityList together based on intensity
+    std::vector<std::pair<double, double>> mz_intensity_pairs(m_intensityList.size());
+    for (std::size_t i = 0; i < m_intensityList.size(); ++i) {
+        mz_intensity_pairs[i] = std::make_pair(m_mzList[i], m_intensityList[i]);
+    }
+    std::partial_sort(mz_intensity_pairs.begin(), mz_intensity_pairs.begin() + N, mz_intensity_pairs.end(),
+                      [](const std::pair<double, double>& lhs, const std::pair<double, double>& rhs) { return lhs.second > rhs.second; });
+
+    // Copy the top N values back into mzList and intensityList
+    for (std::size_t i = 0; i < N; ++i) {
+        m_mzList[i] = mz_intensity_pairs[i].first;
+        m_intensityList[i] = mz_intensity_pairs[i].second;
+    }
+
+    // Resize the lists to keep only the top N elements
+    m_mzList.resize(N);
+    m_intensityList.resize(N);
 }
+
+// void PeakList::KeepTopN(int N) {
+//     double threshold = 0;
+//     vector<double> v = m_intensityList;
+//     sort(v.begin(), v.end(), std::greater<double>());
+//     if (N <= v.size()) {
+//         threshold = v[N - 1];
+//     }
+//     vector<double> tmp_mz, tmp_intensity;
+//     for (int i = 0; i < m_mzList.size(); ++i) {
+//         if (m_intensityList[i] >= threshold) {
+//             tmp_mz.push_back(m_mzList[i]);
+//             tmp_intensity.push_back(m_intensityList[i]);
+//         }
+//     }
+
+//     m_mzList = tmp_mz;
+//     m_intensityList = tmp_intensity;
+// }
 
 void PeakList::rankingAsIntensity(int maxRanking) {
     vector<int> index(m_mzList.size(),0);
