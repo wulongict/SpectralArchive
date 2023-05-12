@@ -74,7 +74,7 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
             getline(fin, line);
             trim_space_only(line);
             split_string(line, m_column_header, m_delim);
-            cout << endl << "Header: " << endl << line << endl;
+            // cout << endl << "Header: " << endl << line << endl;
         }
         while (getline(fin, line)) {
             cps.increase();
@@ -114,7 +114,7 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
         }
         cout << endl;
     }
-    cout << "[Info] Table loaded " << filename << endl << endl;
+    // cout << "[Info] Table loaded " << filename << endl << endl;
 }
 
 string CTable::getEntry(int row, int col) const {
