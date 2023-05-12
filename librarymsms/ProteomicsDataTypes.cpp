@@ -1325,6 +1325,38 @@ SptxtParser::SptxtParser() : ICFileParser(){
 
 SptxtParser::~SptxtParser() = default;
 
+
+void processSpectrum(CSpectrum* spec, PeakList* pl, bool remove_precursor, double localMaxHalfWidth) {
+    std::vector<double> mz, intensity;
+    bool removeLowIntensePeaks = true;
+    bool rmIsotopicPeaks = true;
+    spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
+
+    pl->setM_mzList(mz);
+    pl->setM_intensityList(intensity);
+}
+
+void processSpectra(std::vector<CSpectrum*>& spectra, std::vector<PeakList*>& vpl, bool remove_precursor, double localMaxHalfWidth) {
+    std::size_t num_threads = std::thread::hardware_concurrency();
+    std::size_t chunk_size = (spectra.size() + num_threads - 1) / num_threads;
+
+    std::vector<std::thread> threads(num_threads);
+    for (std::size_t i = 0; i < num_threads; ++i) {
+        std::size_t start = i * chunk_size;
+        std::size_t end = std::min(start + chunk_size, spectra.size());
+
+        threads[i] = std::thread([start, end, &spectra, &vpl, remove_precursor, localMaxHalfWidth]() {
+            for (std::size_t i = start; i < end; ++i) {
+                processSpectrum(spectra[i], vpl[i], remove_precursor, localMaxHalfWidth);
+            }
+        });
+    }
+
+    for (auto& t : threads) {
+        t.join();
+    }
+}
+
 /// todo: to be replaced by a new function
 vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, bool remove_precursor, long start_spec_id, long end_spec_id) {
     if (remove_precursor) {
@@ -1349,33 +1381,26 @@ vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, b
         PeakList *pl = new PeakList();
         vpl.push_back(pl);
     }
+    processSpectra(spectra, vpl, remove_precursor, localMaxHalfWidth);
+    // for(long i = 0; i < spectra.size(); i ++){
+    //     CSpectrum * spec = spectra[i];
+    //     vector<double> mz, intensity;
+    //     bool removeLowIntensePeaks = true;
+    //     bool rmIsotopicPeaks = true;
+    //     spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
 
-    for(long i = 0; i < spectra.size(); i ++){
-
-
-    // for (long i = start_spec_id; i < end_spec_id; i++) {
-        //ps.increase();
-        // CSpectrum *spec = getSpectrum(i);
-        // if (spec == nullptr or spec->getMSLevel() != msLevel) {
-        //     continue;
-        // }
-        CSpectrum * spec = spectra[i];
-        vector<double> mz, intensity;
-        bool removeLowIntensePeaks = true;
-        bool rmIsotopicPeaks = true;
-        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
-
-        PeakList *pl = vpl[i];
+    //     PeakList *pl = vpl[i];
         
-        pl->setM_mzList(mz);
-        pl->setM_intensityList(intensity);
+    //     pl->setM_mzList(mz);
+    //     pl->setM_intensityList(intensity);
 
         
-    }
-    
+    // }
+
 
     return vpl;
 }
+
 
 void DataFile::printSummary() {
     int ms1counts = 0;
