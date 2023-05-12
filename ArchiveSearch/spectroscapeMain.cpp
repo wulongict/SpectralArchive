@@ -607,7 +607,7 @@ collect_files_before_add(const string &datasearchpath, const string &mzXMLList, 
     vector<string> data_extensions = {".mzml", ".mzxml", ".mgf", ".sptxt", ".scanlist"};
     fs::path fs_datasearchpath = fs::absolute(datasearchpath);
     vector<fs::path> new_experimental_datafiles = get_file_list(fs_datasearchpath, data_extensions);
-    vector<string> searchfile_extensions = {".ipro.pep.xml", ".sptxt"};
+    vector<string> searchfile_extensions = {".ipro.pep.xml", ".sptxt", ".spectroscape.tsv", "pep.xml", "pepxml"};
     vector<fs::path> new_search_result_files = get_file_list(fs_datasearchpath, searchfile_extensions);
     // write the data file list to a temp file.
     new_experimental_data="";
