@@ -423,16 +423,16 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     shared_ptr<DataFile> p = q.front();
                     if (p == nullptr) break;
 
-                    cout << "Adding " << filenum_added +1 << " / " << files.size() << " file: " << p->getSourceFileName() << endl;
                     addRawData(*p);
                     filenum_added += 1;
+                    //cout << "File added: " << filenum_added << " / " << files.size() << "\t #Archive: " << archivesize << "\tMS2 added: " << spec_num_added<< "\tfile: " << p->getSourceFileName() << endl;
                     // get the size of the archive 
                     spec_num_added += this->size() - archivesize;
                     archivesize = this->size();
                     double time_elapsed = st.secondsElapsed();
                     double speed = time_elapsed/filenum_added;
                     double time_to_be_used = ((int)files.size()-filenum_added)*speed;
-
+                    spdlog::get("A")->info("#File {}/{}\t#Archive: {} \tMS2 added: {} \tfile: {}", filenum_added, files.size(), archivesize, spec_num_added, p->getSourceFileName());
                     spdlog::get("A")->info("time used {:.1f}s, {:.1f} file/min, {:5.0f} spec/s ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, filenum_added/time_elapsed*60, spec_num_added/time_elapsed ,time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
                     std::lock_guard<std::mutex> lock(m);
                     q.pop();
