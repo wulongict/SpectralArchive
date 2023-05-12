@@ -1337,6 +1337,7 @@ vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, b
 
     //Progress ps(end_spec_id-start_spec_id, "PeakList");
     vector<PeakList *> vpl;
+    vector<CSpectrum *> spectra;
     for (long i = start_spec_id; i < end_spec_id; i++) {
         //ps.increase();
         CSpectrum *spec = getSpectrum(i);
@@ -1344,21 +1345,34 @@ vector<PeakList *> DataFile::toPeakList(double localMaxHalfWidth, int msLevel, b
             continue;
         }
 
+        spectra.push_back(spec);
+        PeakList *pl = new PeakList();
+        vpl.push_back(pl);
+    }
+
+    for(long i = 0; i < spectra.size(); i ++){
+
+
+    // for (long i = start_spec_id; i < end_spec_id; i++) {
+        //ps.increase();
+        // CSpectrum *spec = getSpectrum(i);
+        // if (spec == nullptr or spec->getMSLevel() != msLevel) {
+        //     continue;
+        // }
+        CSpectrum * spec = spectra[i];
         vector<double> mz, intensity;
         bool removeLowIntensePeaks = true;
         bool rmIsotopicPeaks = true;
         spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, remove_precursor, rmIsotopicPeaks, localMaxHalfWidth);
 
-        PeakList *pl = new PeakList();
-        if (pl == nullptr) {
-            cout << "fail to get space from server" << endl;
-            throw runtime_error("out of memory!");
-        }
+        PeakList *pl = vpl[i];
+        
         pl->setM_mzList(mz);
         pl->setM_intensityList(intensity);
 
-        vpl.push_back(pl);
+        
     }
+    
 
     return vpl;
 }
