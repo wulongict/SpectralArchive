@@ -1158,6 +1158,7 @@ CGtUpdater::~CGtUpdater() {
         AnnotationDataFile adf(lib_file);
         update(m_gtfile, adf);
     } else if (ext == "all" and m_gtfile.find(".psm.all") != string::npos) {
+        // support tsv table.
         cout << "Find new gt file type" << endl;
         // find csv file
         CTable psm(m_gtfile, ',', true, 0);

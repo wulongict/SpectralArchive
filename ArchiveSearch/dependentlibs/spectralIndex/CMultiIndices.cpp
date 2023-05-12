@@ -129,7 +129,7 @@ void MultipleIndicesImpl::add(float *vec, long specnum) {
         cout << "append spectrum to " << getNum() << " indices: " ;
 
     }
-    SimpleTimer timer("add spectra to indices");
+    // SimpleTimer timer("add spectra to indices");
     vector<thread> threads;
     for (int i = 0; i < getNum(); i++) {
         if(m_verbose){
@@ -709,12 +709,12 @@ void CMultiIndices::append(DataFile &df) {
         if(m_verbose){
             cout << "Scan:  " << start_spec_id << " - " << end_spec_id << "\t";
         }
-        SimpleTimer st("conversion");
+        // SimpleTimer st("conversion");
         float *vec = df.toFloatVector(m_dim, newspecnum, m_removeprecursor, m_useFlankingBins, m_tolerance, start_spec_id,
                                       end_spec_id);
-        st.restart("add");
+        // st.restart("add");
         m_impl.add(vec, newspecnum);
-        st.stop();
+        // st.stop();
         delete[] vec;
     }
 }
