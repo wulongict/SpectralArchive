@@ -7,6 +7,10 @@
 
 
 #include <string>
+// define some global vaiables
+#include <atomic>
+
+extern std::atomic<bool> g_quit_flag;
 
 
 class CDebugMode {
@@ -38,5 +42,7 @@ public:
 };
 
 void initlog(std::string logfile, std::string logname);
+
+
 
 #endif //MYTOOL_DEBUGMODE_H

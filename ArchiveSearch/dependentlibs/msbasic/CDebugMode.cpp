@@ -7,7 +7,10 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/sinks/ansicolor_sink.h"
-
+#include <iostream>
+#include <csignal>
+#include <atomic>
+std::atomic<bool> g_quit_flag(false);
 
 using namespace std;
 using namespace spdlog;

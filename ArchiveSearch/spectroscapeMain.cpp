@@ -14,12 +14,23 @@
 #include "Util.h"
 // #include <filesystem>
 // namespace fs = std::filesystem;
+#include <csignal>
+#include <atomic>
+
 
 #include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
 
 using namespace std;
+
+
+
+void sigint_handler(int signal) {
+    std::cout << "============== Received SIGINT signal ==============" << std::endl;
+    g_quit_flag.store(true);
+    std::cout << "============== Wait for a few seconds for Spectroscape to exit safely. ==============" << std::endl;
+}
 
 boost::program_options::variables_map getParam(int argc, char *argv[]) {
     namespace po = boost::program_options;
@@ -363,6 +374,8 @@ void writeConfigFile(string filename, string mzxmlfile){
 
 
 int main(int argc, char *argv[]) {
+    // Set up a signal handler for SIGINT
+    std::signal(SIGINT, sigint_handler);
     try
     {
         SimpleTimer st(false);
@@ -553,7 +566,7 @@ int main(int argc, char *argv[]) {
 
             spdlog::get("A")->info("Time report:\n{}\n", oss.str());
             double timeused = st.secondsElapsed();
-            spdlog::get("A")->info("Spectroscape task is finished. \nThe spectra number in archive is {}.\nTotal time elapsed: {:.4f} seconds", archive.size(), timeused);
+            spdlog::get("A")->info("The size of archive is {}. Time elapsed: {:.4f} seconds. Spectroscape finishes.", archive.size(), timeused);
 
             return 0;
         }

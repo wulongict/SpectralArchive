@@ -30,6 +30,7 @@
 #include "dependentlibs/MzRTMap.h"
 #include "CTimerSummary.h"
 #include "PeakList.h"
+#include "dependentlibs/msbasic/CDebugMode.h"
 
 using namespace std;
 
@@ -396,6 +397,10 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
             queue<shared_ptr<DataFile> > q;
             thread readingfiles([&](){
                 for (int i = 0; i < files.size(); i++) {
+                    if(g_quit_flag.load()) {
+                        cout << "got quit signal, stop reading files" << endl;
+                        break;
+                        }
                     cout << "Reading " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
                     newFileAdded = true;
                     auto p = make_shared<DataFile>(files[i], 0, -1);
@@ -410,6 +415,8 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                 q.push(nullptr);
             });
             int filenum_added = 0;
+            long spec_num_added = 0;
+            long archivesize = this->size();
             thread addingfiles([&](){
                 while(true){
                     if(q.empty()) {sleep(0.1); continue;}
@@ -419,11 +426,14 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                     cout << "Adding " << filenum_added +1 << " / " << files.size() << " file: " << p->getSourceFileName() << endl;
                     addRawData(*p);
                     filenum_added += 1;
+                    // get the size of the archive 
+                    spec_num_added += this->size() - archivesize;
+                    archivesize = this->size();
                     double time_elapsed = st.secondsElapsed();
                     double speed = time_elapsed/filenum_added;
-                    double time_to_be_used = ((int)files.size()-1-filenum_added)*speed;
+                    double time_to_be_used = ((int)files.size()-filenum_added)*speed;
 
-                    spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
+                    spdlog::get("A")->info("time used {:.1f}s, {:.1f} file/min, {:.1} spec/sec ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, filenum_added/time_elapsed*60, spec_num_added/time_elapsed ,time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
                     std::lock_guard<std::mutex> lock(m);
                     q.pop();
                 }
@@ -432,18 +442,6 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
             readingfiles.join();
             addingfiles.join();
 
-            // for (int i = 0; i < files.size(); i++) {
-            //     cout << "Processing " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
-            //     newFileAdded = true;
-            //     DataFile df(files[i], 0, -1);
-            //     addRawData(df);
-
-            //     double time_elapsed = st.secondsElapsed();
-            //     double speed = time_elapsed/(i+1);
-            //     double time_to_be_used = (files.size()-1-i)*speed;
-
-            //     spdlog::get("A")->info("time used {:.1f}s, {:.1f}s per file, ETA: {:.1f}s, -> {} hours {} minutes", time_elapsed, speed, time_to_be_used, int(time_to_be_used)/3600, (int(time_to_be_used)%3600)/60 );
-            // }
         }
        
     }
