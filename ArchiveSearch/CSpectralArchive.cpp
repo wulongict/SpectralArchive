@@ -401,7 +401,7 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
                         cout << "got quit signal, stop reading files" << endl;
                         break;
                         }
-                    cout << "Reading " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
+                    // cout << "Reading " << i + 1 << " / " << files.size() << " file " << files[i] << endl;
                     newFileAdded = true;
                     auto p = make_shared<DataFile>(files[i], 0, -1);
                     {
