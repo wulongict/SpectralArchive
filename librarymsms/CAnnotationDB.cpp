@@ -1190,8 +1190,8 @@ CGtUpdater::~CGtUpdater() {
         }
         for (const auto & it : s) {
             //TODO: the following position to be changed.
-            string filename_prefix = "/nasbackup/wulong_backup/pxd000561/";
-            string rawfilename = filename_prefix + File::CFile(it).filename;
+            // string filename_prefix = "/nasbackup/wulong_backup/pxd000561/";
+            string rawfilename =  File::CFile(it).filename;
             cout << "[Info] processing file " << rawfilename << endl;
             update(rawfilename, anno);
 
