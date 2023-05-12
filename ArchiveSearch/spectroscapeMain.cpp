@@ -566,7 +566,7 @@ int main(int argc, char *argv[]) {
 
             spdlog::get("A")->info("Time report:\n{}\n", oss.str());
             double timeused = st.secondsElapsed();
-            spdlog::get("A")->info("The size of archive is {}. Time elapsed: {:.4f} seconds. Spectroscape finishes.", archive.size(), timeused);
+            spdlog::get("A")->info("Spectroscape archive size: {}. Time elapsed: {:.1f} s.", archive.size(), timeused);
 
             return 0;
         }
