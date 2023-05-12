@@ -512,21 +512,21 @@ void CSpectralArchive::addRawData(DataFile &df){
     thread toDB([&](){
         m_AnnotationDB->appendNewDataFile(df);
         if(m_verbose){
-                cout << "DB updated after " << st.secondsElapsed() << " seconds" << endl;
+                // cout << "DB updated after " << st.secondsElapsed() << " seconds" << endl;
                 
         }
     });
     thread toMZ([&](){
         m_csa->append(df, m_removeprecursor, nullptr);
         if(m_verbose){
-        cout << "MZ updated after " << st.secondsElapsed() << " seconds" << endl;
+        // cout << "MZ updated after " << st.secondsElapsed() << " seconds" << endl;
         }
     });
     thread toIndices([&](){
         // this step is very 3x slower than MZ, and 30x times slower than DB.
         m_indices->append(df);
         if(m_verbose){
-                cout << "INDEX updated after " << st.secondsElapsed() << " seconds" << endl;
+                // cout << "INDEX updated after " << st.secondsElapsed() << " seconds" << endl;
         }
     });
 
