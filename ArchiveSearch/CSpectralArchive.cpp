@@ -508,7 +508,7 @@ void CSpectralArchive::addSearchResult(string pepxmlfile) {
 }
 
 void CSpectralArchive::addRawData(DataFile &df){
-    SimpleTimer st("adding raw data");
+    // SimpleTimer st("adding raw data");
     thread toDB([&](){
         m_AnnotationDB->appendNewDataFile(df);
         if(m_verbose){
