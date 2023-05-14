@@ -1850,33 +1850,52 @@ void CSpectralArchive::remove(int lastNfile) {
     }
     // clean mz and scan file.
     int FileNum = m_AnnotationDB->getTotalFileNum();
-    m_csa->removeLastNFile(lastNfile);
 
     // clean index
     specfileinfo sf = m_AnnotationDB->getSpecFileInfo(FileNum - lastNfile);
     long last = m_AnnotationDB->getTotalSpecNum();
-    vector<long> idx(last - sf.start,0);
-    iota(idx.begin(), idx.end(), sf.start);
-    cout << "removing vectors from index " << idx.front() << " - " << idx.back() << endl;
-    m_indices->removeIds(idx);
-    m_indices->write();
+    // remove the last N files with threee threads. each threads remove one type, 
+    // there are three type, index, db, mzfile.
+    // remove from mzfile with thread, lambda function used for threads
+    thread updateMzFileThread([&]() {
+        // cout << "removing mzfile " << sf.filename << endl;
+        m_csa->removeLastNFile(lastNfile);
+    });
+    // remove from db
+    thread updateDBThread([&]() {
+        // cout << "removing db " << sf.filename << endl;
+        m_AnnotationDB->deleteLastNFile(lastNfile);
+    });
+    // remove from index
+    thread updateIndexThread([&]() {
+        // cout << "removing index " << sf.filename << endl;
+        vector<long> idx(last - sf.start,0);
+        iota(idx.begin(), idx.end(), sf.start);
+        cout << "removing vectors from index " << idx.front() << " - " << idx.back() << endl;
+        m_indices->removeIds(idx);
+        m_indices->write();
+    });
 
-    m_AnnotationDB->deleteLastNFile(lastNfile);
+    // wait for all threads to finish
+    updateMzFileThread.join();
+    updateDBThread.join();
+    updateIndexThread.join();
 
 
-//    m_csa->removeLastNFile(lastNfile);
-//    for(int i = 0; i < lastNfile; i ++){
-//        specfileinfo sf =    m_AnnotationDB->getLastSpecFile();
-//        if(sf.isGood()){
-//            m_AnnotationDB->deleteLastNFile();
-//            vector<long> idx(sf.end-sf.start,0);
-//            iota(idx.begin(), idx.end(),sf.start);
-//            m_indices->removeIds(idx);
-//
-//        }
-//    }
-//    m_indices->write();
-//    cout << "Size of archive after files removed "<<size() << endl;
+    
+
+    // // remove from index 
+    // vector<long> idx(last - sf.start,0);
+    // iota(idx.begin(), idx.end(), sf.start);
+    // cout << "removing vectors from index " << idx.front() << " - " << idx.back() << endl;
+    // m_indices->removeIds(idx);
+    // m_indices->write();
+    // // remove from DB
+    // m_AnnotationDB->deleteLastNFile(lastNfile);
+
+    // // remove from mzfile.
+    // m_csa->removeLastNFile(lastNfile);
+
 }
 
 int CSpectralArchive::getNumOfFilesToRemoveForShrinkingArchiveTo(long numberofSpec) {

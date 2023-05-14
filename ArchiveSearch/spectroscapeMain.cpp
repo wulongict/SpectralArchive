@@ -27,9 +27,16 @@ using namespace std;
 
 
 void sigint_handler(int signal) {
-    std::cout << "\n============== Received SIGINT signal ==============" << std::endl;
+    
     g_quit_flag.store(true);
-    std::cout << "============== Wait for a few seconds for Spectroscape to exit safely. ==============\n" << std::endl;
+    g_quit_key_stroke += 1;
+    std::cout << "\nReceived SIGINT signal: " << g_quit_key_stroke << std::endl;
+    if(g_quit_key_stroke>1){
+        std::cout << "Force to exit Spectroscape." << std::endl;
+        exit(0);
+    }
+    std::cout << "Wait for a few seconds for Spectroscape to exit safely.\n" << std::endl;
+    std::cout << "If you want Spectroscape to stop immediately, use ctrl-c key again .\n" << std::endl;
 }
 
 boost::program_options::variables_map getParam(int argc, char *argv[]) {

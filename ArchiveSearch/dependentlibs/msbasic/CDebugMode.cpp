@@ -11,6 +11,7 @@
 #include <csignal>
 #include <atomic>
 std::atomic<bool> g_quit_flag(false);
+std::atomic_int g_quit_key_stroke(0);
 
 using namespace std;
 using namespace spdlog;

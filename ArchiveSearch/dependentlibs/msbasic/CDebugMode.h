@@ -11,6 +11,7 @@
 #include <atomic>
 
 extern std::atomic<bool> g_quit_flag;
+extern std::atomic_int g_quit_key_stroke;
 
 
 class CDebugMode {
