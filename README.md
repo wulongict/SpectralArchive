@@ -7,11 +7,9 @@ Spetroscape is a software tool to search for similar PSMs in spectral archives. 
 Spectroscape has a web user interface, which enables real time searching for approximate nearest neighbors (ANNs) against an archive with hundreds of millions of spectra. 
 
 ## Video tutorial for installation
-For installation, users may also follow the following video tutorial. 
+For installation, users may either follow the [video tutorial](https://youtu.be/C1a9RUqPxYs) below or read through the next section of the ReadMe.md file.  
 
-[![Watch the video](https://img.youtube.com/vi/C1a9RUqPxYs/maxresdefault.jpg)](https://youtu.be/C1a9RUqPxYs)
-
-<video src='https://youtu.be/C1a9RUqPxYs' width=180 ></video>
+[![](https://markdown-videos.deta.dev/youtube/C1a9RUqPxYs)](https://youtu.be/C1a9RUqPxYs)
 
 ## Binary installation 
 This following command has been tested on **Ubuntu 22.04 and 20.04**.  The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). 
