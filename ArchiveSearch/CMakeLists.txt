@@ -48,6 +48,9 @@ target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
 msbasic_small_static mstoolkit spectrastlib_static
 		  )
+set(MY_SPECTROSCAPE_VERSION "1.1.3")
+# target_compile_definitions(spectroscape PRIVATE SPECTROSCAPE_VERSION=${MY_SPECTROSCAPE_VERSION})
+add_compile_definitions(SPECTROSCAPE_VERSION="${MY_SPECTROSCAPE_VERSION}")
 
 add_dependencies(spectroscape boost ${DPGPU})
 
@@ -68,7 +71,7 @@ endif()
 
 # The name of the package file to generate, not including the extension. For example, cmake-2.6.1-Linux-i686. The default value is:
 # ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}
-set(CPACK_PACKAGE_VERSION 1.1.2)
+set(CPACK_PACKAGE_VERSION ${MY_SPECTROSCAPE_VERSION})
 set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER Long WU)

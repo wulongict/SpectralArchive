@@ -295,6 +295,10 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     displayParam(vm);
     return vm;
 }
+// SPECTROSCAPE_VERSION should be defined in CMakeLists.txt
+#ifndef SPECTROSCAPE_VERSION
+#define SPECTROSCAPE_VERSION "0.0.0"
+#endif
 
 // new banner for Spectroscape
 void displayTitle() {
@@ -310,11 +314,11 @@ void displayTitle() {
                            R"(.        |_|                                                  |_|           )"".\n"
                            ".............................................................................\n"
                            ".                                                                           .\n"
-                           ".                          Spectroscape v1.1.2                              .\n"
+                           ".                          Spectroscape v{}                              .\n"
                            ".                                                                           .\n"
                            ".                    Build Date: {} {}                       .\n"
                            ".              Developed by L. WU  in Henry Lam Group @ HKUST               .\n"
-                           ".............................................................................\n\n", __DATE__, __TIME__);
+                           ".............................................................................\n\n",SPECTROSCAPE_VERSION, __DATE__, __TIME__);
 }
 
 
