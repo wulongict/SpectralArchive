@@ -250,6 +250,19 @@ spawn-fcgi -p 8710 -n -- `which spectroscape` --run --wwwroot ~/SpectralArchive/
 After this step, we can open browser on local computer and go to the following [link: http://localhost:8709](http://localhost:8709 ). The UI will be shown as follows. 
 
 ![](webui.png)
+
+### Video tutorials for web UI
+I have made two tutorial videos about how to use the web UI. Here are the links. 
+
+
+#### Introduction to the web UI
+[![](https://markdown-videos.deta.dev/youtube/rp3khWnMdxI)](https://youtu.be/rp3khWnMdxI)
+
+#### Introduction to the web UI: the butterfly PSM plot
+
+[![](https://markdown-videos.deta.dev/youtube/6h8eFYn9V24)](https://youtu.be/6h8eFYn9V24)
+
+
 ## Issues
 - When running archive tool, I got an error said "libdpgpu.so: cannot open shared object file: No such file or directory"?  
     If the binary of archive tool is called /path/to/archive/bin, then try add the library path, /path/to/archive/lib to LD_LIBRARY_PATH variable.
