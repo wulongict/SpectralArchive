@@ -292,8 +292,15 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     m_pc->buildFragIndex(m_pScorer, verbose);
 
     // generate summary of archive.
-    vector<long> queryidxlist = m_pc->getIndexList();
-    CGtOutput gtoutput("background spectra summary", queryidxlist, m_AnnotationDB.get(), m_mzXMLListFileName + "_gtout.tsv", m_csa.get());
+    bool save_gt = false; // make this to be a parameter.
+    if(save_gt){
+        vector<long> queryidxlist = m_pc->getIndexList();
+        cout << "output summary of gt file" << endl;
+
+        CGtOutput gtoutput("background spectra summary", queryidxlist, m_AnnotationDB.get(), m_mzXMLListFileName + "_gtout.tsv", m_csa.get());
+        cout << "output done " << endl;
+    }
+    
 
     updateIndex(m_verbose);
     m_AnnotationDB->createBlackListWithCE(false);
