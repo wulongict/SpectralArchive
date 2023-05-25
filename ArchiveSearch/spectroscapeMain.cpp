@@ -35,8 +35,8 @@ void sigint_handler(int signal) {
         std::cout << "Force to exit Spectroscape." << std::endl;
         exit(0);
     }
-    std::cout << "Wait for a few seconds for Spectroscape to exit safely.\n" << std::endl;
-    std::cout << "If you want Spectroscape to stop immediately, use ctrl-c key again .\n" << std::endl;
+    std::cout << "Please wait for a few seconds for Spectroscape save data and exit safely.\n" << std::endl;
+    std::cout << "To stop Spectroscape immediately, press ctrl-c again .\n" << std::endl;
 }
 
 boost::program_options::variables_map getParam(int argc, char *argv[]) {

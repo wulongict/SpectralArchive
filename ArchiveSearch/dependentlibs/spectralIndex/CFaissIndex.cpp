@@ -7,13 +7,13 @@
 #include "spdlog/spdlog.h"
 
 #include <faiss/AutoTune.h>
-// #include <faiss/gpu/GpuCloner.h>
+
 #include "CFaissIndex.h"
 #include <faiss/index_io.h>
 #include "GpuResourceObj.h"
 #include <iostream>
 #include <faiss/AutoTune.h>
-// #include <faiss/gpu/GpuAutoTune.h>
+
 #if FAISS_VERSION_MAJOR == 1 and FAISS_VERSION_MINOR >=6
 // this header is available in faiss 1.6.4
 #include <faiss/index_factory.h>
@@ -37,62 +37,62 @@ void CFaissIndexWrapper::read(string filename) {
     setPtr(faiss::read_index(filename.c_str()));
 }
 
+// write the bucket size to a file, measure the imbalance as entropy.
 void CFaissIndexWrapper::display() {
-    // write the bucket size to a file, calcualte the imbalanceness. as entropy.
-    // getfilename()
     int number_of_lists = ((faiss::IndexIVFPQ*)m_index)->nlist;
     vector<long> size_of_list(number_of_lists,0);
 
-//    cout << "size of the buckets" << endl;
+
     double sum = 0;
     for(int i = 0; i < number_of_lists; i ++){
         long sizelist = ((faiss::IndexIVFPQ*)m_index)->get_list_size(i);
         size_of_list[i] = sizelist;
         sum += sizelist;
-//        cout << i << "\t" << sizelist << endl;
     }
     double entropy = 0;
     for(int i = 0; i < number_of_lists; i ++){
         if(size_of_list[i]>0){
             double p = size_of_list[i]/sum;
-            entropy -= p* log2(p); // use log2 entropy means bits of information.
+            entropy -= p* log2(p); 
         }
     }
-//    cout <<  getfilename() << "\tEntropy\t" << entropy << "\tmaxEntropy\t" << -log2(1.0/number_of_lists)<< endl;
+    int sacodesize = ((faiss::IndexIVFPQ*)m_index)->sa_code_size(); 
+
     string outputfile = getfilename() + "_nlist.txt";
     ofstream fout(outputfile.c_str(), ios::out);
     fout << "Entropy\t" << entropy << endl;
+    fout << "code size\t" << sacodesize << endl;
     for(int i = 0; i < number_of_lists; i ++){
         fout << i << "\t" << size_of_list[i] << endl;
     }
     fout.close();
-//    cout << "nlist information saved as " << outputfile << endl;
-    int sacodesize = ((faiss::IndexIVFPQ*)m_index)->sa_code_size(); // 17
-//    ((faiss::IndexIVFPQ*)m_index)->range_search()
-//    cout << "size of code in bytes per vector: " << sacodesize << endl;
+
+    
+
 #if FAISS_VERSION_MAJOR == 1 and FAISS_VERSION_MINOR <6
     getPtr()->display();
 #endif
 }
 
+// save index to file.
 void CFaissIndexWrapper::write(string filename) {
     faiss::write_index(getPtr(), filename.c_str());
 }
 
+// get number of vectors in the index
 long CFaissIndexWrapper::total() {
     return getPtr()->ntotal;
 }
 
 void CFaissIndexWrapper::search(int num, float *queries, int ret_num, vector<float> &dist,
                                 vector<long> &ind) {
-//    cout << "Searching with pointer for " << num << " queries " << ret_num << endl;
-    getPtr()->search(num, queries, ret_num, dist.data(), ind.data());
-//    cout << "Query done!" << endl;
+    
+    faiss::Index * ptr = getPtr();
+    ptr->search(num, queries, ret_num, dist.data(), ind.data());
 }
 
 void CFaissIndexWrapper::setnProb(int nprobe) {
     if (m_isCPU) {
-        //cout << "Setting nprobe as " << nprobe << endl;
         faiss::ParameterSpace().set_index_parameter(getPtr(), "nprobe", nprobe);
 
     } else {
@@ -121,17 +121,13 @@ bool CFaissIndexWrapper::istrained() {
 }
 
 void CFaissIndexWrapper::setPtr(faiss::Index *newptr) {
-//    std::cout << "pointer: " << m_index << " --> " << newptr << std::endl;
     m_index = newptr;
+    m_index->verbose = true;
 }
 
-// void CFaissIndexWrapper::backup() {
-//     m_tmp = m_index;
-// }
+
 
 void CFaissIndexWrapper::toCPU() {
-    // delete m_index;
-    // m_index = m_tmp;
     if(not m_isCPU){
         #ifdef __CUDA__
         cout << "[Info] Moving index from GPU to CPU" << endl;
@@ -143,15 +139,12 @@ void CFaissIndexWrapper::toCPU() {
 }
 
 void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
-    //cout << "Creating empty index ..." << endl;
     setPtr(faiss::index_factory(dim, indexstr.c_str()));
 }
+
 #include <map>
 void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
-    // print element in gpu idx
-    // for(auto x:gpu_idx){
-    //     cout << "gpu idx: " << x << endl;
-    // }
+
     if(m_gpu_idx.empty()){
         m_gpu_idx = gpu_idx;
         for(auto y: m_gpu_idx){
@@ -166,7 +159,7 @@ void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
 #ifdef __CUDA__
         cout << "[Info] Moving index from CPU to MultipleGPU" << endl;
         int ngpus = faiss::gpu::getNumDevices();
-        printf("Number of GPUs: %d\n", ngpus);
+        printf("Number of GPUs found: %d\n", ngpus);
         int num_valid_gpu_id = 0;
         std::map<int, bool> id_map;
         for (auto x : m_gpu_idx)
@@ -196,9 +189,7 @@ void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
             }
         }
         m_index = faiss::gpu::index_cpu_to_gpu_multiple(res, devs, m_index);
-        // backup();
-        // GpuResourceObj *gpuRes = GpuResourceObj::getInstance();
-        // setPtr(gpuRes->cpu_to_gpu(getPtr()));
+
 
         m_isCPU = false;
 #endif
@@ -210,32 +201,6 @@ void CFaissIndexWrapper::toGPU() {
         m_gpu_idx.push_back(0);
         }
     toMultipleGPUs(m_gpu_idx);
-    return;
-    cout << "--------------call to GPU--------------------" << endl;
-    if (not m_isCPU){
-        // already using GPU. no change.
-    }
-    else{
-
-    #ifdef __CUDA__
-        cout << "[Info] Moving index from CPU to GPU" << endl;
-        int ngpus = faiss::gpu::getNumDevices();
-        printf("Number of GPUs: %d\n", ngpus);
-        std::vector<faiss::gpu::GpuResourcesProvider*> res;
-        std::vector<int> devs;
-        for (int i = 0; i < ngpus; i++)
-        {
-            res.push_back(new faiss::gpu::StandardGpuResources);
-            devs.push_back(i);
-        }
-        m_index = faiss::gpu::index_cpu_to_gpu_multiple(res,devs,m_index);
-        // backup();
-        // GpuResourceObj *gpuRes = GpuResourceObj::getInstance();
-        // setPtr(gpuRes->cpu_to_gpu(getPtr()));
-        
-        m_isCPU = false;
-    #endif
-    }
 }
 
 void CFaissIndexWrapper::train(int batchSize, float *vecBatch) {

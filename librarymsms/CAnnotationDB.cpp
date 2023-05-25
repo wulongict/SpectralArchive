@@ -959,18 +959,10 @@ void CAnnotationDB::deleteLastNFile(int n) {
     int lastFileId = FileNum - n;
 
 
-//    specfileinfo sf = getLastSpecFile();
-//    sf.display();
-//    if (sf.isGood()){
-//    cout << "deleting from database " << endl;
     string sql = "delete from GROUNDTRUTH where FILEID >= " + to_string(lastFileId) + ";";
     m_dbmanager->execAsTransaction(sql, true);
     sql = "delete from SPECFILES where FILE_ID >= " + to_string(lastFileId) + ";";
     m_dbmanager->execAsTransaction(sql, true);
-//    cout << "done deleting from database" << endl;
-//    }
-//    cout << "This is the current last file " << endl;
-//    getLastSpecFile().display();
 
     cout << "DB updated" << endl;
 }

@@ -551,18 +551,7 @@ void CSpectralArchive::addRawData(string mzXMLfile, bool &newFileAdded) {
     }
 }
 
-// this function should not be used.
-void CSpectralArchive::appendFileName(const string &mzXMLfile) {
-    // append the new mzXMLfile into the exist file list.
-    vector<string> datafiles = readlines(m_mzXMLListFileName);
 
-    auto it = find(datafiles.begin(), datafiles.end(), mzXMLfile);
-    if (it == datafiles.end()) {
-        cout << "data file not find in " << m_mzXMLListFileName << endl;
-        datafiles.push_back(mzXMLfile);
-        File::saveas(datafiles, m_mzXMLListFileName, true);
-    }
-}
 
 void CSpectralArchive::updateIndex(bool verbosity) {
     m_AnnotationDB->createTable("SPECFILES", false,m_verbose);

@@ -274,7 +274,7 @@ public:
 
 
 private:
-	void appendFileName(const string &mzXMLfile);
+
 	void addListOfRawData(const string &new_experimental_datalist, bool &newFileAdded);
 	void addpepxmlfile(string pepxmllist, string new_gt_file);
 

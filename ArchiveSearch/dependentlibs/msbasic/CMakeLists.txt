@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 project(msbasicproj)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wreturn-type  -fPIC -fpermissive -Werror=return-type ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -Wreturn-type  -fPIC -fpermissive -Werror=return-type ")
 
 set(SOURCE_FILES
         CDebugMode.cpp
