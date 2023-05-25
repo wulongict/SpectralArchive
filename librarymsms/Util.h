@@ -461,6 +461,7 @@ public:
     void build_table_index(int col);
 
     bool hasHeader() const;
+    bool hasColumn(const string& colname);
     void appendHeader(const vector<string>& Header);
     string getHeaderByColumn(size_t column);
     int getColByHeader(const string& header);

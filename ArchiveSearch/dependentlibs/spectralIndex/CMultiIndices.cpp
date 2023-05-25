@@ -216,7 +216,7 @@ void MultipleIndicesImpl::display() {
     // cout << "--------Multi-Indices Info-----begin----" << endl;
     for (int i = 0; i < getNum(); i++) {
         display(i);
-        spdlog::get("A")->info("index: d = {}, is_trained = {}, ntotal ={}", getDim(i), istrained(i), ntotal(i));
+        spdlog::get("A")->info("index: d = {}, is_trained = {}, ntotal = {}", getDim(i), istrained(i), ntotal(i));
     }
     // cout << "--------Multi-Indices Info----end-----" << endl;
 }

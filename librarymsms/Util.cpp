@@ -305,6 +305,12 @@ string CTable::getHeaderByColumn(size_t column) {
     return m_column_header[column];
 }
 
+bool CTable::hasColumn(const string& colname)
+{
+    buildheader2column();
+    return m_header2col.count(colname)>0;
+}
+
 int CTable::getColByHeader(const string &header) {
     buildheader2column();
     if(m_header2col.count(header)==0)

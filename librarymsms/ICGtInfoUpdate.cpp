@@ -16,10 +16,15 @@ bool TsvAnnotation::updateGtInfo(SPsmAnnotation &gtinfo) {
     int rownum = m_psm.getRowByKey(key,m_psm.getColByHeader("spectrumname"));
     if(rownum!=-1)    {
         // start to refresh.
+        // compulsory fields
         gtinfo.charge = atoi(m_psm.getEntry(rownum, m_psm.getColByHeader("charge")).c_str());
         gtinfo.score = atof(m_psm.getEntry(rownum, m_psm.getColByHeader("score")).c_str());
-        gtinfo.iProb = atof(m_psm.getEntry(rownum, m_psm.getColByHeader("iprob")).c_str());
-        gtinfo.pProb = atof(m_psm.getEntry(rownum, m_psm.getColByHeader("ppprob")).c_str());
+        if(m_psm.hasColumn("iprob")){
+            gtinfo.iProb = atof(m_psm.getEntry(rownum, m_psm.getColByHeader("iprob")).c_str());
+        }
+        if(m_psm.hasColumn("ppprob")){
+            gtinfo.pProb = atof(m_psm.getEntry(rownum, m_psm.getColByHeader("ppprob")).c_str());
+        }
         string modified_peptide = m_psm.getEntry(rownum, m_psm.getColByHeader("modpep"));
         // convert from modified peptide to unmodified version.
         string unmodified_peptide = "";
@@ -74,10 +79,19 @@ TsvAnnotation::TsvAnnotation(CTable &psm) :m_psm(psm){
     for(int i = 0; i < m_psm.m_row; i ++)
     {
         // for each row , change the first column
-        string filename = m_psm.getEntry(i,m_psm.getColByHeader("filename"));
-        string scannum = m_psm.getEntry(i, m_psm.getColByHeader("scan"));
-        string spectrumname = File::CFile(filename).filename +"."+scannum;
-        m_psm.appendEntry(i,spectrumname);
+        if(m_psm.hasColumn("filename") and m_psm.hasColumn("scan")){
+            // good.
+            string filename = m_psm.getEntry(i,m_psm.getColByHeader("filename"));
+            string scannum = m_psm.getEntry(i, m_psm.getColByHeader("scan"));
+            string spectrumname = File::CFile(filename).filename +"."+scannum;
+            m_psm.appendEntry(i,spectrumname);
+        }else{
+            cout << "Error: the TSV file should contain the following columns." << endl;
+            cout << "filename,scan,modpep,charge,protein,ppprob,iprob,score" << endl;
+            cout << "The first three columns can not be ommited. Please check your TSV file." << endl;
+            exit(1);
+        }
+        
 
     }
     //
