@@ -376,11 +376,6 @@ void writeConfigFile(string filename, string mzxmlfile){
 }
 
 
-
-
-
-
-
 // run the web appliaction: ./scripts/webinterface_8710.bash
 
 
@@ -498,8 +493,6 @@ int main(int argc, char *argv[]) {
             popDataFileNum = popDataFileNum > removeFileNumToShrink ? popDataFileNum : removeFileNumToShrink;
             if (popDataFileNum > 0)
             {
-                // remove data get top priority. after remove, program will exit.
-                // remove information of the last file
                 archive.remove(popDataFileNum);
             }
             else if (update_index)

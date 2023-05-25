@@ -622,7 +622,7 @@ public:
             int_ind.insert(int_ind.end(), results[j].begin() + idx * m_retNumPerIndex,
                            results[j].begin() + (idx + 1) * m_retNumPerIndex);
         }
-//    cout << "With choice of INDEX " << indexChoice << " #candidates "  << int_ind.size() << endl;
+
     }
 
 };
@@ -637,7 +637,7 @@ void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vecto
             dist.insert(dist.end(), results_dist[j].begin() + idx * ret_num,
                         results_dist[j].begin() + (idx + 1) * ret_num);
         }
-//        stableUniqueVector_deprecated(int_ind, true);
+
         vector<long> tmp(int_ind.begin(), int_ind.end()); // keep a record of the ids.
         vector<long> selected_idx;
         stableUniqueVectorSet(int_ind,verbose,ret_num, selected_idx);
@@ -651,13 +651,11 @@ void CMultiIndices::collectANNs(int indexChoice, int ret_num, const vector<vecto
 
     } else {
         int j = indexChoice;
-//        int_ind.reserve(1024);
-//        dist.reserve(1024);
         int_ind.insert(int_ind.end(), results[j].begin() + idx * ret_num,
                        results[j].begin() + (idx + 1) * ret_num);
         dist.insert(dist.end(), results[j].begin() + idx * ret_num, results[j].begin() + (idx + 1) * ret_num);
     }
-//    cout << "With choice of INDEX " << indexChoice << " #candidates "  << int_ind.size() << endl;
+
 }
 
 long CMultiIndices::total() {

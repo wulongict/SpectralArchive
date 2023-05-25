@@ -9,6 +9,11 @@ External/spdlog-1.x/spdlog.pc
 External/spdlog-1.x/spdlogConfig.cmake
 External/spdlog-1.x/spdlogConfigVersion.cmake
 External/boost1.65.1/tmp/
+External/boost1.65.1/
+External/faiss-1.7.3/html
+External/faiss-1.7.3/xml
+conf/
+Makefile
 gsl-1.16.tar.gz
 gsl-1.16/
 cmake-build-release*

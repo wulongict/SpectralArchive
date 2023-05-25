@@ -33,7 +33,6 @@ CFaissIndexWrapper::CFaissIndexWrapper() {
 
 void CFaissIndexWrapper::read(string filename) {
     m_isCPU = true;
-//    spdlog::get("A")->info("Loading index from disk... ");
     setPtr(faiss::read_index(filename.c_str()));
 }
 

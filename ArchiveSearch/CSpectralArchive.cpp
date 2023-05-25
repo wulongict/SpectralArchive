@@ -651,21 +651,7 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         split_string(rawspec, peaksvec, '_');
         cout << "Number of peaks recieved from browser" << peaksvec.size() << endl;
 
-        /*
-         *
-         * 		    CSpectrum *onespec = new CSpectrum();
-        onespec->setRTinSeconds(i.m_RT_in_seconds);
-        onespec->setMSLevel(i.m_ms_level);
-        onespec->setParentMz(i.m_precursormz);
-        onespec->setParentCharge(i.m_precursorcharge);
-        onespec->setScanNum(i.spectrum_scan);
-        onespec->setSpectrumName(i.spectrum_name);
-        vector<double> mzs = i.pkl->getM_mzList();
-        vector<double> intens = i.pkl->getM_intensityList();
-        for (int j = 0; j < mzs.size(); j++) {
-            onespec->addOnePeak(mzs[j], intens[j]);
-        }
-         * */
+
         CSpectrum *onespec = new CSpectrum();
         cout << "creating a spectrum for searching" << endl;
         onespec->setMSLevel(2);
@@ -679,7 +665,7 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
         vector<double> mz, intensity;
         bool removeLowIntensePeaks = true;
         bool rmIsotopicPeaks = true;
-//        double mzTol = 2 * tolerance * 2000.0 / 65535;
+
         onespec->getAllPeaks(mz, intensity, removeLowIntensePeaks, true, rmIsotopicPeaks, 2 * 2000.0 / 65535);
         int PeakNum = 50;
         PeakList pl;
@@ -716,60 +702,7 @@ void CSpectralArchive::searchQuery(long query_index, string &jsonstring, int top
                  << endl;
         }
 
-        /*
-         *
-         *
-         * //ps.increase();
-        CSpectrum *spec = df.getSpectrum(spec_id_k);
-
-        if(nullptr!=sf and sf->skip(spec)){
-            continue;
-        }
-
-        if (spec == nullptr) {
-            cout << "empty spec : " << spec << endl;
-            continue;
-        }
-        if (spec->getMSLevel() != 2) {
-            continue;
-        }
-        vector<double> mz, intensity;
-        bool removeLowIntensePeaks = true;
-        bool rmIsotopicPeaks = true;
-        spec->getAllPeaks(mz, intensity, removeLowIntensePeaks, rmParentIon, rmIsotopicPeaks, m_localMaxHalfWidth);
-
-        if (mz.empty()) {
-            //cout << "Bad mz" << endl;
-        }
-
-        PeakList pl;
-        pl.setM_intensityList(intensity);
-        pl.setM_mzList(mz);
-
-        pl.KeepTopN(PeakNum);
-        pl.rankingAsIntensity(PeakNum);
-
-        vector<double> mzs, intens;
-        mzs = pl.getM_mzList();
-        intens = pl.getM_intensityList();
-        int _peaknum = mzs.size();
-        if (mzs.size() < PeakNum and _peaknum > m_minPeakNum) {
-            mzs.resize(PeakNum, 0);
-            intens.resize(PeakNum, 0);
-        } else if(_peaknum <= m_minPeakNum)   {
-            // put dummy peak there. so every spectra is on the hyper sphere now
-            mzs.assign(PeakNum, 0);
-            intens.assign(PeakNum,0);
-            _peaknum = 1;
-            mzs[0] = 0.5;
-            intens[0] = 1000;
-        }
-
-        const double *mzptr = mzs.data();
-        const double *intensityptr = intens.data();
-        getCompactForm(mzptr, intensityptr, batchMS[ms2count]);
-             *
-             * */
+        
     }
     setnProbe(nprobe);
     agtsummary.setRecallTNN(recalltrueneighbor);
