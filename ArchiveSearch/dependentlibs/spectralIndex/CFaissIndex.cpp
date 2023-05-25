@@ -10,7 +10,7 @@
 
 #include "CFaissIndex.h"
 #include <faiss/index_io.h>
-#include "GpuResourceObj.h"
+
 #include <iostream>
 #include <faiss/AutoTune.h>
 
@@ -21,6 +21,25 @@
 #include <fstream>
 
 #endif
+
+#ifdef __CUDA__
+// #pragma message("__FILE__: __CUDA__: XXX using CUDA")
+//#warning "C Preprocessor got here!"
+
+#include <faiss/gpu/GpuAutoTune.h>
+#include <faiss/gpu/StandardGpuResources.h> // standard GPU Resources
+#include <faiss/gpu/GpuCloner.h>
+
+// --------------------------------------------
+#include <faiss/gpu/GpuIndexIVFPQ.h>
+#include <faiss/index_io.h>
+
+#else
+// #pragma message("__FILE__: __CUDA__: XXX NO CUDA")
+#warning NO CUDA
+#endif
+
+
 // GPU CUDA
 
 faiss::Index *CFaissIndexWrapper::getPtr() {
@@ -136,6 +155,16 @@ void CFaissIndexWrapper::toCPU() {
     }
 
 }
+
+// get number of gpus with Faiss library 
+int getNumGPUs(){
+    int num_gpus = 0;
+#ifdef __CUDA__
+    num_gpus = faiss::gpu::getNumDevices();
+#endif
+    return num_gpus;
+}
+
 
 void CFaissIndexWrapper::createEmptyIndex(int dim, string indexstr) {
     setPtr(faiss::index_factory(dim, indexstr.c_str()));

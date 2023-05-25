@@ -70,3 +70,21 @@ TEST(CTABLE, READ_TXT){
 }
 
 
+// memory footprint of data types. 
+TEST(MEMORY_USAGE, DATATYPES){
+    cout << "size of int " << sizeof(int) << endl;
+    cout << "size of long " << sizeof(long) << endl;
+    cout << "size of float " << sizeof(float) << endl;
+    cout << "size of double " << sizeof(double) << endl;
+    cout << "size of long long " << sizeof(long long) << endl;
+    cout << "size of long double " << sizeof(long double) << endl;
+    cout << "size of size_t " << sizeof(size_t) << endl;
+    cout << "size of shared_ptr<int> " << sizeof(shared_ptr<int>) << endl;
+    cout << "size of unsigned int " << sizeof(unsigned int) << endl;
+    cout << "size of unsigned long " << sizeof(unsigned long) << endl;
+    cout << "size of unsigned long long " << sizeof(unsigned long long) << endl;
+    
+    
+
+}
+
