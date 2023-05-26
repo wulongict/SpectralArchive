@@ -19,7 +19,7 @@ For installation, users may either follow the [YouTube video tutorial](https://y
 
 If you would like to use Spectroscape directly via brower, [click here](http://omics.ust.hk:8709/index.html). 
 
-[![](homepage-spectroscape-img.png)](http://omics.ust.hk:8709/index.html)
+[<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://omics.ust.hk:8709/index.html)
 
 
 ## Binary installation 
