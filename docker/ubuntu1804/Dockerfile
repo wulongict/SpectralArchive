@@ -11,7 +11,6 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.26.4/cmake-3.26.4
 RUN chmod +x cmake-3.26.4-linux-x86_64.sh
 RUN ./cmake-3.26.4-linux-x86_64.sh --skip-license --prefix=/usr/local
 
-
 RUN  git clone --recurse-submodules  https://github.com/wulongict/SpectralArchive.git --branch release
 RUN cd SpectralArchive && ./cleanMake.bash
 RUN cd SpectralArchive && ./compile.bash
