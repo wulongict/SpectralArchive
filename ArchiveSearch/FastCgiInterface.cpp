@@ -401,7 +401,7 @@ void CFastCGIServer::getPageWithId(string &uristr, string &html_template_str) {
 void CFastCGIServer::getSummary() {
     long sizeOfArchive = m_archive.size();
     ostringstream  oss;
-    oss << "{\"total\": " << sizeOfArchive << "}";
+    oss << "{\"total\": " << sizeOfArchive << ", \"date\": \"" << __DATE__ << "\", \"platform\": \"" << m_archive.getPlatform() << "\"}";
     string tmpstr=oss.str();
     cout << "responding : " << tmpstr << endl;
     response(tmpstr, "text/json");
