@@ -31,7 +31,7 @@ project(cuda_dotproduct LANGUAGES NONE)
 # ----      sm_35   sm_52	    sm_61	sm_72	-----   sm_86
 # ----      sm_37 	sm_53	    sm_62
 # choose 60 61 62 is good for our GPU
-set(CMAKE_CUDA_ARCHITECTURES 60 61 62 70 72 80 86 75 87)
+# set(CMAKE_CUDA_ARCHITECTURES 60 61 62 70 72 80 86 75 87)
 
 
 
