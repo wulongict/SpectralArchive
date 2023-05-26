@@ -31,9 +31,9 @@ project(cuda_dotproduct LANGUAGES NONE)
 # ----      sm_35   sm_52	    sm_61	sm_72	-----   sm_86
 # ----      sm_37 	sm_53	    sm_62
 # choose 60 61 62 is good for our GPU
-if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 60;61;62;70;72;86;75;87)
-endif()
+set(CMAKE_CUDA_ARCHITECTURES 60 61 62 70 72 80 86 75 87)
+
+
 
 add_library(dpgpu SHARED dpcuda.cu)
 set_property(TARGET dpgpu PROPERTY CUDA_STANDARD 11)
