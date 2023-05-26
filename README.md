@@ -1,6 +1,9 @@
 # Spectroscape
 
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/cmake.yml/badge.svg)
+![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-1804.yml/badge.svg)
+![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2004.yml/badge.svg)
+![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 Spetroscape is a software tool to search for similar PSMs in spectral archives. It can create a spectral archive, and incrementally add new data (mzML/mzXML) and annotations (pep.xml) to it. 
 
