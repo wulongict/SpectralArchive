@@ -76,8 +76,8 @@ jobs:
         with:
           context: "{{defaultContext}}:docker/ubuntu1804"
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }},wulongict/spectralarchive/spectroscape-ubuntu1804:main
-          labels: ${{ steps.meta.outputs.labels }},wulongict/spectralarchive/spectroscape-ubuntu1804:main
+          tags: ${{ steps.meta.outputs.tags }},ghcr.io/wulongict/spectralarchive/spectroscape-ubuntu1804:main
+          labels: ${{ steps.meta.outputs.labels }},ghcr.io/wulongict/spectralarchive/spectroscape-ubuntu1804:main
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
