@@ -267,17 +267,13 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
     {
         vector<string> gpu_idx_str;
         split_string(gpuidx, gpu_idx_str, ';');
-        for(auto x: gpu_idx_str){
-            cout << "gpu idx str: " << x << endl;
-        }
+
         vector<int> gpu_idx;
         for (auto &s : gpu_idx_str)
         {
             gpu_idx.push_back(stoi(s));
         }
-        for(auto x: gpu_idx){
-            cout << "gpu idx " << x << endl;
-        }
+        
         m_indices->toMultipleGPUs(gpu_idx);
     }
 

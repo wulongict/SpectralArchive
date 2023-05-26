@@ -175,9 +175,7 @@ void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
 
     if(m_gpu_idx.empty()){
         m_gpu_idx = gpu_idx;
-        for(auto y: m_gpu_idx){
-            cout << "m_gpu_idx " << y << endl;
-        }
+        
     }
     if (not m_isCPU){
         // already using GPU. no change.
@@ -211,7 +209,7 @@ void CFaissIndexWrapper::toMultipleGPUs(vector<int> &gpu_idx) {
         {
             if (id_map.count(i))
             {
-                cout << "adding gpu " << i << endl;
+                // cout << "adding gpu " << i << endl;
                 res.push_back(new faiss::gpu::StandardGpuResources);
                 devs.push_back(i);
             }
