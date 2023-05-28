@@ -464,13 +464,6 @@ void
 CAnnotationDB::searchGTWithFileName_new(const string& filename, string startscan, string endscan,
                                     shared_ptr<CDBEntry> &dbentry) {
     SimpleTimer st("searching for annotation");
-    // string sql = "pragma case_sensitive_like=1;select * from GROUNDTRUTH where SCAN >= " + startscan + " and SCAN <= "
-    //              + endscan + " and FILEID in (select FILE_ID from SPECFILES where FILENAME like \"%"
-    //              + filename + "%\") limit 1000 ;";
-
-    // get the filename 
-    // SimpleTimer stx("current method");
-    
     dbentry = make_shared<CDBEntry>();
 
 
@@ -481,8 +474,7 @@ CAnnotationDB::searchGTWithFileName_new(const string& filename, string startscan
         cout << "no file found with name: " << filename << endl;
         return;
     }
-    dbentry_filename.print();
-    // dbentry= make_shared<CDBEntry>();
+    // dbentry_filename.print();
     int totalnum = 0;
     for(int i = 0; i < dbentry_filename.size(); i ++){
         string fileid = dbentry_filename.get("FILE_ID",i);
@@ -490,7 +482,7 @@ CAnnotationDB::searchGTWithFileName_new(const string& filename, string startscan
         string end_idx = dbentry_filename.get("END",i);
         string current_filename = dbentry_filename.get("FILENAME",i);
 
-        cout << "dbentry_filename: " << current_filename << " " << start_idx << " " << end_idx << endl;
+        // cout << "dbentry_filename: " << current_filename << " " << start_idx << " " << end_idx << endl;
 
         string gq_sql = "pragma case_sensitive_like=1;select * from GROUNDTRUTH inner join SPECFILES on SPECFILES.FILE_ID=GROUNDTRUTH.FILEID where ID >= "+ start_idx +" and ID <=  "+ end_idx+ " and FILEID = " + fileid + " and SCAN >= " + startscan + " and SCAN <= "
                     + endscan + " limit 100 ;";
@@ -502,14 +494,11 @@ CAnnotationDB::searchGTWithFileName_new(const string& filename, string startscan
         }
         totalnum += dbentry_gq.size();
         cout << dbentry_gq.size() << "/" << totalnum << " groundtruth found with name: " << filename  << " in new approach"<< endl;
-        dbentry_gq.print();
-        // merge two dbentry. if their header are the same.
+
         dbentry->add(dbentry_gq);
         if(dbentry->size() > 1000){
             break;
         }
-        
-        
         
     }
     // cout << "total number of ground truth found " << totalnum  << " new_dbentry size " << new_dbentry->size()<< endl;
