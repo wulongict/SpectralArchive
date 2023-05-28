@@ -30,7 +30,29 @@ public:
         return num;
         //return m_data.begin()->second.size();
     }
-    bool empty(){return m_data.empty() or m_data.begin()->second.empty();}
+
+    void shrinkto(int n)
+    {
+        if (n < 0)
+        {
+            cout << "invalid n " << n << endl;
+        }
+        else if (n > this->size())
+        {
+            cout << "n is larger than size " << n << " " << this->size() << endl;
+        }
+        else
+        {
+            for (auto &pair : m_data)
+            {
+                pair.second.resize(n);
+            }
+        }
+    }
+
+    bool empty(){
+        return m_data.empty() or m_data.begin()->second.empty();
+        }
     CDBEntry(){m_colname_fixed = false;}
     CDBEntry(const vector<string>& headers);
     void setValue(string header, int record_id, string value){
@@ -50,6 +72,14 @@ public:
     }
     // add data
     void add(const string& header, const string& value);
+    // add another dbentry
+    void add(const CDBEntry& entry){
+        for(auto & pair : entry.m_data){
+            for(auto & value : pair.second){
+                add(pair.first, value);
+            }
+        }
+    }
     string get(string header, int record_id){
         string result;
         if(m_data.find(header)==m_data.end()){

@@ -136,6 +136,9 @@ public:
     void searchGTWithFileName(const string& filename, string startscan, string endscan,
                               shared_ptr<CDBEntry> &dbentry);
 
+    void searchGTWithFileName_new(const string& filename, string startscan, string endscan,
+                              shared_ptr<CDBEntry> &dbentry);
+
     void
     searchSigPeptide(double precursor_neutral_mass, int charge, const string& peptide, vector<vector<string>> &results,
                      const string& excludefile);

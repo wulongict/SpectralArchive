@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../librarymsms/ProteomicsDataTypes.h"
 #include "../librarymsms/Util.h"
+#include "../librarymsms/DatabaseManager.h"
 #include "../ArchiveSearch/dependentlibs/randomSpecParser.h"
 #include "gtest/gtest.h"
 #include "CAnnotationDB.h"
@@ -85,6 +86,31 @@ TEST(MEMORY_USAGE, DATATYPES){
     cout << "size of unsigned long long " << sizeof(unsigned long long) << endl;
     
     
+
+}
+// testing speed of file search
+TEST(FILE_SEARCH, SPEED_TEST){
+    string dbfile = "/data/wulong/data/archive100M/arxiv_pxd000561.sqlite3db";
+    if(!File::isExist(dbfile)){
+        cout << "file not exist" << endl;
+        return;
+    }
+    shared_ptr<CAnnotationDB> m_AnnotationDB = make_shared<CAnnotationDB>(false);
+    m_AnnotationDB->connectDatabase(false, dbfile,true);
+    shared_ptr<CDBEntry> dbentry=nullptr;
+    string filename;
+    cout << "Please input a filename: ('Q' to quit): " <<endl << flush;
+    cin >> filename;
+    while(filename !="Q") {
+         m_AnnotationDB->searchGTWithFileName_new(filename,"1","1000",dbentry);
+        // dbentry->print();
+        cout << "---> entries found in current method" << dbentry->size() << endl;;
+        cout << "---> Please input a filename: ('Q' to quit)" << endl << flush;
+        cin >> filename;
+    }
+   
+
+
 
 }
 

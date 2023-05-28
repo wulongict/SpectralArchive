@@ -467,7 +467,7 @@ string
 CSpectralArchive::searchFileName(string filename, string startscan, string endscan) {
     cout << "start searching for filename " << filename << endl;
     shared_ptr<CDBEntry> dbentry = nullptr;
-    m_AnnotationDB->searchGTWithFileName(filename, startscan, endscan, dbentry);
+    m_AnnotationDB->searchGTWithFileName_new(filename, startscan, endscan, dbentry);
     cout << "end of searching for filename" << endl;
     return m_AnnotationDB->toJsonNodes(*dbentry);
 }

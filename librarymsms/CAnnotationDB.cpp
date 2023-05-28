@@ -15,6 +15,18 @@
 #include <map>
 #include <spdlog/spdlog.h>
 
+// someone might attack the database by using sql injection
+// so we need to check the input string
+// if it contains invalid symbol, we return a empty string.
+// those includes: ; % ' " and so on
+string toSqlSafe(const string &inputString){
+    if(inputString.find_first_of(";%\'\"")!=string::npos){
+        // found invalid symbol
+        return "";
+    }
+    return inputString;
+}
+
 CBatchSQL::CBatchSQL(int batchsize, shared_ptr<CDataBaseManager> dbmanager, bool verbose) {
     m_dbmanager = dbmanager;
     m_batchsize = batchsize;
@@ -447,19 +459,152 @@ specfileinfo CAnnotationDB::getLastSpecFile() {
     else return getSpecFileInfo(last_fileid);
 }
 
-// someone might attack the database by using sql injection
-// so we need to check the input string
-// if it contains invalid symbol, we return a empty string.
-// those includes: ; % ' " and so on
-string toSqlSafe(const string &inputString){
-    if(inputString.find_first_of(";%\'\"")!=string::npos){
-        // found invalid symbol
-        return "";
+// search for rows with the given filename and scan range. 
+void
+CAnnotationDB::searchGTWithFileName_new(const string& filename, string startscan, string endscan,
+                                    shared_ptr<CDBEntry> &dbentry) {
+    SimpleTimer st("searching for annotation");
+    // string sql = "pragma case_sensitive_like=1;select * from GROUNDTRUTH where SCAN >= " + startscan + " and SCAN <= "
+    //              + endscan + " and FILEID in (select FILE_ID from SPECFILES where FILENAME like \"%"
+    //              + filename + "%\") limit 1000 ;";
+
+    // get the filename 
+    // SimpleTimer stx("current method");
+    
+    dbentry = make_shared<CDBEntry>();
+
+
+    string filename_sql = "pragma case_sensitive_like=1;select * from SPECFILES where FILENAME like \"%" + toSqlSafe(filename) + "%\" limit 10";
+    CDBEntry dbentry_filename;
+    m_dbmanager->getRow(dbentry_filename,filename_sql,false);
+    if(dbentry_filename.empty()){
+        cout << "no file found with name: " << filename << endl;
+        return;
     }
-    return inputString;
+    dbentry_filename.print();
+    // dbentry= make_shared<CDBEntry>();
+    int totalnum = 0;
+    for(int i = 0; i < dbentry_filename.size(); i ++){
+        string fileid = dbentry_filename.get("FILE_ID",i);
+        string start_idx = dbentry_filename.get("START",i);
+        string end_idx = dbentry_filename.get("END",i);
+        string current_filename = dbentry_filename.get("FILENAME",i);
+
+        cout << "dbentry_filename: " << current_filename << " " << start_idx << " " << end_idx << endl;
+
+        string gq_sql = "pragma case_sensitive_like=1;select * from GROUNDTRUTH inner join SPECFILES on SPECFILES.FILE_ID=GROUNDTRUTH.FILEID where ID >= "+ start_idx +" and ID <=  "+ end_idx+ " and FILEID = " + fileid + " and SCAN >= " + startscan + " and SCAN <= "
+                    + endscan + " limit 100 ;";
+        CDBEntry dbentry_gq;
+        m_dbmanager->getRow(dbentry_gq,gq_sql,false);
+        if(dbentry_gq.empty()){
+            cout << "no groundtruth found with name: " << fileid << " " << current_filename << endl;
+        
+        }
+        totalnum += dbentry_gq.size();
+        cout << dbentry_gq.size() << "/" << totalnum << " groundtruth found with name: " << filename  << " in new approach"<< endl;
+        dbentry_gq.print();
+        // merge two dbentry. if their header are the same.
+        dbentry->add(dbentry_gq);
+        if(dbentry->size() > 1000){
+            break;
+        }
+        
+        
+        
+    }
+    // cout << "total number of ground truth found " << totalnum  << " new_dbentry size " << new_dbentry->size()<< endl;
+    dbentry->shrinkto(100);
+
+    // clean the file name remove path.
+    for(int i = 0; i < dbentry->size(); i ++){
+        File::CFile fullname(dbentry->get("FILENAME",i));
+        dbentry->setValue("FILENAME",i,fullname.filename);
+    }
+    // cout << "total number of ground truth found " << totalnum  << " new_dbentry size " << new_dbentry->size()<< endl;
+
+    // checking each entry.
+    bool compare_two_version = false;
+    if (compare_two_version)
+    {
+        shared_ptr<CDBEntry> old_dbentry = make_shared<CDBEntry>();
+        searchGTWithFileName(filename, startscan, endscan, old_dbentry);
+        for (int i = 0; i < dbentry->size(); i++)
+        {
+            // compare with the old one.
+            string id = dbentry->get("ID", i);
+            string scan = dbentry->get("SCAN", i);
+            string fileid = dbentry->get("FILEID", i);
+            string filename = dbentry->get("FILENAME", i);
+            string charge = dbentry->get("CHARGE", i);
+            string peptide = dbentry->get("PEPTIDE", i);
+            string protein = dbentry->get("PROTEIN", i);
+            string score = dbentry->get("SCORE", i);
+            string neighbor = dbentry->get("NEIGHBOR", i);
+            string isdecoy = dbentry->get("ISDECOY", i);
+
+            // the old one
+            string old_id = old_dbentry->get("ID", i);
+            string old_scan = old_dbentry->get("SCAN", i);
+            string old_fileid = old_dbentry->get("FILEID", i);
+            string old_filename = old_dbentry->get("FILENAME", i);
+            string old_charge = old_dbentry->get("CHARGE", i);
+            string old_peptide = old_dbentry->get("PEPTIDE", i);
+            string old_protein = old_dbentry->get("PROTEIN", i);
+            string old_score = old_dbentry->get("SCORE", i);
+            string old_neighbor = old_dbentry->get("NEIGHBOR", i);
+            string old_isdecoy = old_dbentry->get("ISDECOY", i);
+
+            // compare
+            if (id != old_id)
+            {
+                cout << "id not equal " << id << " " << old_id << endl;
+            }
+            if (scan != old_scan)
+            {
+                cout << "scan not equal " << scan << " " << old_scan << endl;
+            }
+            if (fileid != old_fileid)
+            {
+                cout << "fileid not equal " << fileid << " " << old_fileid << endl;
+            }
+            if (filename != old_filename)
+            {
+                cout << "filename not equal " << filename << " " << old_filename << endl;
+            }
+            if (charge != old_charge)
+            {
+                cout << "charge not equal " << charge << " " << old_charge << endl;
+            }
+            if (peptide != old_peptide)
+            {
+                cout << "peptide not equal " << peptide << " " << old_peptide << endl;
+            }
+            if (protein != old_protein)
+            {
+                cout << "protein not equal " << protein << " " << old_protein << endl;
+            }
+            if (score != old_score)
+            {
+                cout << "score not equal " << score << " " << old_score << endl;
+            }
+            if (neighbor != old_neighbor)
+            {
+                cout << "neighbor not equal " << neighbor << " " << old_neighbor << endl;
+            }
+            if (isdecoy != old_isdecoy)
+            {
+                cout << "isdecoy not equal " << isdecoy << " " << old_isdecoy << endl;
+            }
+            cout << "-----------------------" << endl;
+            cout << "entry i " << i << " are the same in the two dbentry object." << endl;
+        }
+    }
 }
 
 
+
+
+// search for rows with the given filename and scan range. 
 void
 CAnnotationDB::searchGTWithFileName(const string& filename, string startscan, string endscan,
                                     shared_ptr<CDBEntry> &dbentry) {
