@@ -90,7 +90,10 @@ TEST(MEMORY_USAGE, DATATYPES){
 }
 // testing speed of file search
 TEST(FILE_SEARCH, SPEED_TEST){
-    string dbfile = "/data/wulong/data/archive100M/arxiv_pxd000561.sqlite3db";
+    // this test is disabled now. It will run only when the file is available.
+    // string dbfile = "../tests/data/arxiv_pxd000561.sqlite3db";
+    
+    string dbfile = "../tests/data/_arxiv_pxd000561.sqlite3db";
     if(!File::isExist(dbfile)){
         cout << "file not exist" << endl;
         return;
