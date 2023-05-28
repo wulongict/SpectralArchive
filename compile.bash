@@ -30,9 +30,6 @@ mkdir -p ${releasePath}
 cd ${currentPath}/${releasePath}/ 
 rm -f CMakeCache.txt
 
-#source ~/anaconda3/etc/profile.d/conda.sh
-#conda deactivate
-
 # echo which python `which python`
 # add -pg option to CXX_FLAGS, LINKER_FLAGS AND SHARED_LINKER_FLAGS.
 # THANKS: https://stackoverflow.com/questions/26491948/how-to-use-gprof-with-cmake
@@ -58,6 +55,4 @@ cmake --install . --prefix ${currentPath}/build
 cpack --config CPackConfig.cmake
 cpack -D "CPACK_PACKAGING_INSTALL_PREFIX=" --config CPackSourceConfig.cmake
 
-# make package -j `nproc`
-# make package_source  -j `nproc`
-# cd ../build/bin && ln -s spectroscape fastcgi_similarity.fcgi
+

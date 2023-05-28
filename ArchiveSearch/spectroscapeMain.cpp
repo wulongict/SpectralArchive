@@ -296,6 +296,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     return vm;
 }
 // SPECTROSCAPE_VERSION should be defined in CMakeLists.txt
+#pragma message("The version of Spectroscape is " SPECTROSCAPE_VERSION ".")
 #ifndef SPECTROSCAPE_VERSION
 #define SPECTROSCAPE_VERSION "0.0.0"
 #endif
