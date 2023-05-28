@@ -549,6 +549,7 @@ void CFastCGIServer::identification(string &content) {
                           false, -1, -1, -1, false, "");
 }
 
+// search for peptide or filename.
 void CFastCGIServer::searchPeptideSequence(string &content) {
     int found = content.find_last_not_of("\r\n\t ");
     if (found != string::npos) {

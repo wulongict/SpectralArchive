@@ -280,7 +280,7 @@ bool CAnnotationDB::createTable(const string& tableName, bool overwrite,bool ver
 }
 
 void CAnnotationDB::clearTable(const string& table_name) {
-    string sql = "delete from " + table_name + ";";
+    string sql = "delete from " + toSqlSafe(table_name) + ";";
     m_dbmanager->execAsTransaction(sql, false);
     spdlog::get("A")->info("{} table deleted from db, table status = {}", table_name,
                            m_dbmanager->tableExists(table_name, false));
@@ -289,7 +289,7 @@ void CAnnotationDB::clearTable(const string& table_name) {
 
 void CAnnotationDB::searchGtFileName(const string& basename, vector<string> &filenames) {
 
-    string sql = "select * from GTFILES where FILENAME like  \"%" + basename + "%\" limit 10;";
+    string sql = "select * from GTFILES where FILENAME like  \"%" + toSqlSafe(basename) + "%\" limit 10;";
     CDBEntry dbentry;
     m_dbmanager->getRow(dbentry,sql, false);
     filenames.resize(dbentry.size());
@@ -318,7 +318,7 @@ void CAnnotationDB::searchSpecFileName(const string& specfile, vector<string> &f
         cout << "In valid string found in pattern " << specfile << endl;
         return;
     }
-    string sql = "select * from SPECFILES where FILENAME like  \"%" + specfile + "\" limit 10;";
+    string sql = "select * from SPECFILES where FILENAME like  \"%" + toSqlSafe(specfile) + "\" limit 10;";
     CDBEntry dbentry;
     m_dbmanager->getRow(dbentry,sql, false);
     filenames.resize(dbentry.size());
@@ -400,7 +400,7 @@ void CAnnotationDB::appendGtFileList(const vector<string> &annotationFiles) {
 }
 
 void CAnnotationDB::addNewGtFile(string gtfile) {
-    string sql = "INSERT INTO GTFILES (FILENAME) VALUES('" + gtfile + "');";
+    string sql = "INSERT INTO GTFILES (FILENAME) VALUES('" + toSqlSafe(gtfile) + "');";
     cout << "running: " << sql << endl;
     m_dbmanager->execAsTransaction(sql, m_verbose);
 }
@@ -447,6 +447,10 @@ specfileinfo CAnnotationDB::getLastSpecFile() {
     else return getSpecFileInfo(last_fileid);
 }
 
+// someone might attack the database by using sql injection
+// so we need to check the input string
+// if it contains invalid symbol, we return a empty string.
+// those includes: ; % ' " and so on
 string toSqlSafe(const string &inputString){
     if(inputString.find_first_of(";%\'\"")!=string::npos){
         // found invalid symbol
@@ -467,7 +471,7 @@ CAnnotationDB::searchGTWithFileName(const string& filename, string startscan, st
 
     string sql = "pragma case_sensitive_like=1;select * from GROUNDTRUTH inner join SPECFILES on SPECFILES.FILE_ID=GROUNDTRUTH.FILEID where SCAN >= " 
     + startscan + " and SCAN <= " + endscan + " and FILENAME LIKE \"%"
-    + filename + "%\" limit 100";
+    + toSqlSafe(filename) + "%\" limit 100";
 
     cout << "searching database with sql : " << sql << endl;
 
@@ -514,9 +518,9 @@ void CAnnotationDB::searchSigPeptide(double precursor_neutral_mass, int charge, 
                                      vector<vector<string>> &results,
                                      const string& excludefile) {
     File::CFile fileObj(std::move(excludefile));
-    string sql = "select * from GROUNDTRUTH where PEPTIDE=\"" + peptide + "\" and SIGNIFICANCE=1 and CHARGE=" +
+    string sql = "select * from GROUNDTRUTH where PEPTIDE=\"" + toSqlSafe(peptide) + "\" and SIGNIFICANCE=1 and CHARGE=" +
                  to_string(charge) +
-                 " and fileid not in (select file_id from SPECFILES where filename like '%" + fileObj.basename + "%')" +
+                 " and fileid not in (select file_id from SPECFILES where filename like '%" + toSqlSafe(fileObj.basename) + "%')" +
                  " limit 1;";
 
     m_dbmanager->getMultipleRows(results, sql, false);
@@ -524,7 +528,7 @@ void CAnnotationDB::searchSigPeptide(double precursor_neutral_mass, int charge, 
 
 void CAnnotationDB::updateSpecRemarks(long spec_id, string &remarks) {
     ostringstream oss;
-    oss << spec_id << "," << "'" << remarks << "'";
+    oss << spec_id << "," << "'" << toSqlSafe(remarks) << "'";
     string sql = "INSERT INTO SPECREMARKS( SPEC_ID, REMARKS) VALUES(" + oss.str() + ");";
     m_dbmanager->execAsTransaction(sql, true);
 }
@@ -602,7 +606,7 @@ void CAnnotationDB::createBlackListWithFileName(const string &datafilename, bool
     if(verbose) cout << typeid(this).name() << " Creating black list with file name: " << datafilename << endl;
     File::CFile fileObj(datafilename);
 
-    string sql = "select * from SPECFILES where filename like \"%" + fileObj.filename + "%\"";
+    string sql = "select * from SPECFILES where filename like \"%" + toSqlSafe(fileObj.filename) + "%\"";
     vector<vector<string>> results;
     m_dbmanager->getMultipleRows(results, sql, false);
     if (not results.empty()) {
@@ -632,7 +636,7 @@ shared_ptr<CDataBaseManager> CAnnotationDB::getDB() {
     return m_dbmanager;
 }
 bool CAnnotationDB::isColumnExists(string colName, string table, bool verbosity) {
-    string sql = R"(select sql from sqlite_master where type='table' and name like "%)" + table + R"(%" and sql like '%, )" + colName + R"( %';)";
+    string sql = R"(select sql from sqlite_master where type='table' and name like "%)" + toSqlSafe(table) + R"(%" and sql like '%, )" + toSqlSafe(colName) + R"( %';)";
     CDBEntry dbEntry;
     m_dbmanager->getRow(dbEntry, sql, verbosity);
     return not dbEntry.empty();
@@ -757,7 +761,7 @@ void CAnnotationDB::setDB(const string& filename) {
 void CAnnotationDB::getSpecFileRows(const string &raw_file_name, vector<vector<string>> &results) {
     string name_only = File::CFile(raw_file_name).basename;
     // todo: add protection here.
-    string sql = "select * from SPECFILES where FILENAME like \"%" + name_only + "%\";";
+    string sql = "select * from SPECFILES where FILENAME like \"%" + toSqlSafe(name_only) + "%\";";
     
     m_dbmanager->getMultipleRows(results, sql, false);
 }
