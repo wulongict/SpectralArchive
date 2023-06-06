@@ -140,7 +140,7 @@ bool CFaissIndexWrapper::istrained() {
 
 void CFaissIndexWrapper::setPtr(faiss::Index *newptr) {
     m_index = newptr;
-    m_index->verbose = true;
+    m_index->verbose = false;
 }
 
 
