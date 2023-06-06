@@ -128,8 +128,15 @@ void CFastCGIServer::startFastCGIServer() {
                 
                 string htmlfile = "faiss_ivf256_pq16_gpu.index.json.html";
                 fs::path htmlfile_path = fs::path(m_www_root) / htmlfile; 
-                string html_template_str = readlinesfromfile(htmlfile_path.string());
+                string html_template_str;
+                try{
+                    html_template_str = readlinesfromfile(htmlfile_path.string());
+                }catch(exception &e){
+                    cout << "Error: " << e.what() << endl <<  "Fix: check help information of `spectroscape`, `set `--wwwroot` porperly. "<< endl;
+                    break;
+                }
                 this->getPageWithId(uristr, html_template_str);
+                
             } else if (uristr.find("/identification") != string::npos) {
                 this->identification(content);
             } else if (uristr.find("/remark/") != string::npos) {

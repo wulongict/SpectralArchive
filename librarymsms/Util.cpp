@@ -947,6 +947,7 @@ string make_timestring() {
 }
 
 string readlinesfromfile(const string& filename) {
+    cout << "loading readlines from file: " << filename << endl;
     std::ifstream t(filename);
     if(not t.good()){
         // file not exist!
