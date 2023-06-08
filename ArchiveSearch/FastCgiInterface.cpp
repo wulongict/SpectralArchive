@@ -149,7 +149,7 @@ void CFastCGIServer::startFastCGIServer() {
                 this->getPeakListWithId(uristr);
             }
         } else {
-            cout << "[Error] Get Request other than: GET/POST! ==> " << methodstr << endl;
+            cout << "Get Request other than: GET/POST! ==> " << methodstr << endl;
         }
     }
 }

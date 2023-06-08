@@ -399,7 +399,7 @@ VectorFilter *VectorFilterFactoryMethod(const string& FilterType) {
         ret->setTopN(N);
         return ret;
     } else {
-        cout << "[Error] Invalid Filter type: " << FilterType << endl;
+        cout << "Invalid Filter type: " << FilterType << endl;
         cout << "[Alert] Using base class" << endl;
         return new VectorFilter();
     }
@@ -418,7 +418,7 @@ PeakListFilter *CreatePeakListFilterFactoryMethod(string param) {
         return ret;
     } else {
         cout << "[Info] Invalid MS2 PeakList filter: " << param << endl;
-        throw "[Error] Invalid PeakList filter for MS2";
+        throw "==> Invalid PeakList filter for MS2";
     }
 }
 
@@ -761,7 +761,7 @@ double PNorm::calc(BinningPeakList &a, BinningPeakList &b) {
 
 PNorm::PNorm(double p) : m_p(p) {
     if ((p < 1 && p > 0) || (p < 0 && p > -1) || (p < -1)) {
-        cout << "[Error] Invalid p=" << p << " for calculating p-norm. Valid range [1, +Inf) & {0,-1}" << endl;
+        cout << "==> Invalid p=" << p << " for calculating p-norm. Valid range [1, +Inf) & {0,-1}" << endl;
         throw "Error in calculate p-norm! Program will exit.";
     }
 

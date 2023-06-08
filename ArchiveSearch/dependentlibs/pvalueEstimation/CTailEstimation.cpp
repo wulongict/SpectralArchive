@@ -146,7 +146,7 @@ bool linear_regression_on_logCDF(vector<double> &x, vector<double> &y, vector<do
 
 
         if(fabs(coefs[0]-lro.k) + fabs(coefs[1]-lro.b) > 1e-6 or fabs(r2-lro.r2)>1e-6  ){
-            cout << "[Error] inconsistence lr resutls " << endl;
+            cout << "inconsistence lr resutls " << endl;
             cout << setprecision(5) << "#sample:" << sampleSize << " on y axis interval [" << min_y << ", " << max_y << "] Model: logCDF = " << coefs.at(0) << "x+" << coefs.at(1) << "\tR^2=" << r2
                  << endl;
             cout << "Mine: " << lro.k << "x + " << lro.b << " R2 = " << lro.r2 << endl;
@@ -372,7 +372,7 @@ void CTailEstimation::plotModel(vector<double> coefs, double r2, vector<vector<d
     } else if (termtype == "png") {
         pngVisualization(std::move(outputname), r2, coefs, rx_logry);
     } else {
-        cout << "[Error] Invalid terminal type " << termtype << "Please try dumb or png" << endl;
+        cout << "Invalid terminal type " << termtype << "Please try dumb or png" << endl;
     }
 }
 

@@ -127,7 +127,7 @@ void mzXMLReader::CreateBinningList(vector<PeakList *> &a) {
                 x = x->filterPeaks(m_PeakFilter);
             }
             if (m_SimCalculator == nullptr) {
-                cout << "[Error] Invalid simMetric. please call " << endl;
+                cout << "Invalid simMetric. " << endl;
 
             }
 
@@ -157,7 +157,7 @@ mzXMLReader::MultiThreadDotProduct(vector<PeakList *> &a, vector<PeakList *> &b,
     ApplyMemoryforMatrix(a.size(), b.size(), nSize, matrix);
 
     if (matrix == nullptr) {
-        cout << "[Error] Fail to apply memory" << endl;
+        cout << "Fail to apply memory" << endl;
         throw "Not enough memory for dot product matrix.";
     }
 //    m_SimCalculator = new DotProduct();
@@ -298,7 +298,7 @@ void mzXMLReader::RandMultiThreadDotProduct(vector<PeakList *> &a, vector<PeakLi
     ApplyMemoryforMatrix(num_RT_a, num_RT_b, nSize, matrix);
 
     if (matrix == nullptr) {
-        cout << "[Error] Fail to apply memory" << endl;
+        cout << "Fail to apply memory" << endl;
         throw "Not enough memory for dot product matrix.";
     }
 

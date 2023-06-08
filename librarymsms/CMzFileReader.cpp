@@ -174,7 +174,7 @@ void CMzFileReader::loadScanMzToMemory(bool isList, bool verbose) {
 
     if(m_scanInfo.getTotalScanNum() != m_specnum)    {
         cout << "spectrum num in mz file : " << m_specnum << " while in meta info " << m_scanInfo.getTotalScanNum() << endl;
-        cout << "[Error] Scan Header and mz file are inconsistent" << endl;
+        cout << "Scan Header and mz file are inconsistent" << endl;
         cout << "Two step solution: " 
         << endl << "1. remove *.scan file in the archive folder"
         << endl << "2. append new mzXML files (see below) in database, but not in the archive list file (--mzxmlfiles)"

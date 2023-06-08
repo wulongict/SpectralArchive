@@ -138,9 +138,9 @@ bool CFaissIndexWrapper::istrained() {
     return getPtr()->is_trained;
 }
 
+// remove a line a fixed a segmentation fault at the end. 
 void CFaissIndexWrapper::setPtr(faiss::Index *newptr) {
     m_index = newptr;
-    m_index->verbose = false;
 }
 
 

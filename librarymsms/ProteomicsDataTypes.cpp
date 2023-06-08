@@ -157,7 +157,7 @@ vector<string> readlines(const string &mzXMLList) {
         }
         fin.close();
     } else {
-        cout << "[Error] List file does not exist! filename: \"" << mzXMLList << "\""<< endl;
+        cout << "List file does not exist! filename: \"" << mzXMLList << "\""<< endl;
         //throw logic_error("File does not exist!");
     }
     return filelist;
@@ -346,7 +346,7 @@ DataFile::DataFile(const string& filename, int start, int end) {
          fp->load(filename, m_Spectra,start,end);
         m_sourcefile = filename;
     } else {
-        cout << "[Error] File format error! ext = " << ext << endl;
+        cout << "File format error! ext = " << ext << endl;
     }
     //printSummary();
     for(int i = 0; i < getSpectrumNum(); i ++){
@@ -369,7 +369,7 @@ CSpectrum *DataFile::getSpectrum(long i) {
     if (i >= 0 and i < m_Spectra.size()) {
         return m_Spectra.at(i);
     } else {
-        cout << "[Error] DataFile::getSpectrum() Invalid index " << i << endl;
+        cout << "==> DataFile::getSpectrum() Invalid index " << i << endl;
         return nullptr;
     }
 }
@@ -1063,7 +1063,7 @@ void CAAConsts::CreateAAMap(vector<CAminoAcid *> &AAs, map<string, CAminoAcid *>
 void mzXMLParser::load(string filename, vector<CSpectrum *> &spec) {
     cRamp *cramp = new cRamp(filename.c_str());
     if (!cramp->OK()) {
-        cout << "[Error] Cannot open file \"" << filename << "\". File skipped." << endl;
+        cout << "Cannot open file \"" << filename << "\". File skipped." << endl;
         delete (cramp);
         throw runtime_error("File does not exist!");
     }
@@ -1569,7 +1569,7 @@ uint16_t CMzSpec::getMzOfRank(int rank) {
     if(rank>=0 and rank < m_PeakNum)    {
         return m_p[rank];
     } else{
-        cout << "[Error] Incorrect rank " << rank << endl;
+        cout << "==> Incorrect rank " << rank << endl;
         throw logic_error("invalid rank");
     }
 }

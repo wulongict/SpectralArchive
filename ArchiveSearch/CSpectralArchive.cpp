@@ -352,7 +352,7 @@ void CSpectralArchive::update(string new_experimental_data, string new_search_re
         int rc = std::remove(scanFilename.c_str());
         if(found and rc) { 
             perror("remove of .scan file fails"); 
-            throw runtime_error("\nERROR: Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
+            throw runtime_error("\n==>Fail to remove "+ scanFilename +" file. Program will exit. \nPlease try to manually remove the file, and rerun. ");
         }
 
         // run this only when new data file added.
@@ -953,7 +953,7 @@ void CSpectralArchive::getkTrueNearestNeighbor(ICQuery &query, vector<vector<lon
     // get True Nearest Neighbors from the spectral archive.
     int MAX_SCORE = 42925;
     if (m_csa->getSpecNum() == 0) {
-        cout << "[Error] mz file is empty: " << endl;
+        cout << "mz file is empty: " << endl;
     }
 
     for (int i = 0; i < query.getSpecNum(); i++) {
@@ -1026,7 +1026,7 @@ void CSpectralArchive::getAccurateTopNeighbor(ICQuery &query, vector<long> &topI
     topIdx.assign(query.getSpecNum(), 0);
     Progress ps(query.getSpecNum(), "accurate dotproduct to all");
     if (m_csa->getSpecNum() == 0) {
-        cout << "[Error] mz file is empty: " << endl;
+        cout << "mz file is empty: " << endl;
     }
 //    int bin_tol = isLowMassAcc? 15: 1;
     for (int i = 0; i < query.getSpecNum(); i++) {
@@ -1420,7 +1420,7 @@ void CSpectralArchive::do_pairwise_distance(int calcEdge, long query_index, vect
 //            cout << "First dp and dist: " << dpscore.at(0) << "\t" << distance.at(0) << endl;
 
             CAnnSpectra *p = new CAnnSpectra(targetIds, distance, sourceId,dpscore);
-            if (p == nullptr) { cout << "[Error] Fail to create object: " << __FUNCTION__ << endl; }
+            if (p == nullptr) { cout << "Fail to create object: " << __FUNCTION__ << endl; }
             vecAnns.push_back(p);
         }
 

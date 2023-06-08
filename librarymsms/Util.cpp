@@ -208,7 +208,7 @@ void CTable::printRow(int i) {
         for (const auto& x: m_table[i]) cout << x << ",";
         cout << endl;
     } else{
-        cout << "[Error] invalid row num " << i << " valid range: 0 <= rownum <= " << m_row-1 << endl;
+        cout << "Invalid row num " << i << " valid range: 0 <= rownum <= " << m_row-1 << endl;
     }
 }
 
@@ -372,7 +372,7 @@ namespace statistic {
         if (min < 0) {
             cout << "Vector should be non-negative real number" << endl;
             cout << min << endl;
-            throw "[Error] vector for calculation Harmonic Mean and Geometric Mean should be non negative real numbers.";
+            throw "vector for calculation Harmonic Mean and Geometric Mean should be non negative real numbers.";
         } else if (min == 0 && min != max) {
             double nonzeromin = getNonzeroMin(v);
             double fakeValue = nonzeromin / v.size();
@@ -548,7 +548,7 @@ void CMyMatrix::mergeMatrix(vector<CMyMatrix> &vMatrix, const string& mergeMetho
             } else if (mergeMethod == "Harmonic") {
                 val = statistic::calcHarmonicMean(v);
             } else {
-                cout << "[Error] incorrect merge method: " << mergeMethod << endl;
+                cout << "Incorrect merge method: " << mergeMethod << endl;
                 throw "Invald merge method.";
             }
             set(i, j, val);
@@ -677,7 +677,7 @@ void TestMatrix() {
         cout << "[True] Testing Matrix" << endl;
     }
     catch (char const *s) {
-        cout << "[Error] " << s << endl;
+        cout << "" << s << endl;
         cout << "[False] Testing Matrix" << endl;
     }
 }
@@ -884,7 +884,7 @@ bool File::isExist(const string &curOutputfile,bool beQuiet) {
         fclose(pfile);
         ret = true;
     } else {
-        if(not beQuiet)  cout << "[Error] File does not exist: \"" << curOutputfile << "\"" << endl;
+        if(not beQuiet)  cout << "File does not exist: \"" << curOutputfile << "\"" << endl;
     }
     return ret;
 }

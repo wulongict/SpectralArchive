@@ -385,7 +385,7 @@ void IndexListBuilder::build(vector<long> &m_indexlist, long totalSpecNum, int s
         m_indexlist.resize(long(m_fraction * totalSpecNum));
 //        cout << "[background spectra] Num: " << m_indexlist.size() << "\t fraction: " << m_fraction << endl;
     }else{
-        cout << "[Error] invalid m_fraction, will use all index " << endl;
+        cout << "==> Invalid m_fraction, will use all index " << endl;
     }
 
 

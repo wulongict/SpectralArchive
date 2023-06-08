@@ -18,6 +18,7 @@ class CTimeSummary{
     static CTimeSummary * g_time_summary;
     std::map<std::string, timerTuple> m_record;
     CTimeSummary();
+    ~CTimeSummary();
 public:
     static CTimeSummary * getInstance();
     void startTimer(std::string name);
