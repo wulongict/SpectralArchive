@@ -15,7 +15,7 @@ Spectroscape has a web user interface, which enables real time searching for app
 ## Video tutorial for installation
 For installation, users may either follow the [YouTube video tutorial](https://youtu.be/C1a9RUqPxYs) below or read through the next section of the ReadMe.md file.  
 
-[![](https://markdown-videos.deta.dev/youtube/C1a9RUqPxYs)](https://youtu.be/C1a9RUqPxYs)
+[![Installation tutorial on YouTube](https://markdown-videos.deta.dev/youtube/C1a9RUqPxYs)](https://youtu.be/C1a9RUqPxYs)
 
 If you would like to use Spectroscape directly via brower, [click here](http://omics.ust.hk:8709/index.html). 
 
@@ -267,12 +267,24 @@ I have made two tutorial videos about how to use the web UI. Here are the links.
 
 
 #### Introduction to the web UI
-[![](https://markdown-videos.deta.dev/youtube/rp3khWnMdxI)](https://youtu.be/rp3khWnMdxI)
+[![Web UI YouTube Tutorial Video](https://markdown-videos.deta.dev/youtube/rp3khWnMdxI)](https://youtu.be/rp3khWnMdxI)
+[![Web UI YouTube Tutorial Video](https://img.youtube.com/vi/rp3khWnMdxI/0.jpg)](https://youtu.be/rp3khWnMdxI)
 
 #### Introduction to the web UI: the butterfly PSM plot
 
-[![](https://markdown-videos.deta.dev/youtube/6h8eFYn9V24)](https://youtu.be/6h8eFYn9V24)
+[![Butterfly PSM plot on YouTube](https://markdown-videos.deta.dev/youtube/6h8eFYn9V24)](https://youtu.be/6h8eFYn9V24)
 
+[![Butterfly PSM plot on YouTube](https://img.youtube.com/vi/6h8eFYn9V24/0.jpg)](https://youtu.be/6h8eFYn9V24)
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=6h8eFYn9V24
+" target="_blank"><img src="https://img.youtube.com/vi/6h8eFYn9V24/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+
+ <iframe width="560" height="315"
+src="https://www.youtube.com/embed/MUQfKFzIOeU" 
+frameborder="0" 
+allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+allowfullscreen></iframe>
 
 ## Issues
 - When running archive tool, I got an error said "libdpgpu.so: cannot open shared object file: No such file or directory"?  
