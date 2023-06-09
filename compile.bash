@@ -44,7 +44,7 @@ cmake -DWITH_GPU=${with_GPU}  ..
 
 
 cmake  --build ../${releasePath}   --target  boost  -- -j `nproc`
-cmake  --build ../${releasePath}  --target spectroscape msmstest -- -j `nproc`
+cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
 ctest --verbose
