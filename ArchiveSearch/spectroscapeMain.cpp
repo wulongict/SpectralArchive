@@ -86,6 +86,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
              "the option `socket` and `msocket` will keep accepting queries from client side")
             ("numprobe", po::value<int>()->default_value(8),
              "number of buckets to look into, the web API allows user to change this value in each query. default: 8 ")
+            ("numthreads", po::value<int>()->default_value(0),
+             "number of threads to be used in CPU. default 0, use all threads.")
             ("use_gpu,g", po::bool_switch()->default_value(false),
              "use gpu or not")
 
@@ -378,6 +380,22 @@ void writeConfigFile(string filename, string mzxmlfile){
 
 
 // run the web appliaction: ./scripts/webinterface_8710.bash
+#include <omp.h>
+// set env var
+int set_env_var(string var_name, string new_value) {
+    // char *var_name = "MY_VAR";
+    // char *new_value = "my_value";
+    int change_flag = 1;
+
+    if (setenv(var_name.c_str(), new_value.c_str(), change_flag) != 0) {
+        perror("setenv() failed");
+        return EXIT_FAILURE;
+    }
+
+    printf("The value of %s is %s\n", var_name.c_str(), getenv(var_name.c_str()));
+
+    return EXIT_SUCCESS;
+}
 
 
 int main(int argc, char *argv[]) {
@@ -394,9 +412,38 @@ int main(int argc, char *argv[]) {
         {
 
             spdlog::get("A")->info("maximum number of threads on this computer {}", std::thread::hardware_concurrency());
+            
             spdlog::get("A")->info("CMD: {}", argToStr(argc, argv));
 
+
             auto vm = getParam(argc, argv);
+
+            int numthreads = vm.at("numthreads").as<int>();
+            if(numthreads <= 0){
+                numthreads = std::thread::hardware_concurrency();
+            }
+            int max_threads_available = std::thread::hardware_concurrency();
+            string var_name = "OMP_NUM_THREADS";
+            set_env_var(var_name, std::to_string(numthreads));
+            // set_env_var("OMP_DYNAMIC", "false");
+            // set_env_var("OMP_PROC_BIND", "true");
+            // set_env_var("OMP_PLACES", "cores");
+            // set_env_var("OMP_STACKSIZE", "1G");
+            set_env_var("OMP_WAIT_POLICY", "passive");
+            set_env_var("OMP_NESTED", "false");
+
+            spdlog::get("A")->info("omp_get_max_threads() = {}",omp_get_max_threads());
+            spdlog::get("A")->info("omp_get_thread_limit() = {}",omp_get_thread_limit());
+            spdlog::get("A")->info("omp_get_num_threads() = {}",omp_get_num_threads());
+            if (numthreads <= 0 or numthreads > 2 * max_threads_available){
+                omp_set_num_threads(max_threads_available);
+            }else{
+                omp_set_num_threads(numthreads);
+            }
+            cout << "refreshed from user defined parameters" << endl;
+            spdlog::get("A")->info("omp_get_max_threads() = {}",omp_get_max_threads());
+            spdlog::get("A")->info("omp_get_thread_limit() = {}",omp_get_thread_limit());
+            spdlog::get("A")->info("omp_get_num_threads() = {}",omp_get_num_threads());
             bool init = vm.at("init").as<bool>();
             bool yes_overwrite = vm.at("yes").as<bool>();
             string archivename = vm.at("archivename").as<string>();
@@ -432,7 +479,7 @@ int main(int argc, char *argv[]) {
             bool saveBackgroundScore = vm.at("saveBackgroundScore").as<bool>();
             bool plotHistogram = vm.at("plotHistogram").as<bool>();
             int bgspecseed = vm.at("bgspecseed").as<int>();
-            int numprobe = vm.at("numprobe").as<int>();
+            int numprobe = vm.at("numprobe").as<int>(); 
             bool update_index = vm.at("update").as<bool>();
             string new_experimental_data = vm.at("updaterawdata").as<string>();
             string new_experimental_datalist = vm.at("updaterawdatalist").as<string>();
