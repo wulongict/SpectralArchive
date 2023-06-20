@@ -6,7 +6,7 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **announcement:**  
-> Our server is under maintainance since June 19. It will be back online by June 21.
+> Our server is under maintainance since June 19. It will be back online by June 21.  
 > June 20, 2023
 
 
