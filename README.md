@@ -7,7 +7,7 @@
 
 > **announcement:**  
 > Our server (omics.ust.hk) is under maintainance since June 19. It will be back online by June 21.  
-> Please use the [following link](http://http://spectroscape.cc:8709) to test the web interface.   
+> Please use the [following link](http://spectroscape.cc:8709) to test the web interface.   
 > June 20, 2023
 
 
