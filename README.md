@@ -6,7 +6,8 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **announcement:**  
-> Our server is under maintainance since June 19. It will be back online by June 21.  
+> Our server (omics.ust.hk) is under maintainance since June 19. It will be back online by June 21.  
+> Please use the [following link]（ec2-3-27-148-30.ap-southeast-2.compute.amazonaws.com:8709） to test the web interface. 
 > June 20, 2023
 
 
