@@ -5,10 +5,11 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2004.yml/badge.svg)
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
-> **announcement:**  
-> Our server (omics.ust.hk) is under maintainance since June 19. It will be back online by June 21.  
-> Please use the [following link](http://spectroscape.cc:8709) to test the web interface.   
-> June 20, 2023
+> **Announcement:**  
+> We made our spectral archive search demo available on the following website.  
+> [http://spectroscape.cc](http://spectroscape.cc)  
+> We will keep this domain in the near future and make our Spectroscape available to everyone.     
+> June 23, 2023  
 
 
 
