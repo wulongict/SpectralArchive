@@ -7,7 +7,7 @@
 
 > **Announcement:**  
 > We made our spectral archive search demo available on the following website.  
-> [http://spectroscape.cc](http://spectroscape.cc)  
+> [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
 > We will keep this domain in the near future and make our Spectroscape available to everyone.     
 > June 23, 2023  
 
