@@ -6,9 +6,9 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **Announcement:**  
-> Our server in HKUST was shut down during the weekend due to a electricity suspension. Now the spectroscape demo is back online. 
-> Please visit [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  for an demo spectral archive with over 25 million spectra.
-> June 26, 2023 in HKUST campus
+> Our server in HKUST was shut down during the weekend due to a electricity suspension. Now the spectroscape demo is back online.   
+> Please visit [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  for an demo spectral archive with over 25 million spectra.  
+> June 26, 2023 in HKUST campus  
 >  
 > We made our spectral archive search demo available on the following website.  
 > [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
