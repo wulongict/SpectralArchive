@@ -139,7 +139,7 @@ build/
 
 ## Usage
 ### Build archive
-First create a new folder, e.g. `mass_spectra`. Then put some raw files in it. Here we using following files as example. 
+First create a new folder, e.g. `mass_spectra`. Then put some raw files in it. Here we using following files as example. Note that the minimum number of spectra required to initialize a spectral archive by Spectroscape is 100,000. Using only one mzXML file is not adquate to build an archive. Please try download the following files from [this link](https://drive.google.com/drive/folders/1i31NY48YW6_dy1M_xyF9OCdGIKekA1Xq?usp=sharing) to Google Drive. Users could also download [the compressed version](https://drive.google.com/drive/folders/1ZaHdkzxclzYboYf_67pPxgkmFxpnVFAG?usp=sharing) from Google Drive. 
 
 ```bash
 $ ls mass_spectra

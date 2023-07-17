@@ -440,7 +440,7 @@ int main(int argc, char *argv[]) {
             }else{
                 omp_set_num_threads(numthreads);
             }
-            cout << "refreshed from user defined parameters" << endl;
+            cout << "refreshed from user defined parameters" << endl;         
             spdlog::get("A")->info("omp_get_max_threads() = {}",omp_get_max_threads());
             spdlog::get("A")->info("omp_get_thread_limit() = {}",omp_get_thread_limit());
             spdlog::get("A")->info("omp_get_num_threads() = {}",omp_get_num_threads());
