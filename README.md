@@ -6,6 +6,9 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **Announcement:**  
+> Our server now is switched to use default port 80. Please visit: [http://spectroscape.cc](http://spectroscape.cc) for an demo spectral archive.   
+> July 31, 2023   
+> 
 > Our server in HKUST was shut down during the weekend due to a electricity suspension. Now the spectroscape demo is back online.   
 > Please visit [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  for an demo spectral archive with over 25 million spectra.  
 > June 26, 2023 in HKUST campus  
@@ -30,9 +33,9 @@ For installation, users may either follow the [YouTube video tutorial](https://y
 
 [![Installation tutorial on YouTube](https://img.youtube.com/vi/C1a9RUqPxYs/maxresdefault.jpg)](https://youtu.be/C1a9RUqPxYs)
 
-If you would like to use Spectroscape directly via brower, [click here](http://omics.ust.hk:8709/index.html). 
+If you would like to use Spectroscape directly via brower, [click here](http://omics.ust.hk/index.html). 
 
-[<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://omics.ust.hk:8709/index.html)
+[<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://omics.ust.hk/index.html)
 
 
 ## Binary installation 
