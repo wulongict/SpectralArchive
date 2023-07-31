@@ -416,6 +416,10 @@ float * CMultiIndices::collectTrainingSpectra(const vector<string> &files, long 
             break;
         }
     }
+    if(total < TRAINING_SPEC_NUM){
+        spdlog::get("A")->error("Not enough spectra for training, only {} spectra collected. The minimum number of spectra is 100,000. ", total);
+        exit(1);
+    }
     return vec;
 }
 
