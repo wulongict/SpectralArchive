@@ -6,7 +6,7 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **Announcement:**  
-> Our server now is switched to use default port 80. Please visit: [http://spectroscape.cc](http://spectroscape.cc) for an demo spectral archive.   
+> Our server now is switched to use default port 80. Please visit: [http://spectroscape.cc](http://spectroscape.cc) for an demo spectral archive. We temporarily turn off the demo on port 8709.     
 > July 31, 2023   
 > 
 > Our server in HKUST was shut down during the weekend due to a electricity suspension. Now the spectroscape demo is back online.   
