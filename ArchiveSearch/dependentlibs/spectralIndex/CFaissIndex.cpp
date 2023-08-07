@@ -232,11 +232,11 @@ void CFaissIndexWrapper::toGPU() {
 
 void CFaissIndexWrapper::train(int batchSize, float *vecBatch) {
     // train faiss index. 
-    cout << "Training index" << endl << "omp_get_max_threads() = " << omp_get_max_threads() << endl;
+    // cout << "Training index" << endl << "omp_get_max_threads() = " << omp_get_max_threads() << endl;
     omp_set_num_threads(omp_get_max_threads());
     int threadsnum = omp_get_num_threads();
     int threadsmax = omp_get_max_threads();
-    cout << "Number of threads: " << threadsnum << " max threads: " << threadsmax << endl;
+    // cout << "Number of threads: " << threadsnum << " max threads: " << threadsmax << endl;
 
     m_index->train(batchSize, vecBatch);
 }

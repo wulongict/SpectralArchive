@@ -417,7 +417,7 @@ float * CMultiIndices::collectTrainingSpectra(const vector<string> &files, long 
         }
     }
     if(total < TRAINING_SPEC_NUM){
-        spdlog::get("A")->error("Not enough spectra for training, only {} spectra collected. The minimum number of spectra is 100,000. Please add more files to start training.", total);
+        spdlog::get("A")->error("The minimum number of spectra required for initializing an archive is 100,000. Now there are only {} spectra. Please try with more spectra data files. Run spectroscape command line from  `--init` step, with more data files, and confirm to overwrite previous archive. ", total);
         exit(1);
     }
     return vec;
