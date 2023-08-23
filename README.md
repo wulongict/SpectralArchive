@@ -7,10 +7,10 @@
 
 > **Announcement:**  
 > Now there are three demos available.   
-> Demo 1: archvie with 25 million spectra. [http://spectroscape.cc](http://spectroscape.cc)
-> Demo 2: demo archive with 25 data files, ~350,000 spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)
-> Demo 3: archive with > 100 million spectra. [http://omics.ust.hk:8709](http://omics.ust.hk:8709)
-> Aug 23. 2023 
+> Demo 1: archvie with 25 million spectra. [http://spectroscape.cc](http://spectroscape.cc)  
+> Demo 2: demo archive with 25 data files, ~350,000 spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
+> Demo 3: archive with > 100 million spectra. [http://omics.ust.hk:8709](http://omics.ust.hk:8709)   
+> Aug 23. 2023   
 >
 > Our server now is switched to use default port 80. Please visit: [http://spectroscape.cc](http://spectroscape.cc) for an demo spectral archive. We temporarily turn off the demo on port 8709.     
 > July 31, 2023   
