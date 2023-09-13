@@ -6,18 +6,27 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
 > **Announcement:**  
+> We created our first DOI badge from Zenodo. Future releases may also come with DOI links. 
+>
+> [![DOI](https://zenodo.org/badge/505467760.svg)](https://zenodo.org/badge/latestdoi/505467760)
+>
+>
+> Currently, Zenodo release (as well as GitHub source code package) does not contain the web UI submodule. Therefore, please get our newest source code from GitHub release page to test. Please refer to the [Source code installation](#source-code-installation) part for detailed steps.  
+>
+> Sep. 13, 2023
+> 
 > Now there are three demos available.   
 > Demo 1: an archvie with 25 million spectra. [http://spectroscape.cc](http://spectroscape.cc)  
 > Demo 2: a demo archive with 25 data files, ~350,000 spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
 > Demo 3: an archive with > 100 million spectra. [http://omics.ust.hk:8709](http://omics.ust.hk:8709)   
-> Aug 23. 2023  in HKUST campuse
+> Aug 23. 2023  in HKUST
 >
 > Our server now is switched to use default port 80. Please visit: [http://spectroscape.cc](http://spectroscape.cc) for an demo spectral archive. We temporarily turn off the demo on port 8709.     
 > July 31, 2023   
 > 
 > Our server in HKUST was shut down during the weekend due to a electricity suspension. Now the spectroscape demo is back online.   
 > Please visit [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  for an demo spectral archive with over 25 million spectra.  
-> June 26, 2023 in HKUST campus  
+> June 26, 2023 in HKUST  
 >  
 > We made our spectral archive search demo available on the following website.  
 > [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
