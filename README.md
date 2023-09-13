@@ -34,6 +34,30 @@
 > June 23, 2023  
 
 
+- [Spectroscape](#spectroscape)
+  - [Video tutorial for installation](#video-tutorial-for-installation)
+  - [Binary installation](#binary-installation)
+  - [Uninstallation](#uninstallation)
+  - [Source code installation](#source-code-installation)
+    - [Prerequisites](#prerequisites)
+    - [Compile](#compile)
+  - [Usage](#usage)
+    - [Build archive](#build-archive)
+    - [Add new data/annotation to existing spectral archive:](#add-new-dataannotation-to-existing-spectral-archive)
+      - [supported data format](#supported-data-format)
+      - [supported annotation file format](#supported-annotation-file-format)
+      - [The simplest way to add data files and search results](#the-simplest-way-to-add-data-files-and-search-results)
+      - [Use a specific pepXML as annotation](#use-a-specific-pepxml-as-annotation)
+    - [Add a specific MS data file](#add-a-specific-ms-data-file)
+    - [Search against a archive](#search-against-a-archive)
+      - [Search a given mzXML file](#search-a-given-mzxml-file)
+    - [Web UI](#web-ui)
+    - [Video tutorials for web UI](#video-tutorials-for-web-ui)
+      - [Introduction to the web UI](#introduction-to-the-web-ui)
+      - [Introduction to the web UI: the butterfly PSM plot](#introduction-to-the-web-ui-the-butterfly-psm-plot)
+  - [Issues](#issues)
+
+
 
 Spetroscape is a software tool to search for similar PSMs in spectral archives. It can create a spectral archive, and incrementally add new data (mzML/mzXML) and annotations (pep.xml) to it. 
 
