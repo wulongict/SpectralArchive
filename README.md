@@ -5,7 +5,35 @@
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2004.yml/badge.svg)
 ![example workflow](https://github.com/wulongict/SpectralArchive/actions/workflows/docker-publish-ubuntu-2204.yml/badge.svg)
 
-> **Announcement:**  
+
+**Table of Content**
+- [Spectroscape](#spectroscape)
+  - [Announcement](#announcement)
+  - [Installation](#installation)
+    - [Video tutorial](#video-tutorial)
+    - [From binary](#from-binary)
+      - [Uninstallation](#uninstallation)
+    - [From source code](#from-source-code)
+      - [Prerequisites](#prerequisites)
+      - [Compile](#compile)
+  - [Command line tool usage](#command-line-tool-usage)
+    - [Build an archive](#build-an-archive)
+    - [Add new data/annotation to a existing spectral archive:](#add-new-dataannotation-to-a-existing-spectral-archive)
+      - [Supported data formats](#supported-data-formats)
+      - [Supported annotation file formats](#supported-annotation-file-formats)
+      - [The simplest way](#the-simplest-way)
+      - [Add a pepXML file](#add-a-pepxml-file)
+      - [Add a data file](#add-a-data-file)
+    - [Search against a archive](#search-against-a-archive)
+      - [Search a given mzXML file](#search-a-given-mzxml-file)
+  - [Web UI](#web-ui)
+    - [Video tutorials for web UI](#video-tutorials-for-web-ui)
+      - [Introduction to the web UI](#introduction-to-the-web-ui)
+      - [Introduction to the web UI: the butterfly PSM plot](#introduction-to-the-web-ui-the-butterfly-psm-plot)
+  - [Issues](#issues)
+
+
+## Announcement  
 > We created our first DOI badge from Zenodo. Future releases may also come with DOI links. 
 >
 > [![DOI](https://zenodo.org/badge/505467760.svg)](https://zenodo.org/badge/latestdoi/505467760)
@@ -34,30 +62,6 @@
 > June 23, 2023  
 
 
-- [Spectroscape](#spectroscape)
-  - [Video tutorial for installation](#video-tutorial-for-installation)
-  - [Binary installation](#binary-installation)
-    - [Uninstallation](#uninstallation)
-  - [Source code installation](#source-code-installation)
-    - [Prerequisites](#prerequisites)
-    - [Compile](#compile)
-  - [Command line tool usage](#command-line-tool-usage)
-    - [Build archive](#build-archive)
-    - [Add new data/annotation to existing spectral archive:](#add-new-dataannotation-to-existing-spectral-archive)
-      - [Supported data formats](#supported-data-formats)
-      - [Supported annotation file formats](#supported-annotation-file-formats)
-      - [The simplest way](#the-simplest-way)
-      - [Add a pepXML](#add-a-pepxml)
-      - [Add a data file](#add-a-data-file)
-    - [Search against a archive](#search-against-a-archive)
-      - [Search a given mzXML file](#search-a-given-mzxml-file)
-  - [Web UI](#web-ui)
-    - [Video tutorials for web UI](#video-tutorials-for-web-ui)
-      - [Introduction to the web UI](#introduction-to-the-web-ui)
-      - [Introduction to the web UI: the butterfly PSM plot](#introduction-to-the-web-ui-the-butterfly-psm-plot)
-  - [Issues](#issues)
-
-
 
 Spetroscape is a software tool to search for similar PSMs in spectral archives. It can create a spectral archive, and incrementally add new data (mzML/mzXML) and annotations (pep.xml) to it. 
 
@@ -65,8 +69,8 @@ Spectroscape has a web user interface, which enables real time searching for app
 
 
 
-
-## Video tutorial for installation
+## Installation
+### Video tutorial
 For installation, users may either follow the [YouTube video tutorial](https://youtu.be/C1a9RUqPxYs) below or read through the next section of the ReadMe.md file.  
 
 
@@ -77,7 +81,7 @@ If you would like to use Spectroscape directly via brower, [click here](http://o
 [<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://omics.ust.hk/index.html)
 
 
-## Binary installation 
+### From binary  
 This following command has been tested on **Ubuntu 22.04 and 20.04**.  The .deb file of latest version of spectroscape can be found in the following [link](https://github.com/wulongict/SpectralArchive/releases/latest). 
 
 Spectroscape comes with both CPU and GPU versions. If CUDA environment is not available, please use CPU version.  
@@ -114,15 +118,15 @@ spectroscape
 spectroscape: error while loading shared libraries: libcudart.so.11.0: cannot open shared object file: No such file or directory
 ```
 
-### Uninstallation
+#### Uninstallation
 use the following command line to remove spectroscape (both GPU and CPU versions) from Ubuntu system. 
 ```bash
 sudo apt remove spectroscape_cpu spectroscape_gpu
 ```
 
-## Source code installation
+### From source code
 
-### Prerequisites
+#### Prerequisites
 This following command has been tested on Ubuntu 22.04. It does not compile on older versions because of the `cmake_minimum_required` parameter. 
 `cmake` and `gcc` are required to compile of C++ code.  
 ```bash
@@ -143,7 +147,7 @@ sudo apt install spawn-fcgi nginx
 
 Finally, to compile GPU version, CUDA environment is required. 
 
-### Compile
+#### Compile
 
 First, get the latest source code of spectroscape from GitHub. 
 
@@ -180,7 +184,7 @@ build/
 ```
 
 ## Command line tool usage
-### Build archive
+### Build an archive
 First create a new folder, e.g. `mass_spectra`. Then put some raw files in it. Here we using following files as example. Note that the minimum number of spectra required to initialize a spectral archive by Spectroscape is 100,000. Using only one mzXML file is not adquate to build an archive. Please try download the following files from [this link](https://drive.google.com/drive/folders/1i31NY48YW6_dy1M_xyF9OCdGIKekA1Xq?usp=sharing) to Google Drive. Users could also download [the compressed version](https://drive.google.com/drive/folders/1ZaHdkzxclzYboYf_67pPxgkmFxpnVFAG?usp=sharing) from Google Drive. 
 
 ```bash
@@ -231,7 +235,7 @@ spectroscape --run
 
 After this step, spectroscape creates a spectral archive using the data in `../mass_spectra/` with default parameters in `./conf/spectroscape_auto.conf`. 
 
-### Add new data/annotation to existing spectral archive: 
+### Add new data/annotation to a existing spectral archive: 
 #### Supported data formats
 The spectral archive can be expanded to include more MS data file.  Currently, it supports the following input formats of MS data file.
 - mzXML
@@ -270,7 +274,7 @@ spectroscape --add --datasearchpath /path/to/new/data
 Note that spectroscape will search for data (mzXML/mzML/sptxt) and annotation (.spectroscape.tsv/ipro.pep.xml/pep.xml) files recursively. Therefore new data can be organized into multiple sub-folders. 
 
 To get better control on the new data files added (e.g. excluding certain files), one can follow the command line explained in next section. 
-#### Add a pepXML 
+#### Add a pepXML file 
 
 Run the following command to update the annotation of spectra in the 24 mzXML used above. One can get the interact-Adult_Adrenalgland_Gel_Elite_49.ipro.pep.xml file from a Comet+xinteract database searching pipeline in TPP.
 ```bash
