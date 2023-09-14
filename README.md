@@ -76,9 +76,9 @@ For installation, users may either follow the [YouTube video tutorial](https://y
 
 [![Installation tutorial on YouTube](https://img.youtube.com/vi/C1a9RUqPxYs/maxresdefault.jpg)](https://youtu.be/C1a9RUqPxYs)
 
-If you would like to use Spectroscape directly via brower, [click here](http://omics.ust.hk/index.html). 
+If you would like to use Spectroscape directly via brower, [click here](http://spectroscape.cc/index.html). 
 
-[<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://omics.ust.hk/index.html)
+[<img src="homepage-spectroscape-img.png" width="50%" height="50%" />](http://spectroscape.cc/index.html)
 
 
 ### From binary  
