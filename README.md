@@ -68,7 +68,6 @@ Spetroscape is a software tool to search for similar PSMs in spectral archives. 
 Spectroscape has a web user interface, which enables real time searching for approximate nearest neighbors (ANNs) against an archive with hundreds of millions of spectra. 
 
 
-
 ## Installation
 ### Video tutorial
 For installation, users may either follow the [YouTube video tutorial](https://youtu.be/C1a9RUqPxYs) below or read through the next section of the ReadMe.md file.  
