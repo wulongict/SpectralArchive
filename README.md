@@ -335,13 +335,9 @@ I have made two tutorial videos about how to use the web UI. Here are the links.
 [![Butterfly PSM plot on YouTube](https://img.youtube.com/vi/6h8eFYn9V24/maxresdefault.jpg)](https://youtu.be/6h8eFYn9V24)
 
 
+## How to cite
+
+Wu, L., Hoque, A. & Lam, H. Spectroscape enables real-time query and visualization of a spectral archive in proteomics. Nat Commun 14, 6267 (2023). https://doi.org/10.1038/s41467-023-42006-x
 
 
-## Issues
-- When running archive tool, I got an error said "libdpgpu.so: cannot open shared object file: No such file or directory"?  
-    If the binary of archive tool is called /path/to/archive/bin, then try add the library path, /path/to/archive/lib to LD_LIBRARY_PATH variable.
-    One can check the RUNPATH of a binary or library file with following command: 
-    ```bash
-    objdump -x /path/to/the/binary-or-library-file | grep RUNPATH
-    ```
 
