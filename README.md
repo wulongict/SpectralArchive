@@ -33,7 +33,13 @@
   - [How to cite](#how-to-cite)
 
 ## Announcement
-
+> The small demo with 359k spectra is using default port 80 now.    
+> Demo 1: a demo archive with 25 data files, ~359,022 spectra [http://spectroscape.cc](http://spectroscape.cc)  
+> Demo 2: an archvie with 25 million spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
+> Demo 3: an archive with > 100 million spectra. [http://omics.ust.hk:8709](http://omics.ust.hk:8709)   
+> Feb 19. 2024 
+>
+>
 > We created our first DOI badge from Zenodo. Future releases may also come with DOI links.
 >
 > [![DOI](https://zenodo.org/badge/505467760.svg)](https://zenodo.org/badge/latestdoi/505467760)
@@ -46,9 +52,8 @@
 > Sep. 13, 2023
 >
 > Now there are three demos available.   
-> Demo 1: an archvie with 25 million spectra. [http://spectroscape.cc](http://spectroscape.cc)  
-> Demo 2: a demo archive with 25 data files, ~350,000
-> spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
+> Demo 1: a demo archive with 25 data files, ~359,022 spectra [http://spectroscape.cc](http://spectroscape.cc)  
+> Demo 2: an archvie with 25 million spectra. [http://spectroscape.cc:8709](http://spectroscape.cc:8709)  
 > Demo 3: an archive with > 100 million spectra. [http://omics.ust.hk:8709](http://omics.ust.hk:8709)   
 > Aug 23. 2023 in HKUST
 >
