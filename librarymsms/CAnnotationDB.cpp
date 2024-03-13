@@ -1277,12 +1277,15 @@ CGtUpdater::~CGtUpdater() {
         CometPepXMLParser crp(m_gtfile);
 
         string mzxml_name = File::CFile(m_gtfile).basename;
-
-        if (ext == "pepXML") {
-            // cout << "Got PepXML file" << endl;
-            mzxml_name = m_gtfile;
+        if(ext == "xml"){
+            mzxml_name = File::CFile(mzxml_name).basename;
         }
-        update(mzxml_name, crp);
+        mzxml_name += ".mzXML";
+        for (const auto& each_file : crp.m_allSourceFiles) {
+            cout << "update with soruce file " << each_file << endl;
+            update(each_file, crp);
+        }
+        // update(mzxml_name, crp);
     } else if (ext == "mgf" or ext == "sptxt") {
         DataFile lib_file(m_gtfile, 0, -1);
         AnnotationDataFile adf(lib_file);

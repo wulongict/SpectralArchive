@@ -9,6 +9,7 @@
 #include <cstring>
 #include <spdlog/spdlog.h>
 #include <fstream>
+#include <set>
 
 #include "XMLFileParser.h"
 #include "Util.h"
@@ -101,7 +102,12 @@ void CometPepXMLParser::export_psm_info(vector<shared_ptr<PSMInfo>> &psm,xml_doc
         // sometimes, the raw_data is mzXML, NOT .mzXML, the dot is missing. So this is an ad hoc fix.
         if(extension.at(0)!='.') extension = '.' + extension;
 
-        newfile += extension;
+        // if newfile does not end with extension, append it.
+        if(newfile.length() < extension.length() || newfile.substr(newfile.length() - extension.length()) != extension)
+        {
+            newfile += extension;
+        }
+
         m_allSourceFiles.push_back(newfile);
         spdlog::get("A")->info("Source filename: {}", newfile);
 
@@ -321,7 +327,37 @@ pair<int, int> CometPepXMLParser::getIndexRange(string filename) {
     return m_filename2indeRange[filename];
 }
 
+// get source file name from the spectrum name.
 vector<string> CometPepXMLParser::getAllSoruceFiles() {
+        std::set<string> allSourceFiles;
+    // add all source files to set 
+    allSourceFiles.insert(m_allSourceFiles.begin(), m_allSourceFiles.end());
+
+    
+    // find all source filenames from the spectrum name.
+    for(auto &x: psm) {
+        vector<string> items;
+        split_string(x->m_basename, items, '.');
+        string name = "";
+        if(items.size() == 4){
+            name = items[0];
+            // m_allSoruceFiles.push_back(items[0]);
+        }else{
+            cout << "Found '.' in filename: " << x->m_basename << endl;
+            for(auto &y: items) {
+                if(name.length()>0) name += ".";
+                name += y;
+            }
+        }
+        allSourceFiles.insert(name);
+        
+        m_allSourceFiles = vector<string>(allSourceFiles.begin(), allSourceFiles.end());
+        
+    }
+    // print all the source file name 
+        for(auto &x: m_allSourceFiles) {
+            cout << "Source file: " << x << endl;
+        }
     return m_allSourceFiles;
 }
 
