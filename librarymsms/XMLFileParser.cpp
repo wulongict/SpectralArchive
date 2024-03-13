@@ -103,7 +103,7 @@ void CometPepXMLParser::export_psm_info(vector<shared_ptr<PSMInfo>> &psm,xml_doc
 
         newfile += extension;
         m_allSourceFiles.push_back(newfile);
-        spdlog::get("A")->info("Source fileanme: {}", newfile);
+        spdlog::get("A")->info("Source filename: {}", newfile);
 
         string keywords = "spectrum_query";
         m_currentNode = breadth_first_search(keywords, &doc, false);
@@ -353,7 +353,7 @@ PSMInfo::PSMInfo(xml_node<> *spectrum_query_node):PSMInfo(){
     {
         cout << "empty spectrum " << spectrum_query_node  << endl;
         throw runtime_error("empty spectrum query node!");
-    }
+    }    
     first_attribute(spectrum_query_node, "spectrum", spectrum);
 
     spectrum = spectrum_query_node->first_attribute("spectrum")->value();
@@ -492,22 +492,67 @@ SearchHit::SearchHit(xml_node<> *node)  {
     // node attr list:
     // hit_rank
     m_hit_rank = atoi(node->first_attribute("hit_rank")->value());
+
+/*
+<search_hit hit_rank="1" peptide="HNLGHGHK" protein="P01042" num_tot_proteins="1" num_matched_ions="0" calc_neutral_pep_mass="1356.77805" massdiff="0.0005770" 
+protein_descr="Kininogen-1 [OS=Homo sapiens]" protein_mw="71.912" calc_pI="6.81">
+          <modification_info modified_peptide="[K].hNLGHGHk.[H]">
+            <mod_aminoacid_mass position="8" mass="357.25789496" />
+          </modification_info>
+          <modification_info modified_peptide="[K].hNLGHGHk.[H]" mod_nterm_mass="229.162932" />
+          <search_score name="XCorr" value="4.49736452102661" />
+          <search_score name="Percolator q-Value" value="0.0003473" />
+          <search_score name="Percolator PEP" value="1.58E-05" />
+          <search_score name="Percolator SVMScore" value="1.796" />
+          <analysis_result analysis="percolator">
+            <percolator_result probability="0.9999842" PEP="1.58E-05" q-Value="0.0003473" />
+          </analysis_result>
+        </search_hit>
+*/
+
+
     m_num_matched_ion = -1; // unknown
     if (node->first_attribute("num_matched_ions")) {
         m_num_matched_ion = atoi(node->first_attribute("num_matched_ions")->value());
     }
+    
+    m_num_missed_cleavages = -1;
+    if(node->first_attribute("num_missed_cleavages")){
+        m_num_missed_cleavages = atoi(node->first_attribute("num_missed_cleavages")->value());
+    }
 
-    m_num_missed_cleavages = atoi(node->first_attribute("num_missed_cleavages")->value());
     m_tot_num_ions = -1;
     if (node->first_attribute("tot_num_ions")) {
         m_tot_num_ions = atoi(node->first_attribute("tot_num_ions")->value());
     }
-    m_peptide = node->first_attribute("peptide")->value();
+    m_peptide="";
+    if (node->first_attribute("peptide")) {
+        m_peptide = node->first_attribute("peptide")->value();
+        // m_peptide = node->first_attribute("peptide")->value();
+    }
+    
+    
+    m_preAA = "";
+    if (node->first_attribute("peptide_prev_aa")) {
+        m_preAA = node->first_attribute("peptide_prev_aa")->value();
+    }
+    m_nextAA = "";
+    if (node->first_attribute("peptide_next_aa")) {
+        m_nextAA = node->first_attribute("peptide_next_aa")->value();
+    }
+    // m_preAA = node->first_attribute("peptide_prev_aa")->value();
+    // m_nextAA = node->first_attribute("peptide_next_aa")->value();
+    m_protein = "";
+    if (node->first_attribute("protein")) {
+        m_protein = node->first_attribute("protein")->value();
+    }
+    // m_protein = node->first_attribute("protein")->value();
 
-    m_preAA = node->first_attribute("peptide_prev_aa")->value();
-    m_nextAA = node->first_attribute("peptide_next_aa")->value();
-    m_protein = node->first_attribute("protein")->value();
-    m_massdiff = atof(node->first_attribute("massdiff")->value());
+    m_massdiff = 0;
+    if (node->first_attribute("massdiff")) {
+        m_massdiff = atof(node->first_attribute("massdiff")->value());
+    }
+    // m_massdiff = atof(node->first_attribute("massdiff")->value());
     m_modified_peptide = m_peptide;
     m_peptideprophet_prob = UNKOWN_PEPTIDEPROPHET_SCORE;
     m_iprophet_prob = UNKOWN_PEPTIDEPROPHET_SCORE;

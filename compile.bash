@@ -37,6 +37,7 @@ rm -f CMakeCache.txt
 #--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
 
 # -DCMAKE_INSTALL_PREFIX=${currentPath}/build
+# to use gdb, add -DCMAKE_CXX_FLAGS=-g
 cmake -DWITH_GPU=${with_GPU}  ..
 #/usr/local/spectralarchive ..
 # cmake  --graphviz=foo.dot ..
