@@ -1282,7 +1282,7 @@ CGtUpdater::~CGtUpdater() {
         }
         mzxml_name += ".mzXML";
         for (const auto& each_file : crp.m_allSourceFiles) {
-            cout << "update with soruce file " << each_file << endl;
+            // cout << "update with soruce file " << each_file << endl;
             update(each_file, crp);
         }
         // update(mzxml_name, crp);
