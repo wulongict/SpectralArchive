@@ -539,6 +539,10 @@ int main(int argc, char *argv[]) {
             int removeFileNumToShrink = archive.getNumOfFilesToRemoveForShrinkingArchiveTo(shrinkto);
 
             popDataFileNum = popDataFileNum > removeFileNumToShrink ? popDataFileNum : removeFileNumToShrink;
+            // once the archive is loaded, one of the three tasks can be processed. 
+            // remove, 
+            // update
+            // search
             if (popDataFileNum > 0)
             {
                 archive.remove(popDataFileNum);
@@ -690,7 +694,7 @@ collect_files_before_add(const string &datasearchpath, const string &mzXMLList, 
 }
 
 // if archive_name is empty, change it to current folder.
-string &fix_archive_name(string &archivename) {// checking parameters, if not in current path, change as current path.
+string &fix_archive_name(string &archivename) {
     if(archivename==""){
         archivename = fs::current_path().string();
     }
@@ -701,7 +705,7 @@ string &fix_archive_name(string &archivename) {// checking parameters, if not in
 // 1. create folder with archive name.
 // 2. collecting data files into archive file.
 // 3. creating configuration files.
-// throw runtime_error when there are error inside.
+// throw runtime_error if crashed.
 void archive_initialization(bool yes_overwrite, string &archivename, const string &datasearchpath) {
     // archivename = fix_archive_name(archivename);
 
@@ -772,7 +776,5 @@ void archive_initialization(bool yes_overwrite, string &archivename, const strin
     }else{
         writeConfigFile(config_file.string(), archive_file.string());
     }
-    cout << "the archive is initialized successfully. " << endl;
-
-
+    spdlog::get("A")->info("Spectral archive initialization is done.");
 }
