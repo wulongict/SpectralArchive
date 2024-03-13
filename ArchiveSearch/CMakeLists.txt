@@ -48,7 +48,7 @@ target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
 msbasic_small_static mstoolkit spectrastlib_static
 		  )
-set(MY_SPECTROSCAPE_VERSION "1.1.6")
+set(MY_SPECTROSCAPE_VERSION "1.1.7")
 # target_compile_definitions(spectroscape PRIVATE SPECTROSCAPE_VERSION=${MY_SPECTROSCAPE_VERSION})
 add_compile_definitions(SPECTROSCAPE_VERSION="${MY_SPECTROSCAPE_VERSION}")
 
