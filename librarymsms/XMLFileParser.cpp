@@ -331,7 +331,16 @@ pair<int, int> CometPepXMLParser::getIndexRange(string filename) {
 vector<string> CometPepXMLParser::getAllSoruceFiles() {
         std::set<string> allSourceFiles;
     // add all source files to set 
-    allSourceFiles.insert(m_allSourceFiles.begin(), m_allSourceFiles.end());
+    // for each item in m_allSourceFiles, find its file name with CFile
+    for(auto &x: m_allSourceFiles) {
+        
+        string basename = File::CFile(x).basename;
+        // if(extension.length()>0) {
+        //     filename = x.substr(0, x.length() - extension.length() - 1);
+        // }
+        allSourceFiles.insert(basename);
+    }
+    // allSourceFiles.insert(m_allSourceFiles.begin(), m_allSourceFiles.end());
 
     
     // find all source filenames from the spectrum name.
@@ -355,9 +364,9 @@ vector<string> CometPepXMLParser::getAllSoruceFiles() {
         
     }
     // print all the source file name 
-        for(auto &x: m_allSourceFiles) {
-            cout << "Source file: " << x << endl;
-        }
+        // for(auto &x: m_allSourceFiles) {
+        //     cout << "Source file: " << x << endl;
+        // }
     return m_allSourceFiles;
 }
 

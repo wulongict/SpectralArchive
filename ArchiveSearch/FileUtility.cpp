@@ -44,6 +44,8 @@ std::vector<fs::path> get_file_list(const fs::path& dir_path, std::vector<std::s
                 transform(fullpath.begin(), fullpath.end(), fullpath.begin(), ::tolower);
                 if (isEndWith(fullpath, ext)){
                     file_list.push_back(entry.path());
+                    break; 
+                    // break the loop after we find the file； fixed the bug of multiple file with the same name but different extension
                 } else{
                     // cout << "skipping unsupported file format in " << entry.path() << endl;
                 }

@@ -390,7 +390,11 @@ void CSpectralArchive::addListOfRawData(const string &new_experimental_datalist,
             files.push_back(files[i]);
         }
         files.erase(files.begin(), files.begin()+L);
-        cout << files.size() << " out of " << L << " files will be added" << endl;
+        // spdlog::get("A")->info("Loading data file list: {}", new_experimental_datalist);
+        // cout << files.size() << " out of " << L << " files will be added" << endl;
+        if(not files.empty()){
+            spdlog::get("A")->info("{} out of {} files will be added", files.size(), L);
+        }
         if ( files.empty()){
             return; 
         }
@@ -576,15 +580,20 @@ void CSpectralArchive::addListOfSearchResults(string pepxmlfilelist) {
         //         "pepxml table, and gt table." << endl;
         return;
     }
+    spdlog::get("A")->info("Loading search result file list: {}", pepxmlfilelist);
     CTable pepxmllist(pepxmlfilelist, '\t', false, 0);
-    cout << "reading pepxml file from " << pepxmlfilelist << endl;
+    // cout << "reading pepxml file from " << pepxmlfilelist << endl;
 
     // Progress ps(pepxmllist.m_row, "Updating ground truth");
     for (int i = 0; i < pepxmllist.m_row; i++) {
         // ps.increase();
         string currentfile = pepxmllist.getEntry(i, 0);
-        cout << "\nUpdating GROUNDTRUTH table: " << i + 1 << " / " << pepxmllist.m_row << "  " << endl;
+        spdlog::get("A")->info("Task {} / {} begins", i+1, pepxmllist.m_row);
+        // cout << "\nUpdating GROUNDTRUTH table: " << i + 1 << " / " << pepxmllist.m_row << "  " << endl;
         doAddSearchResult(currentfile);
+        spdlog::get("A")->info("Task {} / {} ends", i+1, pepxmllist.m_row);
+        
+
     }
 }
 

@@ -776,5 +776,7 @@ void archive_initialization(bool yes_overwrite, string &archivename, const strin
     }else{
         writeConfigFile(config_file.string(), archive_file.string());
     }
-    spdlog::get("A")->info("Spectral archive initialization is done.");
+    spdlog::get("A")->info("Spectroscape initialization finished successfully.");
+    spdlog::get("A")->info("Next, consider spectroscape --run to build up the archive.");
+    spdlog::get("A")->info("---------END---------");
 }

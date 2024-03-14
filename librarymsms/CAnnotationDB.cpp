@@ -1232,7 +1232,7 @@ void CGtUpdater::update(const string& rawfilename, ICGtInfoUpdate &gt) {
     vector<vector<string>> results;
     m_annotationdb->getSpecFileRows(rawfilename, results);
 
-    if (results.empty() or results.size() > 1) {
+    if (results.empty()) {
         cout << "No raw file found with name: " << rawfilename << endl;
     } else if (results.size() > 1) {
         cout << results.size() <<" raw files found."<< endl;
@@ -1275,7 +1275,7 @@ CGtUpdater::~CGtUpdater() {
                or ext == "pepXML") {
 
         CometPepXMLParser crp(m_gtfile);
-
+        crp.getAllSoruceFiles();
         string mzxml_name = File::CFile(m_gtfile).basename;
         if(ext == "xml"){
             mzxml_name = File::CFile(mzxml_name).basename;

@@ -54,7 +54,7 @@ string getmodificationfrompeptidestring(string peptidestr, modification &mod) {
 
 
 CTable::CTable(const string& filename, char delimitor, bool has_header, int skipNum) {
-    cout << "[Info] Loading table " << filename << endl;
+    // cout << "[Info] Loading table " << filename << endl;
     m_filename = filename;
     m_delim = delimitor;
     m_has_header = has_header;
@@ -65,7 +65,7 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
     ifstream fin(filename.c_str(), ios::in);
 
     if (fin.is_open()) {
-        CountProgress cps(100000, "loading " + filename);
+        // CountProgress cps(100000, "loading " + filename);
         while (skipNum-- && getline(fin, line)) {
             cout << "skip line " << line << endl;
         }
@@ -77,7 +77,7 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
             // cout << endl << "Header: " << endl << line << endl;
         }
         while (getline(fin, line)) {
-            cps.increase();
+            // cps.increase();
             vector<string> tokens;
 
             trim_space_only(line);
@@ -107,10 +107,10 @@ CTable::CTable(const string& filename, char delimitor, bool has_header, int skip
     }
 
     if (not m_has_header) {
-        cout << "Using place-holder header: ";
+        // cout << "Using place-holder header: ";
         for (int i = 0; i < m_col; i++) {
             m_column_header.push_back(string("C") + to_string(i));
-            cout << "C" << i << ",";
+            // cout << "C" << i << ",";
         }
         cout << endl;
     }
@@ -838,7 +838,7 @@ Progress::Progress(long task_num, const string& task_name) : m_print_percentage_
 }
 
 void File::splitpath(const string& inputpath, string &path, string &file) {
-    int found = inputpath.find_last_of('/');
+    int found = inputpath.find_last_of("/\\");
     if (found != string::npos) {
         path = inputpath.substr(0, found);
         file = inputpath.substr(found + 1);
