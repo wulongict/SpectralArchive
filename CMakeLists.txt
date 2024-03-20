@@ -10,9 +10,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
 # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 if(APPLE)
-  set(CMAKE_INSTALL_RPATH "@loader_path/../lib;@loader_path")
+  set(CMAKE_INSTALL_RPATH "@loader_path/../lib64;@loader_path/../lib;@loader_path")
 elseif(UNIX)
-  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/")
+  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib64:$ORIGIN/../lib:$ORIGIN/")
 endif()
 # set(CMAKE_INSTALL_RPATH "../lib")
 
