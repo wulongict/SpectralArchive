@@ -22,6 +22,12 @@ set( boost_INCLUDE_DIR ${install_dir}/include )
 set( boost_LIB_DIR ${install_dir}/lib )
 set(BOOST_ROOT ${install_dir})
 
+add_subdirectory(External/fcgi2.4.0)
+ExternalProject_Get_Property(libfcgi install_dir )
+set(fcgi_install_dir ${install_dir})
+set( fcgi_INCLUDE_DIR ${fcgi_install_dir}/include )
+set( fcgi_LIB_DIR ${fcgi_install_dir}/lib )
+
 set(Boost_LIBRARIES
         ${boost_LIB_DIR}/libboost_filesystem.a
         ${boost_LIB_DIR}/libboost_iostreams.a

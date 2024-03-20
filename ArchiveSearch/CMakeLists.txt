@@ -7,7 +7,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
-link_directories(${CMAKE_BINARY_DIR}/Release)
+link_directories(${CMAKE_BINARY_DIR}/Release ${fcgi_install_dir}/lib)
 
 # set(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
 
@@ -16,7 +16,7 @@ add_subdirectory(dependentlibs)
 include_directories(External)
 
 include_directories(../External/Eigen ../External/spdlog-1.x/include
-		/usr/local/cuda/include
+		/usr/local/cuda/include  ${fcgi_install_dir}/include
 		)
 set(SOURCE_FILES
 		CTimerSummary.cpp
@@ -39,7 +39,7 @@ target_link_libraries(specarchive fcgi fcgi++ msfileramp ${DPGPU}  archiveindex 
 
 add_library(specarchive_static STATIC ${SOURCE_FILES} )
 target_link_libraries(specarchive_static libfcgi.a libfcgi++.a  ${DPGPU} msms   pthread)
-add_dependencies(specarchive_static boost)
+add_dependencies(specarchive_static boost libfcgi)
 
 
 #The fast cgi interface
@@ -48,7 +48,9 @@ target_link_libraries(spectroscape
 specarchive_static archiveindex_static tailestimation_static msfileramp_static
 msbasic_small_static mstoolkit spectrastlib_static
 		  )
-set(MY_SPECTROSCAPE_VERSION "1.1.8")
+
+file(READ "${CMAKE_SOURCE_DIR}/version.txt" MY_SPECTROSCAPE_VERSION)
+
 # target_compile_definitions(spectroscape PRIVATE SPECTROSCAPE_VERSION=${MY_SPECTROSCAPE_VERSION})
 add_compile_definitions(SPECTROSCAPE_VERSION="${MY_SPECTROSCAPE_VERSION}")
 
