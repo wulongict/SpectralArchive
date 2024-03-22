@@ -88,10 +88,10 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/boost1.65.1/tmp" "/External/boo
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/.git")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/tmp")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/build")
-list(APPEND CPACK_SOURCE_IGNORE_FILES "/package" "/External/fcgi2.4.0/src" "/External/fcgi2.4.0/tmp" )
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/package" "/External/fcgi2.4.0/src"  )
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/.vscode" ".idea" "./SpectralArchiveWeb")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/faiss-1.7.3/faiss_tmp*" "/External/faiss-1.7.3/html" "/External/faiss-1.7.3/xml")
-
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/OpenBLAS*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-cpu/.*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-gpu/.*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release/.*" "/External/SpectraST/CMakeFiles/.*" "/External/spdlog-1.x/CMakeFiles/.*")

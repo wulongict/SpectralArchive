@@ -88,12 +88,6 @@ add_subdirectory(tests)
 
 add_subdirectory(ArchiveSearch)
 
-include_directories(External)
-include_directories(External/spdlog-1.x/include)
-
-
-
-
 
 enable_testing()
 add_test(NAME mytest COMMAND msmstest )
