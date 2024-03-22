@@ -6,7 +6,7 @@ FROM ubuntu:18.04
 
 # First install the dependencies
 RUN apt update
-RUN apt install wget git cmake build-essential libfcgi-dev liblapack-dev  spawn-fcgi nginx -y
+RUN apt install wget git cmake build-essential liblapack-dev  spawn-fcgi nginx -y
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.26.4/cmake-3.26.4-linux-x86_64.sh
 RUN chmod +x cmake-3.26.4-linux-x86_64.sh
 RUN ./cmake-3.26.4-linux-x86_64.sh --skip-license --prefix=/usr/local

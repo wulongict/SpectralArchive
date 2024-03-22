@@ -12,10 +12,11 @@ add_library(mltools SHARED EMAlgorithm.cpp Visual.cpp)
 target_link_libraries(mltools ${Boost_LIBRARIES})
 set_target_properties(mltools PROPERTIES POSITION_INDEPENDENT_CODE ON)
 add_dependencies(mltools boost)
+target_include_directories(mltools PUBLIC ${boost_INCLUDE_DIR})
 
 add_library(mltools_static STATIC EMAlgorithm.cpp Visual.cpp)
 target_link_libraries(mltools_static ${Boost_LIBRARIES})
-
+target_include_directories(mltools_static PUBLIC ${boost_INCLUDE_DIR})
 add_dependencies(mltools_static boost)
 
 # Everything related to tail estimation

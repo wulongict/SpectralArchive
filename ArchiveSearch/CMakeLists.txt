@@ -16,7 +16,7 @@ add_subdirectory(dependentlibs)
 include_directories(External)
 
 include_directories(../External/Eigen ../External/spdlog-1.x/include
-		/usr/local/cuda/include  ${fcgi_install_dir}/include
+		/usr/local/cuda/include  ${fcgi_install_dir}/include ${boost_install_dir}/include
 		)
 set(SOURCE_FILES
 		CTimerSummary.cpp
