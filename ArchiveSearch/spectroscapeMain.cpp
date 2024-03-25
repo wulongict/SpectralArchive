@@ -424,17 +424,7 @@ int main(int argc, char *argv[]) {
                 numthreads = std::thread::hardware_concurrency();
             }
             int max_threads_available = std::thread::hardware_concurrency();
-            
-            set_env_var("OMP_NUM_THREADS", std::to_string(numthreads));
-            // set_env_var("OMP_DYNAMIC", "false");
-            // set_env_var("OMP_PROC_BIND", "true");
-            // set_env_var("OMP_PLACES", "cores");
-            // set_env_var("OMP_STACKSIZE", "1G");
-            set_env_var("OMP_WAIT_POLICY", "passive");
-            set_env_var("OMP_NESTED", "false");
-
-            // spdlog::get("A")->info("omp_get_max_threads() = {}",omp_get_max_threads());
-
+        
             if (numthreads <= 0 or numthreads > 2 * max_threads_available){
                 omp_set_num_threads(max_threads_available);
             }else{
