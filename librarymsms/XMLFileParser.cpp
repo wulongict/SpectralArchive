@@ -346,6 +346,7 @@ vector<string> CometPepXMLParser::getAllSoruceFiles() {
 
     
     // find all source filenames from the spectrum name.
+    set<string> basename_with_dot;
     for(auto &x: psm) {
         vector<string> items;
         split_string(x->m_basename, items, '.');
@@ -354,7 +355,8 @@ vector<string> CometPepXMLParser::getAllSoruceFiles() {
             name = items[0];
             // m_allSoruceFiles.push_back(items[0]);
         }else{
-            cout << "Found '.' in filename: " << x->m_basename << endl;
+            basename_with_dot.insert(x->m_basename);
+            // cout << "Found '.' in filename: " << x->m_basename << endl;
             for(auto &y: items) {
                 if(name.length()>0) name += ".";
                 name += y;
@@ -364,6 +366,9 @@ vector<string> CometPepXMLParser::getAllSoruceFiles() {
         
         m_allSourceFiles = vector<string>(allSourceFiles.begin(), allSourceFiles.end());
         
+    }
+    for(auto &x: basename_with_dot) {
+        cout << "Found '.' in filename: " << x << endl;
     }
     // print all the source file name 
         // for(auto &x: m_allSourceFiles) {
