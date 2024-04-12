@@ -16,7 +16,7 @@ conf/
 Makefile
 gsl-1.16.tar.gz
 gsl-1.16/
-cmake-build-release*
+cmake-build-*
 build
 build_dev
 faiss-1.7.1/faiss_tmp*
