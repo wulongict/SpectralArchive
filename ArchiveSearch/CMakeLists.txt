@@ -94,6 +94,8 @@ list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/faiss-1.7.3/faiss_tmp*" "/Exter
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/External/OpenBLAS*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-cpu/.*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release-gpu/.*")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-debug-cpu/.*")
+list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-debug-gpu/.*")
 list(APPEND CPACK_SOURCE_IGNORE_FILES "/cmake-build-release/.*" "/External/SpectraST/CMakeFiles/.*" "/External/spdlog-1.x/CMakeFiles/.*")
 
 include(CPack)

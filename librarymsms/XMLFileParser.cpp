@@ -100,7 +100,9 @@ void CometPepXMLParser::export_psm_info(vector<shared_ptr<PSMInfo>> &psm,xml_doc
         string newfile = x->first_attribute("base_name")->value();
         string extension =  x->first_attribute("raw_data")->value();
         // sometimes, the raw_data is mzXML, NOT .mzXML, the dot is missing. So this is an ad hoc fix.
-        if(extension.at(0)!='.') extension = '.' + extension;
+        if(not extension.empty() and extension.at(0)!='.') {
+            extension = '.' + extension;
+        }
 
         // if newfile does not end with extension, append it.
         if(newfile.length() < extension.length() || newfile.substr(newfile.length() - extension.length()) != extension)

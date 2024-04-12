@@ -18,7 +18,7 @@
       - [Compile](#compile)
   - [Command line tool usage](#command-line-tool-usage)
     - [Build an archive](#build-an-archive)
-    - [Add new data/annotation to a existing spectral archive:](#add-new-dataannotation-to-a-existing-spectral-archive)
+    - [Add new data or annotation to a existing spectral archive](#add-new-data-or-annotation-to-a-existing-spectral-archive)
       - [Supported data formats](#supported-data-formats)
       - [Supported annotation file formats](#supported-annotation-file-formats)
       - [The simplest way](#the-simplest-way)
@@ -269,7 +269,7 @@ spectroscape --run
 After this step, spectroscape creates a spectral archive using the data in `../mass_spectra/` with default parameters
 in `./conf/spectroscape_auto.conf`.
 
-### Add new data/annotation to a existing spectral archive:
+### Add new data or annotation to a existing spectral archive
 
 #### Supported data formats
 

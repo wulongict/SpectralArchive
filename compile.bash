@@ -1,26 +1,35 @@
 #!/bin/bash
 set -e
-
-
-if (( $# < 1 )); then
-    echo "compile CPU version"
-    with_GPU=FALSE
-else 
-    with_GPU=$1
+echo "Usage:"
+echo $0 "[with_GPU] [build_type]"
+echo "if with_GPU is TRUE, compile GPU version, otherwise, CPU version; Default to CPU."
+echo "if build_type is release, compile release version, otherwise, debug version, Default to release. "
+echo "............................. "
+build_type=release
+if (( $# > 1)); then 
+    build_type=$2
+    if [ ${build_type} = "release" ]; then
+        echo "compile release version";
+    elif [ ${build_type} = "debug" ]; then
+        echo "compile debug version";
+    else 
+        echo "invalid option of build_type. Default to release. "
+    fi
 fi
 
-echo "compile with GPU: ${with_GPU}"
-
-# to continue.
-releasePath=cmake-build-release-cpu
-if [ ${with_GPU} = "TRUE" ]; then
-    echo "compile GPU version";
-    releasePath=cmake-build-release-gpu
-elif [ ${with_GPU} = "FALSE" ]; then 
-    echo "compile CPU version";
-    releasePath=cmake-build-release-cpu
-else 
-    echo "invalid option of WITH_GPU. It must be TRUE or FALSE. "
+releasePath=cmake-build-${build_type}-cpu
+with_GPU=FALSE
+if (( $# > 0 )); then
+    with_GPU=$1
+    if [ ${with_GPU} = "TRUE" ]; then
+        echo "compile GPU version";
+        releasePath=cmake-build-${build_type}-gpu
+    elif [ ${with_GPU} = "FALSE" ]; then 
+        echo "compile CPU version";
+        releasePath=cmake-build-${build_type}-cpu
+    else 
+        echo "invalid option of WITH_GPU. Default to CPU. "
+    fi
 fi
 
 currentPath=$(pwd)
@@ -28,7 +37,7 @@ echo $currentPath
 
 mkdir -p ${releasePath}
 cd ${currentPath}/${releasePath}/ 
-rm -f CMakeCache.txt
+# rm -f CMakeCache.txt
 
 # echo which python `which python`
 # add -pg option to CXX_FLAGS, LINKER_FLAGS AND SHARED_LINKER_FLAGS.
@@ -36,13 +45,24 @@ rm -f CMakeCache.txt
 # -DCMAKE_CXX_FLAGS=-pg -DCMAKE_EXE_LINKER_FLAGS=-pg -DCMAKE_SHARED_LINKER_FLAGS=-pg
 #--debug-output -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
 
+
+
+# create cmake build options. 
+cmake_build_options="-DWITH_GPU=${with_GPU}"
+
+# if build type is release, add CXX flag -g
+if [ ${build_type} = "debug" ]; then
+    # to use gdb, add -DCMAKE_CXX_FLAGS=-g
+    cmake_build_options="${cmake_build_options} -DCMAKE_CXX_FLAGS=-g"
+fi
+cmake ${cmake_build_options} ..
+
 # -DCMAKE_INSTALL_PREFIX=${currentPath}/build
 # to use gdb, add -DCMAKE_CXX_FLAGS=-g
-cmake -DWITH_GPU=${with_GPU}  ..
+# cmake -DWITH_GPU=${with_GPU} -DCMAKE_CXX_FLAGS=-g ..
 #/usr/local/spectralarchive ..
 # cmake  --graphviz=foo.dot ..
 # cmake ..
-
 
 
 cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j `nproc`
