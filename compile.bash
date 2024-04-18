@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e
-echo "Usage:"
-echo $0 "[with_GPU] [build_type]"
+echo "Usage: "$0 "[with_GPU] [build_type]"
+echo "A script for compile spectroscape with CMake"
+echo ""
 echo "if with_GPU is TRUE, compile GPU version, otherwise, CPU version; Default to CPU."
 echo "if build_type is release, compile release version, otherwise, debug version, Default to release. "
+echo ""
 echo "............................. "
+echo $0 $@
+echo "............................. "
+echo ""
 build_type=release
 if (( $# > 1)); then 
     build_type=$2
