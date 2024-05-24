@@ -69,7 +69,7 @@ cmake ${cmake_build_options} ..
 # cmake  --graphviz=foo.dot ..
 # cmake ..
 
-
+cmake  --build ../${releasePath}  --target libfcgi -- -j `nproc`
 cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
