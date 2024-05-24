@@ -71,7 +71,7 @@ cmake ${cmake_build_options} ..
 
 # compile libfcgi will multiple cores will crash on macos+docker(ubuntu2204) environment. 
 # it turns out that this is a resource issue on macos.
-cores=$((`nproc` / 5 + 1)) 
+cores=$((`nproc` / 16 + 1)) 
 cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j $cores
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
