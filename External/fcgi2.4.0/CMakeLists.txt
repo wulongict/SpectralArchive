@@ -15,24 +15,14 @@ ExternalProject_Add( libfcgi
         CONFIGURE_COMMAND
         echo ==== <INSTALL_DIR> =====
         &&
-        ./configure
-        # --with-libraries=filesystem
-        # --with-libraries=system
-        # --with-libraries=iostreams
-        # --with-libraries=program_options
-        # --with-libraries=timer
-        # --with-libraries=chrono
+        ./configure        
         --prefix=<INSTALL_DIR>
-    #    --with-python=${Python3_INCLUDE_DIRS}
+
         BUILD_COMMAND
-#        &&
         make 
-#         ./b2 cxxflags=-fPIC cflags=-fPIC install
-#         #        link=static variant=release threading=multi runtime-link=static
-#         -j 30
-# #        echo done
+
         INSTALL_COMMAND make install
-        # INSTALL_DIR ${boost_INSTALL}
+
         )
 
 
