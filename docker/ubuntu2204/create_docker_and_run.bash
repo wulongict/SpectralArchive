@@ -1,11 +1,19 @@
 #!/bin/bash
 
 # create the docker
-docker build -t spectroscape-v1.1.3 .
+docker build -t spectroscape-v1.1.9 .
 
 # run spectroscape
-docker run -it spectroscape-v1.1.3:latest spectroscape 
+docker run -it --rm  spectroscape-v1.1.9:latest spectroscape 
+output=$?
+status="compiled successfully;"
+if [ $output -eq 0 ]; then
+    echo "spectroscape run successfully"
+    # run the docker with bash
+    echo docker run -it --rm spectroscape-v1.1.9:latest bash
+else
+    status="compiled failed;"
+    echo "spectroscape run failed"
+fi
 
-# run the docker with bash
-docker run -it spectroscape-v1.1.3:latest bash
-
+echo `date` `pwd` $status tested by Long > ../log.txt
