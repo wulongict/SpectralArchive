@@ -69,7 +69,8 @@ cmake ${cmake_build_options} ..
 # cmake  --graphviz=foo.dot ..
 # cmake ..
 
-cmake  --build ../${releasePath}  --target libfcgi -- -j `nproc`
+# compile libfcgi will multiple cores will crash on macos+docker(ubuntu2204) environment. 
+cmake  --build ../${releasePath}  --target libfcgi 
 cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j `nproc`
 
 # run tests added into CMakeLists.txt file with add_test(Name XXX Command YYY)
