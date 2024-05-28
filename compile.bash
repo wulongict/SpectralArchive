@@ -18,6 +18,19 @@ show_help() {
     exit 1
 }
 
+is_docker(){
+    if [ -f /.dockerenv ] || [ -f /run/.containerenv ]; then
+        echo "Running inside Docker"
+        # Adjust script behavior for Docker
+    else
+        echo "Running outside Docker"
+        # Normal script behavior
+    fi
+}
+
+is_docker
+# exit 0
+
 POSITIONAL_ARGS=()
 with_GPU=FALSE
 build_type=release
