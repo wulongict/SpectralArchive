@@ -29,7 +29,6 @@ is_docker(){
 }
 
 is_docker
-# exit 0
 
 POSITIONAL_ARGS=()
 with_GPU=FALSE
@@ -104,8 +103,6 @@ echo "............................."
 releasePath=cmake-build-${build_type}-${path_suffix}
 echo "releasePath = ${releasePath}"
 
-
-exit 0
 
 currentPath=$(pwd)
 echo $currentPath
