@@ -35,8 +35,10 @@ void sigint_handler(int signal) {
         std::cout << "Force to exit Spectroscape." << std::endl;
         exit(0);
     }
-    std::cout << "Please wait for a few seconds for Spectroscape save data and exit safely.\n" << std::endl;
-    std::cout << "To stop Spectroscape immediately, press ctrl-c again .\n" << std::endl;
+    std::cout << "If spectroscape is adding new raw data files, please wait for a few seconds for Spectroscape save data and exit safely.\n" << std::endl;
+    std::cout << "Otherwise, to stop Spectroscape immediately, press ctrl-c again .\n" << std::endl;
+    std::cout << "Attention:" << std::endl;
+    std::cout << "Forced interruption when adding new data files to archive can results in corrupted files. A fresh building is required. " << std::endl;
 }
 
 boost::program_options::variables_map getParam(int argc, char *argv[]) {

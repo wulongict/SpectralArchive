@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <map>
+#include <atomic>
 using namespace std;
 class CAnnotationDB;
 class ICQuery;
@@ -217,6 +218,8 @@ private:
 	int m_tol;
 	int m_minPeakNum;
 	bool m_usegpu;
+    std::atomic_int m_stage; 
+    enum Archive_Stage {STAGE_ANNOTATION, STAGE_TRAIN, STAGE_ADD, STAGE_INIT, STAGE_INDEX, STAGE_SEARCH, STAGE_UPDATE};
 public:
     CSpectralArchive(string mzXMLList, string pepxml, string indexfile, bool removeprecursor, bool useflankingbins,
                      int tol, int minPeakNum, bool myOwnIndex, CPQParam option, string indexstrings, bool usegpu,

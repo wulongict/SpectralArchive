@@ -188,7 +188,8 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
                                    bool usegpu, bool rebuildsqldb, int seedpvalue, const int topPeakNum,
                                    bool createfilenameBlackList, bool saveBackgroundScore, bool verbose,
                                    string archivename, string indexshuffleseeds, string gpuidx) : PeakNumPerSpec(
-        topPeakNum) {
+        topPeakNum), m_stage(STAGE_INIT) {
+            
             m_savebackgroundscore = saveBackgroundScore;
     // checking the parameters.
     if(mzXMLList.empty()){
@@ -311,6 +312,7 @@ void CSpectralArchive::createMzFileObject() {
 // get number of indices to be created, using indexstr, split by ';'
 // create multiIndices object. each corresponding to a file in multiIndices folder. 
 void CSpectralArchive::createIndices(bool myOwnIndex, shared_ptr<CPQParam> option, string &indexstrings, string indexshuffleseeds) {
+    m_stage = STAGE_TRAIN;
     int cnts = count(indexstrings.begin(), indexstrings.end(), ';') + 1;
     if (cnts > 6 and cnts < 1) {
         cout << "Error: invalid cnts " << cnts << endl;
@@ -332,6 +334,7 @@ CSpectralArchive::~CSpectralArchive() {}
 
 void CSpectralArchive::update(string new_experimental_data, string new_search_result, string new_search_result_list,
                               string new_experimental_datalist) {
+    m_stage = STAGE_UPDATE;
     updateIndex(m_verbose);
     bool newFilesAdded = false;
     addRawData(new_experimental_data, newFilesAdded);
