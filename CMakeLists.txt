@@ -88,6 +88,7 @@ add_subdirectory(tests)
 
 add_subdirectory(ArchiveSearch)
 
+install(DIRECTORY SpectralArchiveWeb/arxiv/ DESTINATION ./www)
 
 enable_testing()
 add_test(NAME mytest COMMAND msmstest )

@@ -57,16 +57,6 @@ add_dependencies(msms spdlog)
 add_dependencies(msms_static spdlog)
 
 install(TARGETS msms DESTINATION lib)
-#install(FILES
-#        CAnnotationDB.h        GraphKNN.h        PeakList.h
-#        CArchiveSearchReply.h  ICGtInfoUpdate.h  ProteomicsDataTypes.h
-#        CFragmentIndex.h       ICHistdata.h      SpectraST_base64.h
-#        CMzFileReader.h        ICMzFile.h        SpectraST_ramp.h
-#        ConcreteQueries.h      ICQuery.h         SWATHmzXMLReader.h
-#        CThreadsPool.h         mzXMLReader.h     Util.h
-#        DatabaseManager.h      pathManager.h     XMLFileParser.h
-#        DESTINATION include
-#        )
 
 
 #---------------------------

@@ -192,17 +192,13 @@ CSpectralArchive::CSpectralArchive(string mzXMLList, string pepxml, string index
             m_savebackgroundscore = saveBackgroundScore;
     // checking the parameters.
     if(mzXMLList.empty()){
+        // test if the file is empty.
         cerr << "The archive file name is not provided. use --mzxmlfiles or -m to specify the file contains a list of ms/ms data files. (or use the config file to provide the archive filename.)" << endl;
         throw runtime_error("No data file. ");
     }else{
-        // test if the file is empty.
         vector<string> data_files = readlines(mzXMLList);
         cout << "find " << data_files.size() << " data files in '" << mzXMLList << "' file " << endl;
-        // if(data_files.empty()){
-        //     cerr << "No data files found in '" << mzXMLList << "' file " << endl;
-        //     cerr << "Please use `--datasearchpath` to specify path for collecting mzXML/mzML files in --init step." << endl;
-        //     throw runtime_error("No data file. ");
-        // }
+        
     }
     m_verbose = verbose;
 
