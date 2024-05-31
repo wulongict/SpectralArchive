@@ -103,26 +103,26 @@ Spectroscape comes with both CPU and GPU versions. If CUDA environment is not av
 Spectroscape (CPU version) can be installed using following command lines.
 
 ```bash
-wget https://github.com/wulongict/SpectralArchive/releases/download/v1.1.9/Spectroscape_CPU-1.1.9.deb
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.2.0/Spectroscape_CPU-1.2.0.deb
 sudo apt update
-sudo apt install ./Spectroscape_CPU-1.1.9.deb
+sudo apt install ./Spectroscape_CPU-1.2.0.deb
 
 ```
 
 In case that the user do not have root privilege, the following command could be used.
 
 ```bash 
-wget https://github.com/wulongict/SpectralArchive/releases/download/v1.1.9/Spectroscape_CPU-1.1.9.deb
-dpkg -x ./Spectroscape_CPU-1.1.9.deb ./
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.2.0/Spectroscape_CPU-1.2.0.deb
+dpkg -x ./Spectroscape_CPU-1.2.0.deb ./
 ```
 
-The [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.1.9/Spectroscape_GPU-1.1.9.deb) can
+The [GPU version](https://github.com/wulongict/SpectralArchive/releases/download/v1.2.0/Spectroscape_GPU-1.2.0.deb) can
 be installed similarly.
 
 ```bash
-wget https://github.com/wulongict/SpectralArchive/releases/download/v1.1.9/Spectroscape_GPU-1.1.9.deb
+wget https://github.com/wulongict/SpectralArchive/releases/download/v1.2.0/Spectroscape_GPU-1.2.0.deb
 sudo apt update
-sudo apt install ./Spectroscape_GPU-1.1.9.deb
+sudo apt install ./Spectroscape_GPU-1.2.0.deb
 ```
 
 However, users should first make sure CUDA environment available. Otherwise, the following error occurs when running
