@@ -9,6 +9,7 @@ show_help() {
     echo "  -g, --gpu           compile GPU version, otherwise, CPU version; Default to CPU."
     echo "  -b, --build-type    compile release version, otherwise, debug version, Default to release. "
     echo "  -c, --cores         number of cores to use for compilation. Default to nproc / 16 + 1"
+    echo "  -t, --test-only     only compile and run tests" 
     echo "  -h, --help          display this help and exit"
     echo ""
     echo "Examples:"
@@ -65,6 +66,11 @@ while [[ $# -gt 0 ]]; do
         fi
       shift # past argument
       shift # past value
+      ;;
+    -t|--test-only)
+      test_only="TRUE"
+      echo "test only"
+      shift # past argument
       ;;
     -c|--cores)
       cores="$2"
@@ -135,6 +141,14 @@ cmake ${cmake_build_options} ..
 #/usr/local/spectralarchive ..
 # cmake  --graphviz=foo.dot ..
 # cmake ..
+
+# if TEST_ONLY is set, only compile msmstest
+if [ ${test_only} = "TRUE" ]; then
+    cmake  --build ../${releasePath}  --target msmstest -- -j $cores
+    ctest --verbose
+    echo "TEST ONLY RUN FINISHED."
+    exit 0
+fi
 
 cmake  --build ../${releasePath}  --target spectroscape msmstest using_all_cpu_cores -- -j $cores
 

@@ -112,10 +112,25 @@ TEST(FILE_SEARCH, SPEED_TEST){
         cin >> filename;
     }
    
-
-
-
 }
+
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
+#include "../ArchiveSearch/FileUtility.h"
+
+TEST(FILE_SEARCH, FILE_SEARCH){
+    // fs::path dir = "../tests/data";
+    fs::path dir = "../tests/data/fileutility";
+    vector<string> ext_list = {".mzxml", ".mzml", ".tsv"};
+    vector<fs::path> file_list = get_file_list(dir, ext_list);
+    cout << "file list size " << file_list.size() << endl;
+    for(auto file: file_list){
+        cout << file.string() << endl;
+    }
+    ASSERT_EQ(2, file_list.size());
+}
+
+// create test for function in FileUtility.cpp
 
 
 

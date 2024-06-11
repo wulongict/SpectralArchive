@@ -9,8 +9,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Release)
 
 link_directories(${CMAKE_BINARY_DIR}/Release ${fcgi_install_dir}/lib)
 
-# set(CMAKE_INSTALL_RPATH "${ORIGIN}/lib")
-
 # code can be moved to other places: might rely libraries in dependentlibs
 add_subdirectory(dependentlibs)
 include_directories(External)
@@ -52,18 +50,12 @@ msbasic_small_static mstoolkit spectrastlib_static
 
 file(READ "${CMAKE_SOURCE_DIR}/version.txt" MY_SPECTROSCAPE_VERSION)
 
-# target_compile_definitions(spectroscape PRIVATE SPECTROSCAPE_VERSION=${MY_SPECTROSCAPE_VERSION})
-add_compile_definitions(SPECTROSCAPE_VERSION="${MY_SPECTROSCAPE_VERSION}")
+target_compile_definitions(spectroscape PRIVATE SPECTROSCAPE_VERSION="${MY_SPECTROSCAPE_VERSION}")
 
 add_dependencies(spectroscape boost ${DPGPU})
 
-#The commandline tool for library search
-#add_executable(LibraryRetrieval	LibSearchEngine.cpp	)
-#target_link_libraries(LibraryRetrieval specarchive)
-
 install(TARGETS spectroscape DESTINATION bin )
-# install(TARGETS    linear  DESTINATION lib OPTIONAL)
-# install(TARGETS  msfileramp msbasic_small linear  DESTINATION lib OPTIONAL)
+
 
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopenblas-dev,libgomp1,sqlite")
 set(CPACK_PACKAGE_NAME Spectroscape_CPU)
@@ -79,7 +71,7 @@ set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER Long WU)
 set(CPACK_OUTPUT_FILE_PREFIX ${CMAKE_SOURCE_DIR}/package)
-set(CPACK_THREADS 0)
+set(CPACK_THREADS 0) # USING MULTICORE.
 SET(CPACK_GENERATOR "ZIP")  #.ZIP
 SET(CPACK_GENERATOR "STGZ" "DEB") #.sh #deb
 SET(CPACK_SOURCE_GENERATOR "TBZ2")

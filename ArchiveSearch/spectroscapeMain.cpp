@@ -16,6 +16,7 @@
 // namespace fs = std::filesystem;
 #include <csignal>
 #include <atomic>
+#include <unistd.h>
 
 
 #include <boost/filesystem.hpp>
@@ -208,7 +209,7 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
             ("maxconnection", po::value<int>()->default_value(10),
              "The port which socket to listen to. Default: port=10; "
              "check /proc/sys/net/core/somaxconn for maximal number of connections allowed on local computer")
-             ("wwwroot", po::value<string>()->default_value("./"),
+             ("wwwroot", po::value<string>()->default_value(""),
              "path of root folder of spectroscape web UI, config this to the SpectralArchiveWeb/arxiv folder. ")
             ("indexstring", po::value<string>()->default_value("IVF100,PQ8"),
              "the string for index_factory() to build index")
@@ -233,6 +234,8 @@ boost::program_options::variables_map getParam(int argc, char *argv[]) {
     po::positional_options_description p;
     p.add("inputfile", -1);
     po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
+    // const int PATH_MAX = 4096;
+    
 
     // po::store(po::command_line_parser(argc, argv).options(visible).run(), visiable_vm);
     bool run = vm["run"].as<bool>();
@@ -505,6 +508,20 @@ int main(int argc, char *argv[]) {
             int initcenoption = vm.at("centroidinit").as<int>();
             string indexstrs = vm.at("indexstrs").as<string>();
             string wwwroot = vm.at("wwwroot").as<string>();
+            char buffer[PATH_MAX + 1];
+            ssize_t len = readlink("/proc/self/exe",buffer,PATH_MAX);
+
+            if(len!=-1){
+                buffer[len] = '\0';
+                // set_env_var("SPECTROSCAPE_PATH", path);
+            }
+            string path = fs::path(buffer).parent_path().string();
+            cout << "------------------------------------The path is " << path << endl;
+            if(wwwroot == ""){
+                wwwroot = (fs::path(buffer).parent_path().parent_path() / "www").string();
+                // set the path back to vm
+                cout << "The wwwroot is " << wwwroot << endl;
+            }
             string indexshuffleseeds = vm.at("indexshuffleseeds").as<string>();
             string gpuidx = vm.at("gpuidx").as<string>();
             int tolerance = vm["tolerance"].as<int>();
